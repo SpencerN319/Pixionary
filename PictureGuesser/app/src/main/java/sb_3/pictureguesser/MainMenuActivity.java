@@ -19,7 +19,25 @@ public class MainMenuActivity extends AppCompatActivity {
         button_joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Open join game activity", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        Button button_hostGame = (Button) findViewById(R.id.button_hostGame);
+        button_hostGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Open host game activity", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        Button button_buildGame = (Button) findViewById(R.id.button_buildGame);
+        button_buildGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Open build game activity", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });

@@ -50,38 +50,38 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/button_hostGame"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
         android:background="@color/colorPrimaryOrange"
         android:text="@string/menu_host_game"
         android:textColor="@color/colorPrimaryText"
         android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline10"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline12" />
+        app:layout_constraintTop_toTopOf="@+id/guideline10" />
 
     <Button
-        android:id="@+id/button9"
+        android:id="@+id/button_buildGame"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
         android:background="@color/colorPrimaryRed"
         android:text="@string/menu_build_game"
         android:textColor="@color/colorPrimaryText"
         android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline12"
-        android:layout_marginTop="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="0dp" />
+        app:layout_constraintTop_toTopOf="@+id/guideline12" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
