@@ -1,5 +1,6 @@
 package sb_3.pictureguesser;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -7,8 +8,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainMenuActivity extends AppCompatActivity {
+
+    private final int LOGIN_REQUEST_ID = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,9 @@ public class MainMenuActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
+        usernameDisplay.setText("You are currently not logged in");
     }
 
     @Override
@@ -63,5 +70,24 @@ public class MainMenuActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void getLoginInfo(View view) {
+        Intent getLoginInfo = new Intent(this, LoginActivity.class);
+        startActivityForResult(getLoginInfo, LOGIN_REQUEST_ID);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //Returning from login
+        if(requestCode == LOGIN_REQUEST_ID){
+            if(resultCode == RESULT_OK){
+                TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
+                usernameDisplay.setText("You are currently logged in as " + data.getStringArrayExtra("UPPair")[0]);
+            }
+        }
+
     }
 }
