@@ -1,27 +1,36 @@
-// No guarentee this compiles, I haven't wrote java in over a year and I am doing this in VIM 
-import java.util.scanner;
+// get guess from user and see if it is correct. will need to be modified for networking stuff
+import java.util.Scanner;
 public class guesser{
 	String word;
-	ArrayList synonyms;
-	public guesser (String correctword, ArrayList thesynonyms)
+	String[] synonyms;
+	public guesser (String correctword, String[] thesynonyms)
 	{
 		word = correctword;
 		synonyms = thesynonyms;
 	}
 
-	public void getGuess(String guess)
+	public void getGuess()
 	{
 		Scanner scan = new Scanner(System.in);
 		String guess = scan.next();
-		if (guess.equals(word)
+		if (guess.equals(word))
 				{
 					System.out.println("CORRECT!");
-					//give points or something
+					//give points or something here
 				}
-			else if (thesynonyms.contains(guess)
+			else 
 			{
-				System.out.println("CLOSE!");
+				for( String s : synonyms)
+				{
+				
+					if( s.equals(guess))
+							System.out.println("CLOSE!");	
+				}
+				
+			
 			}
+		scan.close();
 
 	}
 
+}
