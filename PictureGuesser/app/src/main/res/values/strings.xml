@@ -5,4 +5,6 @@
     <string name="menu_join_game">Join Game</string>
     <string name="menu_host_game">Host Game</string>
     <string name="menu_build_game">Build Custom Game</string>
+    <string name="login_prompt">Please Login</string>
+    <string name="login">Login</string>
 </resources>
