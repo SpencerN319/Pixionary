@@ -34,14 +34,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
-    <!-- Some of the following lines are out of date, but are required as android:backgroundTint is only supported API 21+ -->
+    <!-- Some of the following lines are out of date, but are required as android:backgroundTint and android:style is only supported API 21+ -->
     <EditText
         android:id="@+id/editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:text="@string/username"
         android:textColor="@color/colorPrimaryText"
         app:backgroundTint="@color/colorPrimaryText"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
@@ -51,15 +51,15 @@
 
     <EditText
         android:id="@+id/editText2"
-        style="@android:style/TextAppearance.Material.Medium.Inverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:textColor="@color/colorPrimaryText"
         android:textColorHint="@color/colorPrimaryText"
+        app:style="@android:style/TextAppearance.Material.Medium.Inverse"
         app:backgroundTint="@color/colorPrimaryText"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -7,4 +7,6 @@
     <string name="menu_build_game">Build Custom Game</string>
     <string name="login_prompt">Please Login</string>
     <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
 </resources>
