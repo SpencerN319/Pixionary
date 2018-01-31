@@ -21,7 +21,6 @@
         </activity>
         <activity android:name=".LoginActivity" />
         <activity android:name=".PlayActivity" />
-        <activity android:name=".Dialogs.GameOverDialog"></activity>
     </application>
 
 </manifest>

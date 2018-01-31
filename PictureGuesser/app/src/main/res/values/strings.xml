@@ -12,4 +12,5 @@
     <string name="answer_hint">Your Answer Here!</string>
     <string name="guess">Guess!</string>
     <string name="game_over">Game Over!</string>
+    <string name="update_pic">Update</string>
 </resources>

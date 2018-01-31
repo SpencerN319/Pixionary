@@ -2,6 +2,7 @@ package sb_3.pictureguesser;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.support.v7.app.AlertDialog;
@@ -16,11 +17,21 @@ import android.widget.ImageView;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ImageBuilder.ImageCreator;
+
 public class PlayActivity extends AppCompatActivity {
 
     private Button btnGuess;
     private EditText etGuess;
     private ImageView picGuess;
+    private Bitmap image;
+    private Button btnUpdate;
+
+    //Temporary for testing
+    private int tempwidth = 0;
+    private int tempheight = 0;
+    private int color = 0xFFACED21;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +41,7 @@ public class PlayActivity extends AppCompatActivity {
         btnGuess = (Button) findViewById(R.id.btnSendGuess);
         etGuess = (EditText) findViewById(R.id.etGuess);
         picGuess = (ImageView) findViewById(R.id.imgGame);
+        btnUpdate = (Button) findViewById(R.id.btnUpdate);
 
         presentImage(picGuess);
 
@@ -39,15 +51,27 @@ public class PlayActivity extends AppCompatActivity {
                 sendGuess(etGuess.getText().toString());
             }
         });
+
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tempheight++;
+                tempwidth++;
+                image.setPixel(tempwidth, tempheight, color);
+            }
+        });
     }
 
     protected void sendGuess(String guess) {
         Log.i("PlayActivity", guess);
 
-        if (etGuess.getText().toString().equals("cat")) {
+        if (etGuess.getText().toString().equals("blank")) {
             AlertDialog.Builder endBuilder = new AlertDialog.Builder(PlayActivity.this);
             endBuilder.setTitle("Game Over!");
             endBuilder.setMessage("You Won!");
+            //Figure out how to make changes to
+            //the look of the alert dialog.
+            //endBuilder.setView();
             endBuilder.setPositiveButton("Exit to Main Menu", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -60,20 +84,28 @@ public class PlayActivity extends AppCompatActivity {
             endBuilder.show();
         }
     }
+    //TEST
+//    protected void presentImage(ImageView pic) {
+//
+//        //testing
+//        String imageName = "cat.jpg";
+//
+//        try {
+//            InputStream stream = getAssets().open(imageName);
+//            Drawable d = Drawable.createFromStream(stream,null);
+//            pic.setImageDrawable(d);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
-    protected void presentImage(ImageView pic) {
+    private void presentImage(ImageView pic) {
 
-        //testing
-        String imageName = "cat.jpg";
+        ImageCreator creator = new ImageCreator(480, 900);
+        image = creator.getImage();
 
-        try {
-            InputStream stream = getAssets().open(imageName);
-            Drawable d = Drawable.createFromStream(stream,null);
-            pic.setImageDrawable(d);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        pic.setImageBitmap(image);
     }
 }
 
