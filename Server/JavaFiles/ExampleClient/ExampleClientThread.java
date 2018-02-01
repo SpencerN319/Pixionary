@@ -9,25 +9,22 @@ public class ExampleClientThread implements Runnable{
   public ExampleClientThread(Socket socket){
     this.socket = socket;
   }
-  //TODO Levi Clark - Send data to server from here
+
   public void run(){
-    try{
-      System.out.println("Enter any data and press enter:");
-      String input;
+    System.out.println("Enter any data and press enter:");
+    while(true){
       try{
-        Scanner scanner = new Scanner(System.in);
-        input = scanner.nextLine();
-      }
-      catch(Exception e){
-        System.out.println("Failed to get input.");
-      }
-      System.out.println("Thank you.");
-      socket.close();
-      System.out.println("Socket closed.");
-    }
-    catch(Exception e){
-      System.out.println("Failed to close socket.");
+          String input;
+          Scanner scanner = new Scanner(System.in);
+          input = scanner.nextLine();
+          PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+          System.out.println("Sending " + input);
+          out.println(input);
+        }
+        catch(Exception e){
+          System.out.println("Failed to get and send input.");
+        }
     }
   }
-
+  
 }

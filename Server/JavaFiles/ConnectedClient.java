@@ -5,7 +5,8 @@ public class ConnectedClient implements Runnable{
 
   private Socket socket;
   private PixionaryServer currentServer;
-  private int increment = 0;
+  private BufferedReader in;
+  private PrintWriter out;
 
   public ConnectedClient(PixionaryServer currentServer, Socket socket){
     this.socket = socket;
@@ -13,24 +14,27 @@ public class ConnectedClient implements Runnable{
   }
 
   public void run(){
-    BufferedReader in;
-    PrintWriter out;
-    System.out.println("Began new client thread!");
+    System.out.println("New client has joined");
+    try{
+      openComs();
+    }
+    catch(Exception e){
+      System.out.println("Error connecting to client, disconnecting client");
+      disconnectClient();
+      return;
+    }
     while(true){
-      System.out.println(increment++);
       try{
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream());
-        if(in.read() == -1){
-          //Client socket is disconnected
+        String input = in.readLine();
+        if(input == null){
           disconnectClient();
           return;
         }
-        String newInput = in.readLine();
-        System.out.println("Hit");
+        System.out.println(input);
       }
       catch(Exception e){
         //Client can be considered disconnected
+        System.out.println("Hit error during getting input, disconncting client");
         disconnectClient();
         return;
       }
@@ -39,8 +43,31 @@ public class ConnectedClient implements Runnable{
 
   //Properly removes client from the server
   public void disconnectClient(){
+    closeComs();
     currentServer.removeClient(this);
-    System.out.println("Client removed!");
+    System.out.println("Client removed");
+  }
+
+  private void openComs() throws IOException{
+    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    out = new PrintWriter(socket.getOutputStream());
+  }
+
+  private void closeComs(){
+    try{
+      if(in != null){
+        in.close();
+      }
+      if(out != null){
+        out.close();
+      }
+      if(socket != null && !socket.isClosed()){
+        socket.close();
+      }
+    }
+    catch(Exception e){
+      System.out.println("Failed to close comms.");
+    }
   }
 
 }

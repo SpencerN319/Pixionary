@@ -28,6 +28,7 @@ public class PixionaryServer {
         Socket socket = serverSocket.accept();
         ConnectedClient newClient = new ConnectedClient(this, socket);
         connectedClients.add(newClient);
+        System.out.println("Now serving " + connectedClients.size() + " clients.");
         Thread newThread = new Thread(newClient);
         newThread.start();
       }
@@ -39,6 +40,7 @@ public class PixionaryServer {
 
   public void removeClient(ConnectedClient client){
     connectedClients.remove(client);
+    System.out.println("Now serving " + connectedClients.size() + " clients.");
   }
 
 }
