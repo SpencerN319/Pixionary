@@ -3,8 +3,6 @@ package sb_3.pictureguesser;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,9 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import ImageBuilder.ImageCreator;
 
@@ -27,11 +22,7 @@ public class PlayActivity extends AppCompatActivity {
     private Bitmap image;
     private Button btnUpdate;
 
-    //Temporary for testing
-    private int tempwidth = 0;
-    private int tempheight = 0;
-    private int color = 0xFFACED21;
-
+    final ImageCreator editImage = new ImageCreator(800,900);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +34,7 @@ public class PlayActivity extends AppCompatActivity {
         picGuess = (ImageView) findViewById(R.id.imgGame);
         btnUpdate = (Button) findViewById(R.id.btnUpdate);
 
-        presentImage(picGuess);
+        presentImage(picGuess, editImage);
 
         btnGuess.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,15 +43,11 @@ public class PlayActivity extends AppCompatActivity {
             }
         });
 
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tempheight++;
-                tempwidth++;
-                image.setPixel(tempwidth, tempheight, color);
-            }
-        });
+        editImage.updateImage(image);
+
     }
+
+
 
     protected void sendGuess(String guess) {
         Log.i("PlayActivity", guess);
@@ -100,9 +87,8 @@ public class PlayActivity extends AppCompatActivity {
 //
 //    }
 
-    private void presentImage(ImageView pic) {
+    private void presentImage(ImageView pic, ImageCreator creator) {
 
-        ImageCreator creator = new ImageCreator(480, 900);
         image = creator.getImage();
 
         pic.setImageBitmap(image);
