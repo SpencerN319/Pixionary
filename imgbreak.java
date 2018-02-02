@@ -1,11 +1,11 @@
 import java.awt.image.BufferedImage;
-//breaks the image into 100 chunks of equal size, except for maybe the ones on the bottom row and right column. 
-public class imgbreak{
+//breaks the image into PIXELS
+public class imgbreaker{
     
    BufferedImage img;
-    BufferedImage[][] chunks = new BufferedImage[10][10];
+   int[][] pixels;
     
-    public imgbreak (BufferedImage i)
+    public imgbreaker (BufferedImage i)
     {
 	img = i; 
     }
@@ -15,30 +15,13 @@ public class imgbreak{
 	int height = img.getHeight();
 	int width = img.getWidth();
 	//maybe not declare this here
-	int chunkheight = height / 10;
-	int chunkwidth = width / 10;
+	pixels = new int[height][width];
 
-	for (int y = 0; y < 10; y++)
+	for (int y = 0; y < height; y++)
 	    {
-		for (int x = 0; x < 10; x++)
+		for (int x = 0; x < width; x++)
 		    {
-			BufferedImage b = new BufferedImage(chunkwidth, chunkheight, img.getType());
-			int chunkxstart = x * chunkwidth;
-			int chunkystart = y * chunkwidth;
-			int localchunkwidth = chunkwidth;
-			int localchunkheight = chunkheight;
-
-			//make sure image doesn't get cut off FIX
-			if (x == 9)
-			    localchunkwidth = width - (chunkwidth * 9);
-	       
-			if (y == 9)
-			    localchunkheight = height - (chunkheight * 9);
-	        
-
-			b = img.getSubimage(chunkxstart, chunkystart, chunkwidth, chunkheight);
-			chunks[y][x] = b;
-			
+		        pixels[y][x] = img.getRGB(x,y);
 							   
 		    }
 	    }
