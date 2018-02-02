@@ -97,7 +97,7 @@ public class PlayActivity extends AppCompatActivity {
         picGuess.setImageBitmap(bitmap);
 
         //Slowly adds pixels to the current image. -- Will eventually receive a Pixel from Socket.
-        editImage.updateImage(bitmap);
+        editImage.updateImage();
     }
 }
 

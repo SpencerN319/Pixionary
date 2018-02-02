@@ -43,7 +43,7 @@ public class ImageCreator {
 
 
     //Normally need to pass a Pixel in. --to receive from server-side.
-    public void updateImage(final Bitmap bitmap) {
+    public void updateImage() {
 
         pixels = breaker.getPixels();
         pixelUsed = new boolean[pixels.length];
