@@ -9,7 +9,7 @@ public class Pixel {
     private int xpos;
     private int ypos;
 
-    public Pixel(int color, int x, int y) {
+    public Pixel( int x, int y, int color) {
 
         //Create pixel values.
         argb = color;

@@ -1,16 +1,16 @@
 package sb_3.pictureguesser;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import ImageBuilder.ImageCreator;
 
@@ -18,11 +18,14 @@ public class PlayActivity extends AppCompatActivity {
 
     private Button btnGuess;
     private EditText etGuess;
-    private ImageView picGuess;
-    private Bitmap image;
-    private Button btnUpdate;
+    public ImageView picGuess;
+    private Bitmap bitmap;
+    public TextView imagesRemaining;
+    private ImageCreator editImage;
 
-    final ImageCreator editImage = new ImageCreator(800,900);
+    private String[] images;
+    private String guess;
+    private int imagenum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,66 +35,69 @@ public class PlayActivity extends AppCompatActivity {
         btnGuess = (Button) findViewById(R.id.btnSendGuess);
         etGuess = (EditText) findViewById(R.id.etGuess);
         picGuess = (ImageView) findViewById(R.id.imgGame);
-        btnUpdate = (Button) findViewById(R.id.btnUpdate);
+        imagesRemaining = (TextView) findViewById(R.id.images_remaining);
+        images = new String[]{"cat.jpg", "cow.jpg", "dog.jpg", "horse.jpg"};
 
-        presentImage(picGuess, editImage);
+        nextImage();
 
         btnGuess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendGuess(etGuess.getText().toString());
+                guess = etGuess.getText().toString();
+                if (guess.equals(cutExtension(images[imagenum]))) {
+                    imagenum++;
+                    etGuess.setText("");
+                    if (imagenum >= images.length) {
+                        endGame();
+                    } else {
+                        nextImage();
+                    }
+
+                }
             }
         });
 
-        editImage.updateImage(image);
-
     }
 
+    private String cutExtension(String fileName) {
+        int dot = fileName.lastIndexOf(".");
 
-
-    protected void sendGuess(String guess) {
-        Log.i("PlayActivity", guess);
-
-        if (etGuess.getText().toString().equals("blank")) {
-            AlertDialog.Builder endBuilder = new AlertDialog.Builder(PlayActivity.this);
-            endBuilder.setTitle("Game Over!");
-            endBuilder.setMessage("You Won!");
-            //Figure out how to make changes to
-            //the look of the alert dialog.
-            //endBuilder.setView();
-            endBuilder.setPositiveButton("Exit to Main Menu", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent i = new Intent(PlayActivity.this, MainMenuActivity.class);
-                    startActivity(i);
-                    finish();
-                }
-            });
-            endBuilder.create();
-            endBuilder.show();
-        }
+        return fileName.substring(0, dot);
     }
-    //TEST
-//    protected void presentImage(ImageView pic) {
-//
-//        //testing
-//        String imageName = "cat.jpg";
-//
-//        try {
-//            InputStream stream = getAssets().open(imageName);
-//            Drawable d = Drawable.createFromStream(stream,null);
-//            pic.setImageDrawable(d);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 
-    private void presentImage(ImageView pic, ImageCreator creator) {
+    private void endGame() {
+        //Add the collection of data from the game.
 
-        image = creator.getImage();
+        //End Game Dialog
+        AlertDialog.Builder endBuilder = new AlertDialog.Builder(PlayActivity.this);
+        endBuilder.setTitle("Game Over!");
+        endBuilder.setMessage("You Won!");
+        //Figure out how to make changes to
+        //the look of the alert dialog.
+        //endBuilder.setView();
+        endBuilder.setPositiveButton("Exit to Main Menu", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent i = new Intent(PlayActivity.this, MainMenuActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+        endBuilder.create();
+        endBuilder.show();
+    }
 
-        pic.setImageBitmap(image);
+    private void nextImage(){
+        //Display Remaining images.
+        imagesRemaining.setText("Images Remaining: " + (images.length - imagenum));
+
+        //Initialize editImage and starts the image at the View.
+        editImage = new ImageCreator(getApplicationContext(), images, imagenum);
+        bitmap = editImage.getImage();
+        picGuess.setImageBitmap(bitmap);
+
+        //Slowly adds pixels to the current image. -- Will eventually receive a Pixel from Socket.
+        editImage.updateImage(bitmap);
     }
 }
 
