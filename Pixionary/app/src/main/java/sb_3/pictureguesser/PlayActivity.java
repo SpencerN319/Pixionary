@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import Client.ClientGuessThread;
 import ImageBuilder.ImageCreator;
 
 public class PlayActivity extends AppCompatActivity {
@@ -44,6 +45,9 @@ public class PlayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 guess = etGuess.getText().toString();
+//                ClientGuessThread client = new ClientGuessThread();
+//                client.sendGuess(guess);
+                //This is locally test stuff.
                 if (guess.equals(cutExtension(images[imagenum]))) {
                     imagenum++;
                     etGuess.setText("");
@@ -52,7 +56,6 @@ public class PlayActivity extends AppCompatActivity {
                     } else {
                         nextImage();
                     }
-
                 }
             }
         });

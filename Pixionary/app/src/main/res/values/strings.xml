@@ -1,17 +1,25 @@
 <resources>
-    <string name="app_name">PictureGuesser</string>
-    <string name="formatted_app_name">Picture Guesser</string>
+    <string name="app_name">Pixonary</string>
+    <string name="formatted_app_name">Pixonary</string>
     <string name="action_settings">Settings</string>
+    //Login and Create Account
+    <string name="login_prompt">Please Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="attempts">Attempts Remaining: 10</string>
+    <string name="create_account">Create Account</string>
+    <string name="guest_login">Guest</string>
+    <string name="create_message">Your Almost There!</string>
+    <string name="btnCreate">Create Account</string>
+    //Main Menu
     <string name="menu_join_game">Join Game</string>
     <string name="menu_host_game">Host Game</string>
     <string name="menu_build_game">Build Custom Game</string>
-    <string name="login_prompt">Please Login</string>
-    <string name="login">Login</string>
-    <string name="password">Password</string>
-    <string name="username">Username</string>
-    <string name="answer_hint">Your Answer Here!</string>
-    <string name="guess">Guess!</string>
-    <string name="game_over">Game Over!</string>
-    <string name="update_pic">Update</string>
-    <string name="remain_images">Games Remaining: </string>
+    //Gameplay
+    <string name="remain_images">Images Remaining: 15</string>
+    <string name="answer_hint">Your Answer Here</string>
+    <string name="guess">Guess</string>
+
+
 </resources>
