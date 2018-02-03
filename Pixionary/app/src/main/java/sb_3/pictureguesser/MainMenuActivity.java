@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class MainMenuActivity extends AppCompatActivity {
 
-    private final int LOGIN_REQUEST_ID = 4;
+    private final int LOGIN_INFO = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +48,9 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
+        //Get username request here.
         TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
-        usernameDisplay.setText("You are currently not logged in");
+        usernameDisplay.setText("You are currently logged in as admin");
     }
 
     @Override
@@ -72,24 +73,5 @@ public class MainMenuActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void getLoginInfo(View view) {
-        Intent getLoginInfo = new Intent(this, LoginActivity.class);
-        startActivityForResult(getLoginInfo, LOGIN_REQUEST_ID);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        //Returning from login
-        if(requestCode == LOGIN_REQUEST_ID){
-            if(resultCode == RESULT_OK){
-                TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
-                usernameDisplay.setText("You are currently logged in as " + data.getStringArrayExtra("UPPair")[0]);
-            }
-        }
-
     }
 }

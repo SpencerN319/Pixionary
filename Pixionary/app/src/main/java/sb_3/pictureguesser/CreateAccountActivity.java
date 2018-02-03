@@ -27,23 +27,21 @@ public class CreateAccountActivity extends AppCompatActivity {
         Create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Successfully created account
+                //Method to send new User data to the server... eventually
                 createUser(Username.getText().toString(), Password.getText().toString());
-                Log.d("CreateAccountActivity", "Username: " + Username.getText().toString() + "    Password: " + Password.getText().toString());
-                //Method to send new User data to the server...
-                //Going to be used to check the successful creation of the newUser.
-                boolean success = true;
-                if (success) {
-                    Intent intent = new Intent(CreateAccountActivity.this, MainMenuActivity.class);
-                    startActivity(intent);
-                }
             }
         });
     }
 
-    private String createUser(String user, String pass) {
+    private void createUser(String user, String pass) {
         String newUser = "NewUser: " + user + " " + pass;
-        return newUser;
+        //Pass string to the server, if successful server will return value.
+        boolean success = true;
+        Log.i("CreateAccountActivity", "Username: " + Username.getText().toString() + "    Password: " + Password.getText().toString());
+        if (success) {
+            Intent intent = new Intent(CreateAccountActivity.this, MainMenuActivity.class);
+            startActivity(intent);
+        }
     }
 
 }
