@@ -9,4 +9,9 @@
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="username">Username</string>
+    <string name="answer_hint">Your Answer Here!</string>
+    <string name="guess">Guess!</string>
+    <string name="game_over">Game Over!</string>
+    <string name="update_pic">Update</string>
+    <string name="remain_images">Games Remaining: </string>
 </resources>
