@@ -1,4 +1,4 @@
-package sb_3.pictureguesser;
+package sb_3.pixionary;
 
 import org.junit.Test;
 
