@@ -1,4 +1,4 @@
-package sb_3.pictureguesser;
+package sb_3.pixionary;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,8 +25,8 @@ public class MainMenuActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Open join game activity", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                Intent i = new Intent(MainMenuActivity.this, PlayActivity.class);
-                startActivity(i);
+                Intent playGame = new Intent(MainMenuActivity.this, PlayActivity.class);
+                startActivity(playGame);
             }
         });
 

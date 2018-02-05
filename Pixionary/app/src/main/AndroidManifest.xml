@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="sb_3.pictureguesser">
+    package="sb_3.pixionary">
 
     <application
         android:allowBackup="true"

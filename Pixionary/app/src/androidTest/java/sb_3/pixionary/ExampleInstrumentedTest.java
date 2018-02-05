@@ -1,4 +1,4 @@
-package sb_3.pictureguesser;
+package sb_3.pixionary;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("sb_3.pictureguesser", appContext.getPackageName());
+        assertEquals("sb_3.pixionary", appContext.getPackageName());
     }
 }
