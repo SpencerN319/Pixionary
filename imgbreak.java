@@ -72,24 +72,27 @@ public class imgbreak{
 		used [pixy][pixx] = true;
 
 		Thread.sleep(1);
-		/* I don't have the method yet
-	      game.sendStringToAllPlayers("px," + pixx + "," + pixy + "," + pixels[pixx][pixy]);
-		*/
+		// pixel strings start px, end with xp, and have all values separated by a comma, if this is how we want to do it ya know?
+	      game.sendStringToAllPlayers("px," + pixx + "," + pixy + "," + pixels[pixx][pixy] + ",xp");
+		
 		sent++;
 	    }
 		
     }
 
-    	public void getGuess()
+    	public void getGuess(ConnectedClient c)
 	{
+
+	    //c.getStringFromClient?????
 		Scanner scan = new Scanner(System.in);
 		String guess = scan.next();
 		if (guess.equals(word))
 				{
 				    //send string to one player
-					System.out.println("CORRECT!");
+					c.sendStringToClient("CORRECT!");
 					//give points or something here
 					int score = (totalpixels - sent) * 100 / totalpixels + 1;
+					//c.incrementScore(score); 
 				}
 			else 
 			{
@@ -97,7 +100,7 @@ public class imgbreak{
 				{
 				
 					if( s.equals(guess))
-							System.out.println("CLOSE!");	
+							c.sendStringToClient("CLOSE!");	
 				}
 				
 			
