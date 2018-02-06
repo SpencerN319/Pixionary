@@ -9,6 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.EditText;
 
+import java.io.IOException;
+import java.net.Socket;
+
+import Client.LoginThread;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -19,6 +24,9 @@ public class LoginActivity extends AppCompatActivity {
     private Button CreateAccount;
     private Button Guest;
     private int attemptsLeft = 10;
+    private boolean success;
+
+    Socket socket;
 
 
     @Override
@@ -32,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         Login = (Button) findViewById(R.id.btnLogin);
         CreateAccount = (Button) findViewById(R.id.btnCreateAccount);
         Guest = (Button) findViewById(R.id.btnGuest);
+
 
         Attempts.setText("Attempts Left: 10");
         Login.setOnClickListener(new View.OnClickListener() {
@@ -53,15 +62,39 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Just testing Authentication on frontend without the server.
-    private void validateUser(String username, String password) {
-        String userInfo = "UserInfo: " + username + " " + password;
-        Log.i("LoginActivity", userInfo);
+//    private void validateUserLocal(String username, String password) {
+//        String userInfo = "UserInfo: " + username + " " + password;
+//        Log.i("LoginActivity", userInfo);
+//
+//        //Local test only.
+//        if ((username.equals("admin")) && (password.equals("password"))) {
+//            Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
+//            startActivity(intent);
+//        } else {
+//            attemptsLeft--;
+//            Attempts.setText("Attempts Left: " + String.valueOf(attemptsLeft));
+//            if (attemptsLeft == 0) {
+//                Login.setEnabled(false);
+//            }
+//        }
+//    }
 
-        //Local test only.
-        if ((username.equals("admin")) && (password.equals("password"))) {
+    private void validateUser(String username, String password) {
+
+        try {
+            socket = new Socket("localhost", 9090);
+            LoginThread loginRequest = new LoginThread(socket,
+                    username, password);
+            loginRequest.run();
+            success = loginRequest.getSuccess();
+        }
+        catch (IOException e) {
+
+        }
+        if (success == true) {
             Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
             startActivity(intent);
-        } else {
+        } else  {
             attemptsLeft--;
             Attempts.setText("Attempts Left: " + String.valueOf(attemptsLeft));
             if (attemptsLeft == 0) {
