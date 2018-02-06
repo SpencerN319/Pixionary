@@ -1,22 +1,35 @@
 import java.awt.image.BufferedImage;
 import java.util.Random;
-//breaks the image into PIXELS and also transfers them
+import java.util.Scanner;
+
+//breaks the image into pixels, transfers them, handles guesses, and more.
 public class imgbreak{
     
-   BufferedImage img;
-   int[][] pixels;
+    BufferedImage img;
+    Game game;
+    
+    int[][] pixels;
     boolean[][] used;
+
     int totalpixels;
     int sent;
     int height;
-    int width; 
+    int width;
+
+    String word;
+    String[] synonyms;
+
     Random rand = new Random();
     boolean guessed = false;
-  
     
-    public imgbreak (BufferedImage i)
+  
+    //get the game too, sendstringtoclient,sendstingtoallmembers
+    public imgbreak (BufferedImage i, String correctword, String[] thesynonyms, Game g)
     {
-	img = i; 
+	img = i;
+	word = correctword;
+	synonyms = thesynonyms;
+	game = g;
     }
 
     public void breakImage()
@@ -57,13 +70,42 @@ public class imgbreak{
 			    found = true;
 		    }
 		used [pixy][pixx] = true;
-		/* pseudo code
-		   socket.sendInts (pixx, pixy, pixels[pixx][pixy]);
+
+		Thread.sleep(1);
+		/* I don't have the method yet
+	      game.sendStringToAllPlayers("px," + pixx + "," + pixy + "," + pixels[pixx][pixy]);
 		*/
 		sent++;
 	    }
 		
     }
+
+    	public void getGuess()
+	{
+		Scanner scan = new Scanner(System.in);
+		String guess = scan.next();
+		if (guess.equals(word))
+				{
+				    //send string to one player
+					System.out.println("CORRECT!");
+					//give points or something here
+					int score = (totalpixels - sent) * 100 / totalpixels + 1;
+				}
+			else 
+			{
+				for( String s : synonyms)
+				{
+				
+					if( s.equals(guess))
+							System.out.println("CLOSE!");	
+				}
+				
+			
+			}
+		scan.close();
+
+	}
+    
     public void setGuessed()
     {
 	guessed = true;
