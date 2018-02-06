@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryPurple"
-    tools:context="sb_3.pictureguesser.CreateAccountActivity">
+    tools:context="sb_3.pixionary.CreateAccountActivity">
 
     <EditText
         android:id="@+id/etCreateUser"

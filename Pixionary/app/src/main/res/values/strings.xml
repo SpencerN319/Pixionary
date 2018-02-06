@@ -20,6 +20,7 @@
     <string name="remain_images">Images Remaining: 15</string>
     <string name="answer_hint">Your Answer Here</string>
     <string name="guess">Guess</string>
+    <string name="game_browser">Game Browser</string>
 
 
 </resources>

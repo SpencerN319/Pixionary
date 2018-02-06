@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryPurple"
-    tools:context="sb_3.pictureguesser.PlayActivity">
+    tools:context="sb_3.pixionary.PlayActivity">
 
     <View
         android:id="@+id/gameover"
@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimaryOrange"
         android:text="@string/guess"

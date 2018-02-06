@@ -1,4 +1,4 @@
-package sb_3.pictureguesser;
+package sb_3.pixionary;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 public class MainMenuActivity extends AppCompatActivity {
 
-    private final int LOGIN_INFO = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +24,7 @@ public class MainMenuActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Open join game activity", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                Intent i = new Intent(MainMenuActivity.this, PlayActivity.class);
+                Intent i = new Intent(MainMenuActivity.this, GameBrowserActivity.class);
                 startActivity(i);
             }
         });

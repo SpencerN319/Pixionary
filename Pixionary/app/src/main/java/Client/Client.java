@@ -12,8 +12,8 @@ public class Client{
         try{
             //We will have our server address instead of "localhost"
             Socket socket = new Socket("localhost", 1337);
-            Thread thread = new Thread(new ClientGuessThread(socket));
-            thread.start();
+            //Thread mainthread = new MainThread();
+            //thread.start();
         }
         catch(IOException e){
             System.out.println("Failed to connect.");

@@ -1,4 +1,4 @@
-package sb_3.pictureguesser;
+package sb_3.pixionary;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

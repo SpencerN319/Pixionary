@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryPurple"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="sb_3.pictureguesser.MainMenuActivity"
+    tools:context="sb_3.pixionary.MainMenuActivity"
     tools:showIn="@layout/activity_main_menu">
 
     <TextView
