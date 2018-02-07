@@ -12,6 +12,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.net.Socket;
+
+import Client.GuessThread;
 import ImageBuilder.ImageCreator;
 
 public class PlayActivity extends AppCompatActivity {
@@ -26,6 +30,8 @@ public class PlayActivity extends AppCompatActivity {
     private String[] images;
     private String guess;
     private int imagenum = 0;
+
+    Socket socket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +62,7 @@ public class PlayActivity extends AppCompatActivity {
                     }
                 }
                 else {
-                    wrongGuess();
+                    wrongGuessDialog();
                 }
             }
         });
@@ -69,7 +75,7 @@ public class PlayActivity extends AppCompatActivity {
         return fileName.substring(0, dot);
     }
 
-    private void wrongGuess() {
+    private void wrongGuessDialog() {
         AlertDialog.Builder wrongBuilder = new AlertDialog.Builder(PlayActivity.this);
         wrongBuilder.setTitle("Wrong!");
         wrongBuilder.setMessage("Hurry up and try again!");
@@ -115,6 +121,24 @@ public class PlayActivity extends AppCompatActivity {
 
         //Slowly adds pixels to the current image. -- Will eventually receive a Pixel from Socket.
         editImage.updateImage();
+    }
+
+    private void  sendGuess(String guess) {
+        try {
+            socket = new Socket("localhost", 9091);
+            GuessThread guessSend = new GuessThread(socket, guess);
+            guessSend.run();
+            boolean correct = guessSend.getCorrect();
+            if (correct) {
+                //clear() and start new from server.
+            }
+            else {
+                wrongGuessDialog();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 
