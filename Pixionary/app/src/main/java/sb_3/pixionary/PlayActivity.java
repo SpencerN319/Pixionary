@@ -12,19 +12,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-<<<<<<< HEAD:Pixionary/app/src/main/java/sb_3/pixionary/PlayActivity.java
+
 import sb_3.pixionary.ImageBuilder.ImageCreator;
-=======
+
 import java.io.IOException;
 import java.net.Socket;
 
 import Client.BuildImageThread;
 import Client.GuessThread;
 import Client.ReceivePixelThread;
-
-import ImageBuilder.ImageCreator;
->>>>>>> Steven:Pixionary/app/src/main/java/sb_3/pixionary/PlayActivity.java
-
 
 public class PlayActivity extends AppCompatActivity {
 

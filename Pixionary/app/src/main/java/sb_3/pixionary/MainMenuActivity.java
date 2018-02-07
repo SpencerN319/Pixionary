@@ -38,10 +38,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
                 Snackbar.make(view, "Open join game activity", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-<<<<<<< HEAD:Pixionary/app/src/main/java/sb_3/pixionary/MainMenuActivity.java
 
-=======
->>>>>>> Steven:Pixionary/app/src/main/java/sb_3/pixionary/MainMenuActivity.java
                 Intent playGame = new Intent(MainMenuActivity.this, PlayActivity.class);
                 startActivity(playGame);
             }
