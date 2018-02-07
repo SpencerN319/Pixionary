@@ -32,10 +32,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void sendMessage(View view) {
         Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
-        //editText editText = (editText) findViewById(R.id.editText);
-        //String message = editText.getText().toString();
         startActivity(intent);
-
-
     }
 }

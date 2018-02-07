@@ -31,8 +31,6 @@
             android:name=".PlayActivity"
             android:windowSoftInputMode="stateAlwaysVisible"
             android:parentActivityName=".MainMenuActivity"/>
-
-
     </application>
 
 </manifest>
