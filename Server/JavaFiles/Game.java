@@ -5,10 +5,12 @@ public class Game{
   ConnectedClient host;
   GamesList gamesList;
   ArrayList<ConnectedClient> gameMembers = new ArrayList<ConnectedClient>();
+  final String gameName;
 
-  public Game(GamesList gamesList, ConnectedClient host){
+  public Game(GamesList gamesList, ConnectedClient host, String gameName){
     this.gamesList = gamesList;
     this.host = host;
+    this.gameName = gameName;
     gameMembers.add(host);
   }
 
@@ -52,8 +54,19 @@ public class Game{
     }
   }
 
-  public void delete(){
+  public String getName(){
+    return gameName;
+  }
 
+  public void delete(){
+    for(int i = 0; i < gameMembers.size(); i++){
+      if(gameMembers.get(i) != host){
+        kickMember(gameMembers.get(i));
+      }
+    }
+    //All except host is gone, and host is currently leaving.
+    gamesList.removeGameFromActiveGames(gameName);
+    return;
   }
 
 }

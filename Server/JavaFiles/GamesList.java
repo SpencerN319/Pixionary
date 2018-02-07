@@ -9,7 +9,7 @@ public class GamesList{
   }
 
   public boolean gameExists(String gameName){
-    return !(namesAndGames.get(gameName) == null);
+    return namesAndGames.get(gameName) != null;
   }
 
   public Game getGame(String gameName){
@@ -20,14 +20,17 @@ public class GamesList{
     if(gameExists(gameName)){
       return null;
     }
-    return namesAndGames.put(gameName, new Game(this, host));
+    Game newGame = new Game(this, host, gameName);
+    namesAndGames.put(gameName, newGame);
+    System.out.println("Game started: " + gameName);
+    System.out.println("# of games running:" + namesAndGames.size());
+    return newGame;
   }
 
-  public void endGame(String gameName){
-    if(gameExists(gameName)){
-      namesAndGames.get(gameName).delete();
-    }
-    namesAndGames.put(gameName, null);
+  public void removeGameFromActiveGames(String gameName){
+    namesAndGames.remove(gameName);
+    System.out.println("Game ended: " + gameName);
+    System.out.println("# of games running:" + namesAndGames.size());
   }
 
 }

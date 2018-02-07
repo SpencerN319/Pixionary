@@ -10,6 +10,8 @@ public class ConnectedClient implements Runnable{
   private String username = "tempUsername";
   private GamesList gamesList;
   private Game gameSession;
+  private final String ACTION_SUCCESS = "success";
+  private boolean connected = true;
 
   public ConnectedClient(PixionaryServer currentServer, GamesList gamesList, Socket socket){
     this.socket = socket;
@@ -20,50 +22,90 @@ public class ConnectedClient implements Runnable{
   public void run(){
     try{
       openComs();
-      System.out.println("Player disconnected");
     }
     catch(Exception e){
       delete();
       return;
     }
-    while(true){
-      try{
-        String input = in.readLine();
-        if(input == null){
-          delete();
-          return;
-        }
-        System.out.println("Input recieved: " + input);
-      }
-      catch(Exception e){
-        //Client can be considered disconnected
-        delete();
-        return;
-      }
+    while(connected){
+        doAction(readInputLine());
     }
   }
 
-  public void startGame(String gameName){
+  //This method is what connects input strings to their proper actions. It returns a string regarding the success of the action.
+  private String doAction(String input){
+    if(input == null){
+      return null;
+    }
+    switch(input){
+      case "startGame":
+        String gameName = readInputLine();
+        if(gameName != null){
+          boolean gameStarted = startGame(gameName);
+          if(gameStarted){
+            return ACTION_SUCCESS;
+          }
+          return "Game already exists";
+        }
+        delete();
+        break;
+      case "leaveGame":
+        System.out.println("Leaving Game");
+        leaveGame();
+        return ACTION_SUCCESS;
+      default:
+        return "Input did not match any expected input.";
+    }
+    return "User input did not activate in switch.";
+  }
+
+  private String readInputLine(){
+    if(!connected){
+      return null;
+    }
+    try{
+      String input = in.readLine();
+      if(input == null){
+        delete();
+        return null;
+      }
+      return input;
+    }
+    catch(Exception e){
+      //Client can be considered disconnected
+      delete();
+      return null;
+    }
+  }
+
+  private boolean startGame(String gameName){
     if(gameSession != null){
       leaveGame();
     }
     if(!gamesList.gameExists(gameName)){
+      //Made new game
       gameSession = gamesList.startGame(this, gameName);
+      return true;
     }
     else{
-
+      //Game already exists
+      return false;
     }
   }
 
-  public void joinGame(String gameName){
+  public boolean joinGame(String gameName){
     if(gameSession != null){
       leaveGame();
     }
     Game joinGame = gamesList.getGame(gameName);
     if(joinGame != null){
+      //Joined game
       joinGame.addMember(this);
       this.gameSession = joinGame;
+      return true;
     }
+    //Game didn't exist
+    return false;
   }
 
   public void leaveGame(){
@@ -75,12 +117,13 @@ public class ConnectedClient implements Runnable{
 
   //Properly removes client from the server
   public void delete(){
-    closeComs();
-    if(gameSession != null){
-      leaveGame();
+    if(!connected){
+      return;
     }
+    connected = false;
+    closeComs();
+    leaveGame();
     currentServer.removeClient(this);
-    System.out.println("Client removed");
   }
 
   private void openComs() throws IOException{
@@ -89,6 +132,7 @@ public class ConnectedClient implements Runnable{
   }
 
   private void closeComs(){
+    boolean comsOpen = false;
     try{
       if(in != null){
         in.close();
@@ -106,6 +150,9 @@ public class ConnectedClient implements Runnable{
   }
 
   public void sendStringToClient(String output){
+    if(!connected){
+      return;
+    }
     try{
       out.println(output);
     }
