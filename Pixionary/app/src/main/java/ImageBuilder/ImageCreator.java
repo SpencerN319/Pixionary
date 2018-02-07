@@ -59,7 +59,6 @@ public class ImageCreator {
 
     //Normally need to pass a Pixel in. --to receive from server-side.
     public void updateImageLocal() {
-
         pixels = breaker.getPixels();
         pixelUsed = new boolean[pixels.length];
         Arrays.fill(pixelUsed, false);

@@ -13,6 +13,7 @@ import android.widget.TextView;
 public class MainMenuActivity extends AppCompatActivity {
 
     private String username = null;
+    private final int LOGIN_REQUEST_ID = 4;
 
 
     @Override
@@ -34,6 +35,11 @@ public class MainMenuActivity extends AppCompatActivity {
                     Intent i = new Intent(MainMenuActivity.this, GameBrowserActivity.class);
                     startActivity(i);
                 }
+
+                Snackbar.make(view, "Open join game activity", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                Intent playGame = new Intent(MainMenuActivity.this, PlayActivity.class);
+                startActivity(playGame);
             }
         });
 
@@ -41,6 +47,7 @@ public class MainMenuActivity extends AppCompatActivity {
         button_hostGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if(username == null){
                     startLoginActivity();
                 }
@@ -48,6 +55,9 @@ public class MainMenuActivity extends AppCompatActivity {
                     Snackbar.make(view, "Open host game activity", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
+
+                Snackbar.make(view, "Open host game activity", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
@@ -55,6 +65,7 @@ public class MainMenuActivity extends AppCompatActivity {
         button_buildGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if(username == null){
                     startLoginActivity();
                 }
@@ -72,6 +83,11 @@ public class MainMenuActivity extends AppCompatActivity {
                 startLoginActivity();
             }
         });
+
+
+
+        TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
+        usernameDisplay.setText("You are currently not logged in");
 
     }
 
@@ -97,6 +113,7 @@ public class MainMenuActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent returnedData){
         if(returnedData == null){
@@ -111,10 +128,17 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
 
-    public void startLoginActivity(){
+    public void startLoginActivity() {
         Intent login = new Intent(this, LoginActivity.class);
         startActivityForResult(login, 1);
         TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
         usernameDisplay.setText("You are not currently logged in");
     }
+
+    public void getLoginInfo(View view) {
+        Intent getLoginInfo = new Intent(this, LoginActivity.class);
+        startActivityForResult(getLoginInfo, LOGIN_REQUEST_ID);
+    }
+
+
 }

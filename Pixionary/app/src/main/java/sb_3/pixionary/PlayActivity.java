@@ -18,7 +18,9 @@ import java.net.Socket;
 import Client.BuildImageThread;
 import Client.GuessThread;
 import Client.ReceivePixelThread;
+
 import ImageBuilder.ImageCreator;
+
 
 public class PlayActivity extends AppCompatActivity {
 
@@ -59,6 +61,10 @@ public class PlayActivity extends AppCompatActivity {
 //        }
 
 
+        images = new String[]{"cat.jpg", "cow.jpg", "dog.jpg", "horse.jpg"};
+
+        nextImage();
+
         btnGuess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +94,7 @@ public class PlayActivity extends AppCompatActivity {
         return fileName.substring(0, dot);
     }
 
+
     private void wrongGuessDialog() {
         AlertDialog.Builder wrongBuilder = new AlertDialog.Builder(PlayActivity.this);
         wrongBuilder.setTitle("Wrong!");
@@ -101,6 +108,7 @@ public class PlayActivity extends AppCompatActivity {
         wrongBuilder.create();
         wrongBuilder.show();
     }
+
     private void endGame() {
         //Add the collection of data from the game.
 
@@ -131,7 +139,6 @@ public class PlayActivity extends AppCompatActivity {
         editImage = new ImageCreator(getApplicationContext(), images, imagenum);
         bitmap = editImage.getImage();
         picGuess.setImageBitmap(bitmap);
-
 
         editImage.updateImageLocal();
 
@@ -166,7 +173,6 @@ public class PlayActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
 

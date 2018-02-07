@@ -28,6 +28,7 @@
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity android:name="sb_3.pixionary.CreateAccountActivity" />
         <activity android:name="sb_3.pixionary.GameBrowserActivity"></activity>
+
     </application>
 
 </manifest>

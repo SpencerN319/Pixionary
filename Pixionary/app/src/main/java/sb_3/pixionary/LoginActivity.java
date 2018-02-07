@@ -1,5 +1,6 @@
 package sb_3.pixionary;
 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -27,16 +28,16 @@ public class LoginActivity extends AppCompatActivity {
 
     Socket socket;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
         Username = (EditText) findViewById(R.id.editText_username);
         Password = (EditText) findViewById(R.id.editText_password);
         Attempts = (TextView) findViewById(R.id.tvAttempts);
-        Login = (Button) findViewById(R.id.btnLogin);
+        Login = (Button) findViewById(R.id.btn_login);
         CreateAccount = (Button) findViewById(R.id.btnCreateAccount);
         Guest = (Button) findViewById(R.id.btnGuest);
 
@@ -122,4 +123,17 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    public void returnLoginInfo(View view) {
+        EditText usernameTextbox = (EditText) findViewById(R.id.editText_username);
+        EditText passwordTextbox = (EditText) findViewById(R.id.editText_password);
+        String username = String.valueOf(usernameTextbox.getText());
+        String password = String.valueOf(passwordTextbox.getText());
+        String[] upPair = new String[2];
+        upPair[0] = username;
+        upPair[1] = password;
+        Intent retval = new Intent();
+        retval.putExtra("UPPair", upPair);
+        setResult(RESULT_OK, retval);
+        finish();
+    }
 }
