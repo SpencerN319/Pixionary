@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
             if (attemptsLeft == 0) {
                 Login.setEnabled(false);
             }
+
         }
     }
 
