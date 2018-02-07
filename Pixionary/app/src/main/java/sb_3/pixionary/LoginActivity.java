@@ -29,9 +29,4 @@ public class LoginActivity extends AppCompatActivity {
         setResult(RESULT_OK, retval);
         finish();
     }
-
-    public void sendMessage(View view) {
-        Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
-        startActivity(intent);
-    }
 }
