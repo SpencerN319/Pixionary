@@ -3,12 +3,10 @@
     package="sb_3.pictureguesser">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-
-    android:allowBackup="true"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -24,9 +22,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".PlayActivity"
-            android:windowSoftInputMode="stateAlwaysVisible"/>
+
+        <activity
+            android:name=".LoginActivity"
+            android:parentActivityName=".MainMenuActivity" />
+
+        <activity
+            android:name=".PlayActivity"
+            android:windowSoftInputMode="stateAlwaysVisible"
+            android:parentActivityName=".MainMenuActivity"/>
+
+        <activity
+            android:name=".CreateAccountActivity"
+            android:parentActivityName=".LoginActivity">
+
+        </activity>
+
     </application>
 
 </manifest>

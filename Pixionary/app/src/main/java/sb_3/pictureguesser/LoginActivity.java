@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 public class LoginActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,5 +28,14 @@ public class LoginActivity extends AppCompatActivity {
         retval.putExtra("UPPair", upPair);
         setResult(RESULT_OK, retval);
         finish();
+    }
+
+    public void sendMessage(View view) {
+        Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
+        //editText editText = (editText) findViewById(R.id.editText);
+        //String message = editText.getText().toString();
+        startActivity(intent);
+
+
     }
 }
