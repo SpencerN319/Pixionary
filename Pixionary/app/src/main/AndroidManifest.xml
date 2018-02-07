@@ -32,11 +32,6 @@
             android:windowSoftInputMode="stateAlwaysVisible"
             android:parentActivityName=".MainMenuActivity"/>
 
-        <activity
-            android:name=".CreateAccountActivity"
-            android:parentActivityName=".LoginActivity">
-
-        </activity>
 
     </application>
 
