@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 public class MainMenuActivity extends AppCompatActivity {
 
+    private String username = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +24,16 @@ public class MainMenuActivity extends AppCompatActivity {
         button_joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Open join game activity", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Intent i = new Intent(MainMenuActivity.this, GameBrowserActivity.class);
-                startActivity(i);
+
+                if(username == null){
+                    startLoginActivity();
+                }
+                else{
+                    Snackbar.make(view, "Open join game activity", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    Intent i = new Intent(MainMenuActivity.this, GameBrowserActivity.class);
+                    startActivity(i);
+                }
             }
         });
 
@@ -33,8 +41,13 @@ public class MainMenuActivity extends AppCompatActivity {
         button_hostGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Open host game activity", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if(username == null){
+                    startLoginActivity();
+                }
+                else{
+                    Snackbar.make(view, "Open host game activity", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
 
@@ -42,14 +55,25 @@ public class MainMenuActivity extends AppCompatActivity {
         button_buildGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Open build game activity", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if(username == null){
+                    startLoginActivity();
+                }
+                else{
+                    Snackbar.make(view, "Open build game activity", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
 
-        //Get username request here.
-        TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
-        usernameDisplay.setText("You are currently logged in as admin");
+        if(username == null){
+            //Not logged in
+            startLoginActivity();
+        }
+        else{
+            //Logged in
+            TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
+            usernameDisplay.setText("You are currently logged in as " + username);
+        }
     }
 
     @Override
@@ -72,5 +96,26 @@ public class MainMenuActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent returnedData){
+        if(returnedData == null){
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, returnedData);
+        switch (requestCode){
+            case 1:
+                TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
+                username = returnedData.getStringExtra("username");
+                usernameDisplay.setText("You are currently logged in as " + username);
+        }
+    }
+
+    public void startLoginActivity(){
+        Intent login = new Intent(this, LoginActivity.class);
+        startActivityForResult(login, 1);
+        TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
+        usernameDisplay.setText("You are not currently logged in");
     }
 }

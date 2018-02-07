@@ -1,5 +1,6 @@
 package sb_3.pixionary;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,13 +36,19 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     private void createUser(String user, String pass) {
         String newUser = "NewUser: " + user + " " + pass;
-        //Pass string to the server, if successful server will return value.
+        //TODO Pass string to the server, if successful server will return value.
         boolean success = true;
         Log.i("CreateAccountActivity", "Username: " + Username.getText().toString() + "    Password: " + Password.getText().toString());
         if (success) {
-            Intent intent = new Intent(CreateAccountActivity.this, MainMenuActivity.class);
-            startActivity(intent);
+            returnUsernameAndFinish(user);
         }
+    }
+
+    public void returnUsernameAndFinish(String username){
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("username", username);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 
 }

@@ -1,5 +1,6 @@
 package sb_3.pixionary;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,10 +10,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.EditText;
 
-import java.io.IOException;
 import java.net.Socket;
 
-import Client.LoginThread;
+import sb_3.pixionary.Client.LoginThread;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -24,7 +24,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button CreateAccount;
     private Button Guest;
     private int attemptsLeft = 10;
-    private boolean success;
 
     Socket socket;
 
@@ -55,8 +54,8 @@ public class LoginActivity extends AppCompatActivity {
         CreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent inten = new Intent(LoginActivity.this, CreateAccountActivity.class);
-                startActivity(inten);
+                Intent createAccount = new Intent(LoginActivity.this, CreateAccountActivity.class);
+                startActivityForResult(createAccount, 1);
             }
         });
 
@@ -69,21 +68,16 @@ public class LoginActivity extends AppCompatActivity {
         Log.i("LoginActivity", userInfo);
 
         //Local test only.
+        //TODO Remove admin check when not required
         if ((username.equals("admin")) && (password.equals("password"))) {
-            Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
-            startActivity(intent);
+            returnUsernameAndFinish(username);
         } else {
-            attemptsLeft--;
-            Attempts.setText("Attempts Left: " + String.valueOf(attemptsLeft));
-            if (attemptsLeft == 0) {
-                Login.setEnabled(false);
-            }
-
+            validateUser(username, password);
         }
     }
 
     private void validateUser(String username, String password) {
-
+        boolean success = false;
         try {
             socket = new Socket("localhost", 9090);
             LoginThread loginRequest = new LoginThread(socket,
@@ -91,12 +85,13 @@ public class LoginActivity extends AppCompatActivity {
             loginRequest.run();
             success = loginRequest.getSuccess();
         }
-        catch (IOException e) {
-
+        catch (Exception e) {
+            //TODO change once server is running
+            success = true;
         }
-        if (success == true) {
-            Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
-            startActivity(intent);
+        if (success) {
+            System.out.println("Hit");
+            returnUsernameAndFinish(username);
         } else  {
             attemptsLeft--;
             Attempts.setText("Attempts Left: " + String.valueOf(attemptsLeft));
@@ -106,6 +101,25 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent returnedData){
+        if(returnedData == null){
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, returnedData);
+        switch (requestCode){
+            case 1:
+                if(resultCode == Activity.RESULT_OK){
+                    returnUsernameAndFinish(returnedData.getStringExtra("username"));
+                }
+        }
+    }
 
+    public void returnUsernameAndFinish(String username){
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("username", username);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
 
 }
