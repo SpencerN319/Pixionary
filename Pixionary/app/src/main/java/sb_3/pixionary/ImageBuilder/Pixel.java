@@ -1,4 +1,4 @@
-package ImageBuilder;
+package sb_3.pixionary.ImageBuilder;
 
 /**
  * Created by fastn on 1/30/2018.

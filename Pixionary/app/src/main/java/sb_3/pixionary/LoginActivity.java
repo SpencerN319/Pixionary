@@ -1,4 +1,4 @@
-package sb_3.pictureguesser;
+package sb_3.pixionary;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

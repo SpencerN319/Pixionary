@@ -1,4 +1,4 @@
-package sb_3.pictureguesser;
+package sb_3.pixionary;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ImageBuilder.ImageCreator;
+import sb_3.pixionary.ImageBuilder.ImageCreator;
 
 public class PlayActivity extends AppCompatActivity {
 

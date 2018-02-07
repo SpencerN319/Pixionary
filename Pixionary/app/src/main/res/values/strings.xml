@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PictureGuesser</string>
+    <string name="app_name">pixionary</string>
     <string name="formatted_app_name">Picture Guesser</string>
     <string name="action_settings">Settings</string>
     <string name="menu_join_game">Join Game</string>

@@ -1,4 +1,4 @@
-package ImageBuilder;
+package sb_3.pixionary.ImageBuilder;
 
 import android.content.Context;
 import android.graphics.Bitmap;

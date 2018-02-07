@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "26.0.2"
     defaultConfig {
-        applicationId "sb_3.pictureguesser"
+        applicationId "sb_3.pixionary"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
