@@ -3,16 +3,19 @@ import java.net.Socket;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 //Architecture rules of the server:
 //To remove anything from the server (playlist, game, user, etc.) you must call it's delete() function.
 //Subsequently, it must be possible to completely remove an entity from the server by calling it's delete function.
 //(There should be no need to remove it's references manually)
+
 
 public class PixionaryServer {
 
   private ServerSocket serverSocket;
   private final int portNumber;
   private ArrayList<ConnectedClient> connectedClients = new ArrayList<ConnectedClient>();
+
   private GamesList gamesList = new GamesList();
 
   public PixionaryServer(int portNumber){
@@ -48,5 +51,6 @@ public class PixionaryServer {
     connectedClients.remove(client);
     System.out.println("Now serving " + connectedClients.size() + " clients.");
   }
+  
 
 }

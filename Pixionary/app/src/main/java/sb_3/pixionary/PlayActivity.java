@@ -12,7 +12,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+<<<<<<< HEAD:Pixionary/app/src/main/java/sb_3/pixionary/PlayActivity.java
 import sb_3.pixionary.ImageBuilder.ImageCreator;
+=======
+import java.io.IOException;
+import java.net.Socket;
+
+import Client.BuildImageThread;
+import Client.GuessThread;
+import Client.ReceivePixelThread;
+
+import ImageBuilder.ImageCreator;
+>>>>>>> Steven:Pixionary/app/src/main/java/sb_3/pixionary/PlayActivity.java
+
 
 public class PlayActivity extends AppCompatActivity {
 
@@ -27,6 +39,8 @@ public class PlayActivity extends AppCompatActivity {
     private String guess;
     private int imagenum = 0;
 
+    Socket socket;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +50,21 @@ public class PlayActivity extends AppCompatActivity {
         etGuess = (EditText) findViewById(R.id.etGuess);
         picGuess = (ImageView) findViewById(R.id.imgGame);
         imagesRemaining = (TextView) findViewById(R.id.images_remaining);
+
+        //For local
+        images = new String[]{"cat.jpg", "cow.jpg", "dog.jpg", "horse.jpg"};
+        nextImage();
+
+        //Server connecting, creating and updating image.
+//        try {
+//            Socket socket = new Socket("localhost", 9092);
+//            presentImage(socket);
+//
+//        } catch(IOException e) {
+//            e.printStackTrace();
+//        }
+
+
         images = new String[]{"cat.jpg", "cow.jpg", "dog.jpg", "horse.jpg"};
 
         nextImage();
@@ -44,6 +73,8 @@ public class PlayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 guess = etGuess.getText().toString();
+
+                //This is locally test stuff.
                 if (guess.equals(cutExtension(images[imagenum]))) {
                     imagenum++;
                     etGuess.setText("");
@@ -52,7 +83,9 @@ public class PlayActivity extends AppCompatActivity {
                     } else {
                         nextImage();
                     }
-
+                }
+                else {
+                    wrongGuessDialog();
                 }
             }
         });
@@ -63,6 +96,21 @@ public class PlayActivity extends AppCompatActivity {
         int dot = fileName.lastIndexOf(".");
 
         return fileName.substring(0, dot);
+    }
+
+
+    private void wrongGuessDialog() {
+        AlertDialog.Builder wrongBuilder = new AlertDialog.Builder(PlayActivity.this);
+        wrongBuilder.setTitle("Wrong!");
+        wrongBuilder.setMessage("Hurry up and try again!");
+        wrongBuilder.setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        wrongBuilder.create();
+        wrongBuilder.show();
     }
 
     private void endGame() {
@@ -96,8 +144,39 @@ public class PlayActivity extends AppCompatActivity {
         bitmap = editImage.getImage();
         picGuess.setImageBitmap(bitmap);
 
-        //Slowly adds pixels to the current image. -- Will eventually receive a Pixel from Socket.
-        editImage.updateImage();
+        editImage.updateImageLocal();
+
+    }
+
+    private void presentImage(Socket socket) {
+        BuildImageThread builder = new BuildImageThread(socket);
+        builder.run();
+
+        editImage = new ImageCreator(getApplicationContext(), builder);
+
+        ReceivePixelThread updater = new ReceivePixelThread(socket);
+        updater.run();
+
+        editImage.updateImage(updater);
+
+
+    }
+
+    private void  sendGuess(String guess) {
+        try {
+            socket = new Socket("localhost", 9091);
+            GuessThread guessSend = new GuessThread(socket, guess);
+            guessSend.run();
+            boolean correct = guessSend.getCorrect();
+            if (correct) {
+                //clear() and start new from server.
+            }
+            else {
+                wrongGuessDialog();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

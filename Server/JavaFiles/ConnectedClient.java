@@ -7,6 +7,19 @@ public class ConnectedClient implements Runnable{
   private PixionaryServer currentServer;
   private BufferedReader in;
   private PrintWriter out;
+<<<<<<< HEAD
+=======
+<<<<<<< .merge_file_a07340
+
+  public ConnectedClient(PixionaryServer currentServer, Socket socket){
+    this.socket = socket;
+    this.currentServer = currentServer;
+  }
+
+  public void run(){
+    System.out.println("New client has joined");
+=======
+>>>>>>> Steven
   private String username = "tempUsername";
   private GamesList gamesList;
   private Game gameSession;
@@ -20,10 +33,38 @@ public class ConnectedClient implements Runnable{
   }
 
   public void run(){
+<<<<<<< HEAD
+=======
+>>>>>>> .merge_file_a14168
+>>>>>>> Steven
     try{
       openComs();
     }
     catch(Exception e){
+<<<<<<< HEAD
+=======
+<<<<<<< .merge_file_a07340
+      System.out.println("Error connecting to client, disconnecting client");
+      disconnectClient();
+      return;
+    }
+    while(true){
+      try{
+        String input = in.readLine();
+        if(input == null){
+          disconnectClient();
+          return;
+        }
+        System.out.println(input);
+      }
+      catch(Exception e){
+        //Client can be considered disconnected
+        System.out.println("Hit error during getting input, disconncting client");
+        disconnectClient();
+        return;
+      }
+=======
+>>>>>>> Steven
       delete();
       return;
     }
@@ -112,10 +153,23 @@ public class ConnectedClient implements Runnable{
     if(gameSession != null){
        gameSession.removeMemberFromMembersList(this);
        gameSession = null;
+<<<<<<< HEAD
+=======
+>>>>>>> .merge_file_a14168
+>>>>>>> Steven
     }
   }
 
   //Properly removes client from the server
+<<<<<<< HEAD
+=======
+<<<<<<< .merge_file_a07340
+  public void disconnectClient(){
+    closeComs();
+    currentServer.removeClient(this);
+    System.out.println("Client removed");
+=======
+>>>>>>> Steven
   public void delete(){
     if(!connected){
       return;
@@ -124,15 +178,32 @@ public class ConnectedClient implements Runnable{
     closeComs();
     leaveGame();
     currentServer.removeClient(this);
+<<<<<<< HEAD
+=======
+>>>>>>> .merge_file_a14168
+>>>>>>> Steven
   }
 
   private void openComs() throws IOException{
     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+<<<<<<< HEAD
+=======
+<<<<<<< .merge_file_a07340
+    out = new PrintWriter(socket.getOutputStream());
+  }
+
+  private void closeComs(){
+=======
+>>>>>>> Steven
     out = new PrintWriter(socket.getOutputStream(), true);
   }
 
   private void closeComs(){
     boolean comsOpen = false;
+<<<<<<< HEAD
+=======
+>>>>>>> .merge_file_a14168
+>>>>>>> Steven
     try{
       if(in != null){
         in.close();
@@ -149,6 +220,11 @@ public class ConnectedClient implements Runnable{
     }
   }
 
+<<<<<<< HEAD
+=======
+<<<<<<< .merge_file_a07340
+=======
+>>>>>>> Steven
   public void sendStringToClient(String output){
     if(!connected){
       return;
@@ -165,4 +241,8 @@ public class ConnectedClient implements Runnable{
     return username;
   }
 
+<<<<<<< HEAD
+=======
+>>>>>>> .merge_file_a14168
+>>>>>>> Steven
 }
