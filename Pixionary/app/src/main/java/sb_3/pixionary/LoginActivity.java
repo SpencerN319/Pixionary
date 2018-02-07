@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import java.net.Socket;
 
-import sb_3.pixionary.Client.LoginThread;
+import Client.LoginThread;
 
 
 public class LoginActivity extends AppCompatActivity {

@@ -65,15 +65,14 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
-        if(username == null){
-            //Not logged in
-            startLoginActivity();
-        }
-        else{
-            //Logged in
-            TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
-            usernameDisplay.setText("You are currently logged in as " + username);
-        }
+        Button button_login = (Button) findViewById(R.id.button_login);
+        button_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLoginActivity();
+            }
+        });
+
     }
 
     @Override

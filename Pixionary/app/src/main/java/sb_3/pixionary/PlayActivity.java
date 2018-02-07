@@ -47,15 +47,16 @@ public class PlayActivity extends AppCompatActivity {
 
         //For local
         images = new String[]{"cat.jpg", "cow.jpg", "dog.jpg", "horse.jpg"};
+        nextImage();
 
         //Server connecting, creating and updating image.
-        try {
-            Socket socket = new Socket("localhost", 9092);
-            presentImage(socket);
-
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Socket socket = new Socket("localhost", 9092);
+//            presentImage(socket);
+//
+//        } catch(IOException e) {
+//            e.printStackTrace();
+//        }
 
 
         btnGuess.setOnClickListener(new View.OnClickListener() {
