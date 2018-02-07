@@ -44,8 +44,7 @@ public class PlayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 guess = etGuess.getText().toString();
-//                ClientGuessThread client = new ClientGuessThread();
-//                client.sendGuess(guess);
+
                 //This is locally test stuff.
                 if (guess.equals(cutExtension(images[imagenum]))) {
                     imagenum++;
@@ -55,6 +54,9 @@ public class PlayActivity extends AppCompatActivity {
                     } else {
                         nextImage();
                     }
+                }
+                else {
+                    wrongGuess();
                 }
             }
         });
@@ -67,6 +69,19 @@ public class PlayActivity extends AppCompatActivity {
         return fileName.substring(0, dot);
     }
 
+    private void wrongGuess() {
+        AlertDialog.Builder wrongBuilder = new AlertDialog.Builder(PlayActivity.this);
+        wrongBuilder.setTitle("Wrong!");
+        wrongBuilder.setMessage("Hurry up and try again!");
+        wrongBuilder.setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        wrongBuilder.create();
+        wrongBuilder.show();
+    }
     private void endGame() {
         //Add the collection of data from the game.
 

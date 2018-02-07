@@ -53,10 +53,10 @@ public class ImageCreator {
             @Override
             public void run() {
                 postPixel(image, getUnusedPixel());
-                handler.postDelayed(this, 1);
+                handler.postDelayed(this, 3);
             }
         };
-        handler.postDelayed(runnable, 1);
+        handler.postDelayed(runnable, 3);
 
     }
 

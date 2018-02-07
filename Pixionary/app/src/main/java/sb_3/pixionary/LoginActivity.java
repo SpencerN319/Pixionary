@@ -46,7 +46,9 @@ public class LoginActivity extends AppCompatActivity {
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                validateUser(Username.getText().toString(), Password.getText().toString());
+                //Commented out because there's no server to contact yet.
+                //validateUser(Username.getText().toString(), Password.getText().toString());
+                validateUserLocal(Username.getText().toString(), Password.getText().toString());
             }
         });
 
@@ -62,22 +64,22 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Just testing Authentication on frontend without the server.
-//    private void validateUserLocal(String username, String password) {
-//        String userInfo = "UserInfo: " + username + " " + password;
-//        Log.i("LoginActivity", userInfo);
-//
-//        //Local test only.
-//        if ((username.equals("admin")) && (password.equals("password"))) {
-//            Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
-//            startActivity(intent);
-//        } else {
-//            attemptsLeft--;
-//            Attempts.setText("Attempts Left: " + String.valueOf(attemptsLeft));
-//            if (attemptsLeft == 0) {
-//                Login.setEnabled(false);
-//            }
-//        }
-//    }
+    private void validateUserLocal(String username, String password) {
+        String userInfo = "UserInfo: " + username + " " + password;
+        Log.i("LoginActivity", userInfo);
+
+        //Local test only.
+        if ((username.equals("admin")) && (password.equals("password"))) {
+            Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
+            startActivity(intent);
+        } else {
+            attemptsLeft--;
+            Attempts.setText("Attempts Left: " + String.valueOf(attemptsLeft));
+            if (attemptsLeft == 0) {
+                Login.setEnabled(false);
+            }
+        }
+    }
 
     private void validateUser(String username, String password) {
 
