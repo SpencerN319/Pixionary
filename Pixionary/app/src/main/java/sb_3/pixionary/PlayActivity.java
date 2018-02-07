@@ -15,7 +15,9 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.net.Socket;
 
+import Client.BuildImageThread;
 import Client.GuessThread;
+import Client.ReceivePixelThread;
 import ImageBuilder.ImageCreator;
 
 public class PlayActivity extends AppCompatActivity {
@@ -42,9 +44,19 @@ public class PlayActivity extends AppCompatActivity {
         etGuess = (EditText) findViewById(R.id.etGuess);
         picGuess = (ImageView) findViewById(R.id.imgGame);
         imagesRemaining = (TextView) findViewById(R.id.images_remaining);
+
+        //For local
         images = new String[]{"cat.jpg", "cow.jpg", "dog.jpg", "horse.jpg"};
 
-        nextImage();
+        //Server connecting, creating and updating image.
+        try {
+            Socket socket = new Socket("localhost", 9092);
+            presentImage(socket);
+
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
 
         btnGuess.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,8 +131,23 @@ public class PlayActivity extends AppCompatActivity {
         bitmap = editImage.getImage();
         picGuess.setImageBitmap(bitmap);
 
-        //Slowly adds pixels to the current image. -- Will eventually receive a Pixel from Socket.
-        editImage.updateImage();
+
+        editImage.updateImageLocal();
+
+    }
+
+    private void presentImage(Socket socket) {
+        BuildImageThread builder = new BuildImageThread(socket);
+        builder.run();
+
+        editImage = new ImageCreator(getApplicationContext(), builder);
+
+        ReceivePixelThread updater = new ReceivePixelThread(socket);
+        updater.run();
+
+        editImage.updateImage(updater);
+
+
     }
 
     private void  sendGuess(String guess) {
