@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Pixionary.iml" filepath="$PROJECT_DIR$/Pixionary.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\fastn\AndroidProjects\SB_3_ImageGuesser\Pixionary\volley\volley.iml" filepath="C:\Users\fastn\AndroidProjects\SB_3_ImageGuesser\Pixionary\volley\volley.iml" />
     </modules>
   </component>
 </project>
