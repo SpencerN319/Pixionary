@@ -41,12 +41,12 @@ public class ImageCreator {
 
     }
 
-    //Getting data from server.
-    public ImageCreator(Context context, BuildImageThread builder) {
+    //Building image from the data on server.
+    public ImageCreator(int imageWidth, int imageHeight) {
 
-        //Set width and height
-        imgWidth = builder.getImgWidth();
-        imgHeight = builder.getImgHeight();
+        //Create
+        this.imgWidth = imageWidth;
+        this.imgHeight = imageHeight;
 
         //Create Bitmap
         image = Bitmap.createBitmap(imgWidth, imgHeight, Bitmap.Config.ARGB_8888);
@@ -67,22 +67,11 @@ public class ImageCreator {
             @Override
             public void run() {
                 postPixel(image, getUnusedPixel());
-                handler.postDelayed(this, 3);
             }
         };
         handler.postDelayed(runnable, 3);
 
     }
-
-    //Receiving Pixels from server
-    public void updateImage(ReceivePixelThread updater) {
-        updater.run();
-        if (updater.isReceived()) {
-            postPixel(image, updater.getNewPixel());
-        }
-    }
-
-
 
     //Currently adding randomly without checking if its been used.
     private Pixel getUnusedPixel() {
@@ -99,7 +88,7 @@ public class ImageCreator {
         return pix;
     }
 
-    public void postPixel(Bitmap bitmap, Pixel pixel) {
+    private void postPixel(Bitmap bitmap, Pixel pixel) {
         int x = pixel.getXPosition();
         int y = pixel.getYPosition();
         int pixIndex = (y*imgWidth) + x;
