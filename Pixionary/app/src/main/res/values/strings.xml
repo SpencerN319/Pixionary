@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">pixionary</string>
-    <string name="formatted_app_name">Picture Guesser</string>
+    <string name="formatted_app_name">pixionary</string>
     <string name="action_settings">Settings</string>
     //Login and Create Account
     <string name="login_prompt">Please Login</string>

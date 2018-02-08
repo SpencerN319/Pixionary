@@ -13,7 +13,7 @@ import android.widget.TextView;
 public class MainMenuActivity extends AppCompatActivity {
 
     private String username = null;
-    private final int LOGIN_REQUEST_ID = 4;
+    public final int LOGIN_REQUEST_ID = 4;
 
 
     @Override
@@ -39,8 +39,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 Snackbar.make(view, "Open join game activity", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-                Intent playGame = new Intent(MainMenuActivity.this, PlayActivity.class);
-                startActivity(playGame);
             }
         });
 
@@ -81,10 +79,10 @@ public class MainMenuActivity extends AppCompatActivity {
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startLoginActivity();
+                if (username == null)
+                    startLoginActivity();
             }
         });
-
 
 
         TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
@@ -122,7 +120,7 @@ public class MainMenuActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, returnedData);
         switch (requestCode){
-            case 1:
+            case 4:
                 TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
                 username = returnedData.getStringExtra("username");
                 usernameDisplay.setText("You are currently logged in as " + username);
@@ -130,16 +128,11 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     public void startLoginActivity() {
-        Intent login = new Intent(this, LoginActivity.class);
-        startActivityForResult(login, 1);
+        Intent login = new Intent(MainMenuActivity.this, LoginActivity.class);
         TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
         usernameDisplay.setText("You are not currently logged in");
-    }
+        startActivityForResult(login, LOGIN_REQUEST_ID);
 
-    public void getLoginInfo(View view) {
-        Intent getLoginInfo = new Intent(this, LoginActivity.class);
-        startActivityForResult(getLoginInfo, LOGIN_REQUEST_ID);
     }
-
 
 }

@@ -24,7 +24,7 @@ public class GameBrowserActivity extends AppCompatActivity {
         games.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)  {
-
+                //clickMe runs here.
             }
         });
 
@@ -37,12 +37,11 @@ public class GameBrowserActivity extends AppCompatActivity {
     }
 
     public void clickMe(View view) {
-        Button btn = (Button) view;
 
         //Some threading to communicate to the server that a player has joined the game.
         Intent i  = new Intent(GameBrowserActivity.this, PlayActivity.class);
         startActivity(i);
-
+        finish();
     }
 
 

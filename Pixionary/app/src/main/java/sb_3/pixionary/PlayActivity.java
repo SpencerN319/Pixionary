@@ -122,9 +122,10 @@ public class PlayActivity extends AppCompatActivity {
         endBuilder.setPositiveButton("Exit to Main Menu", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(PlayActivity.this, MainMenuActivity.class);
-                startActivity(i);
+//                Intent i = new Intent(PlayActivity.this, MainMenuActivity.class);
+//                startActivity(i);
                 finish();
+
             }
         });
         endBuilder.create();

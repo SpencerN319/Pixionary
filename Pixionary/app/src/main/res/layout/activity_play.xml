@@ -44,8 +44,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        android:layout_marginRight="16dp" />
+        app:layout_constraintVertical_bias="1.0"/>
 
     <ImageView
         android:id="@+id/imgGame"

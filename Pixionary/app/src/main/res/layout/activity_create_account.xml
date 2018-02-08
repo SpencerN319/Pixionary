@@ -4,17 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-<<<<<<< HEAD
-    tools:context="sb_3.pictureguesser.CreateAccountActivity"
-    android:background="@color/colorPrimary"
-
-    >
-
-
-
-
-</android.support.constraint.ConstraintLayout>
-=======
     android:background="@color/colorPrimaryPurple"
     tools:context="sb_3.pixionary.CreateAccountActivity">
 
@@ -46,7 +35,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/create_account"
+        android:text="@string/create_ccount"
         android:textColor="@color/colorPrimaryText"
         android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -112,5 +101,3 @@
     </android.support.constraint.ConstraintLayout>
 
 
-
->>>>>>> Steven
