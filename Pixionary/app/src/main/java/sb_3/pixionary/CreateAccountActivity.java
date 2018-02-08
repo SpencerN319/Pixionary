@@ -13,8 +13,7 @@ import android.widget.EditText;
 public class CreateAccountActivity extends AppCompatActivity {
 
     private Button Create;
-    private EditText Username;
-    private EditText Password;
+    private EditText Username, Password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +24,14 @@ public class CreateAccountActivity extends AppCompatActivity {
         Username = (EditText) findViewById(R.id.etCreateUser);
         Password = (EditText) findViewById(R.id.etCreatePass);
 
+
         Create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Method to send new User data to the server... eventually
-                createUser(Username.getText().toString(), Password.getText().toString());
+                if((validateUsername(Username.getText().toString()) && validatePassword(Password.getText().toString()))){
+                    createUser(Username.getText().toString(), Password.getText().toString());
+                }
             }
         });
     }
@@ -49,6 +51,49 @@ public class CreateAccountActivity extends AppCompatActivity {
         returnIntent.putExtra("username", username);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+    }
+
+
+    /**
+     * Checks to make sure the username is valid
+     *
+     * @param string
+     * @return
+     */
+    private boolean validateUsername(String string) {
+        if(string == ""){
+            Username.setError("Enter Username");
+            return false;
+        } else if(Username.length() > 20){
+            Username.setError("Max 20 Characters");
+            return false;
+        } else if(Username.length() < 6){
+            Username.setError("Minimum 6 Characters");
+            return false;
+        }
+
+        //Check if username already exists
+        return true;
+    }
+
+    /**
+     *  Checks to make sure the password is valid
+     * @param string
+     * @return
+     */
+    private boolean validatePassword(String string){
+        if(string.equals("")){
+            Password.setError("Enter Password");
+            return false;
+        } else if(string.length() < 6){
+            Password.setError("Minimum 6 Characters");
+            return false;
+        } else if(string.length() > 8){
+            Password.setError("Max 8 Characters");
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

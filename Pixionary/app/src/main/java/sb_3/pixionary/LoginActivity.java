@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 public class LoginActivity extends AppCompatActivity {
@@ -11,13 +12,25 @@ public class LoginActivity extends AppCompatActivity {
     private EditText usernameTextbox, passwordTextbox;
     private String username, password;
     private String[] upPair = new String[2];
+    private Button login = (Button) findViewById(R.id.button_login);
+    private Button crt_accnt = (Button) findViewById(R.id.button_createAccount);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         init();
+
+        crt_accnt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Method to send new User data to the server... eventually
+                moveToCreateAccount();
+            }
+        });
     }
+
+
 
     public void init() {
         usernameTextbox = (EditText) findViewById(R.id.editText_username);
@@ -36,39 +49,10 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    // To be used in Create Account Activity
-    /*
-
-    private boolean validUsername(String string) {
-        //validate username;
-        if(string.equals("")){
-            usernameTextbox.setError("Enter a username");
-            return false;
-        } else if(string.length() > 20){
-            usernameTextbox.setError("Max 20 characters");
-            return false;
-        } else if(string.length() < 5){
-            usernameTextbox.setError("Minimum 5 characters");
-            return false;
-        }
-        return true;
+    public void moveToCreateAccount() {
+        Intent move = new Intent(LoginActivity.this,CreateAccountActivity.class);
+        startActivity(move);
     }
-
-    private boolean validPassword(String string){
-        if(string.equals("")){
-            passwordTextbox.setError("Enter a username");
-            return false;
-        } else if(string.length() > 8){
-            passwordTextbox.setError("Max 8 Characters");
-            return false;
-        } else if(string.length() < 6){
-            passwordTextbox.setError("Minimum 6 Characters");
-            return false;
-        }
-        return true;
-    }
-
-    */
 
 
 }
