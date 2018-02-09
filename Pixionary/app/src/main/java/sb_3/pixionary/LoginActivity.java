@@ -10,11 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
-
 import java.util.Scanner;
-
 import Client.ServiceToActivity;
-
 
 public class LoginActivity extends AppCompatActivity {
     //Local stuff
@@ -28,6 +25,9 @@ public class LoginActivity extends AppCompatActivity {
     private String username;
     private String password;
 
+
+
+
     //Helping out the server stuff.
     private String send = null;
     private ServiceToActivity serviceReceiver;
@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
 
         Username = (EditText) findViewById(R.id.editText_username);
         Password = (EditText) findViewById(R.id.editText_password);
@@ -79,9 +80,7 @@ public class LoginActivity extends AppCompatActivity {
     private void validateUserLocal() {
         Log.i("LoginActivity", "User:" + username + "Pass: " + password);
         if ((username.equals("admin")) && (password.equals("password"))) {
-
             success = true;  //Set to true until backend is ready.
-
         } else {
             attemptsLeft--;
             Attempts.setText("Attempts Left: " + String.valueOf(attemptsLeft));
@@ -93,6 +92,8 @@ public class LoginActivity extends AppCompatActivity {
             resultLogin();
         }
     }
+
+
 
     private void sendDataToService() {
         Intent broadcaster = new Intent();
@@ -135,7 +136,9 @@ public class LoginActivity extends AppCompatActivity {
         if (id.equals("LoginResult") && scanInput.hasNextBoolean()) {
             success = scanInput.nextBoolean();
         }
+
     }
+
 
     private void resultLogin() {
         Intent send = new Intent();
@@ -144,8 +147,22 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-
-
-
-
 }
+
+    // To be used in Create Account Activity
+    /*
+
+    private boolean validUsername(String string) {
+        //validate username;
+        if(string.equals("")){
+            usernameTextbox.setError("Enter a username");
+            return false;
+        } else if(string.length() > 20){
+            usernameTextbox.setError("Max 20 characters");
+            return false;
+        } else if(string.length() < 5){
+            usernameTextbox.setError("Minimum 5 characters");
+            return false;
+        }
+        return true;
+    }
