@@ -42,11 +42,10 @@ public class LoginActivity extends AppCompatActivity {
         Password = (EditText) findViewById(R.id.editText_password);
         Attempts = (TextView) findViewById(R.id.tvAttempts);
         Login = (Button) findViewById(R.id.button_login);
-        CreateAccount = (Button) findViewById(R.id.create_account);
+        CreateAccount = (Button) findViewById(R.id.button_create_account);
 
 
-        //All for server run.
-        //Enables the ServiceTOActivity to run.
+        //Enables the ServiceToActivity to run.
         enableReceiver();
 
         Attempts.setText("Attempts Left: 10");
@@ -56,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                 username = Username.getText().toString();
                 password = Password.getText().toString();
                 validateUserLocal();
-                validateUser(username, password);
+                //validateUser(username, password);
 
             }
         });
@@ -165,4 +164,4 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
         return true;
-    }
+    } */
