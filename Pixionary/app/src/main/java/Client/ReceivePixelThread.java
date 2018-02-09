@@ -22,6 +22,7 @@ public class ReceivePixelThread extends Thread {
     private String pixelMsg;
     private boolean received;
 
+    //Don't think referencing like this is going to work.
     public ReceivePixelThread(Socket socket, Bitmap bitmap) {
         this.socket = socket;
         this.bitmap = bitmap;

@@ -51,12 +51,12 @@ public class PlayActivity extends AppCompatActivity {
         imagesRemaining = (TextView) findViewById(R.id.images_remaining);
 
         //For local
-//        images = new String[]{"cat.jpg", "cow.jpg", "dog.jpg", "horse.jpg"};
-//        nextImage();
+        images = new String[]{"cat.jpg", "cow.jpg", "dog.jpg", "horse.jpg"};
+        nextImage();
 
         //Handling all image building and updating.
-        imageStart();
-        imageRun();
+        //imageStart();
+        //imageRun();
 
         btnGuess.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,10 +137,7 @@ public class PlayActivity extends AppCompatActivity {
         endBuilder.setPositiveButton("Exit to Main Menu", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-//                Intent i = new Intent(PlayActivity.this, MainMenuActivity.class);
-//                startActivity(i);
                 finish();
-
             }
         });
         endBuilder.create();

@@ -25,6 +25,9 @@ public class ImageCreator {
     private boolean[] pixelUsed;
     private int[] pixels;
 
+    private Handler handler;
+    private Runnable runnable;
+
     //Local Image creator
     public ImageCreator(Context context, String[] imageNames, int index) {
 
@@ -57,19 +60,24 @@ public class ImageCreator {
     }
 
 
-    //Normally need to pass a Pixel in. --to receive from server-side.
+    //This is for local demo.
     public void updateImageLocal() {
         pixels = breaker.getPixels();
         pixelUsed = new boolean[pixels.length];
         Arrays.fill(pixelUsed, false);
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
+        handler = new Handler();
+        runnable = new Runnable() {
             @Override
             public void run() {
-                postPixel(image, getUnusedPixel());
+                Pixel pix = getUnusedPixel();
+                postPixel(image, pix);
+                handler.postDelayed(runnable, 3);
+
             }
         };
+        
         handler.postDelayed(runnable, 3);
+
 
     }
 
