@@ -1,6 +1,8 @@
 package sb_3.pixionary;
 
+
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,13 +11,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
 
-import java.io.IOException;
-import java.net.Socket;
+import java.util.Scanner;
 
-import Client.LoginThread;
+import Client.ServiceToActivity;
+
 
 public class LoginActivity extends AppCompatActivity {
-
+    //Local stuff
     private EditText Username;
     private EditText Password;
     private TextView Attempts;
@@ -23,9 +25,12 @@ public class LoginActivity extends AppCompatActivity {
     private Button CreateAccount;
     private int attemptsLeft = 10;
     private boolean success = false;
-
     private String username;
     private String password;
+
+    //Helping out the server stuff.
+    private String send = null;
+    private ServiceToActivity serviceReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,9 @@ public class LoginActivity extends AppCompatActivity {
         CreateAccount = (Button) findViewById(R.id.create_account);
 
 
+        //All for server run.
+        //Enables the ServiceTOActivity to run.
+        enableReceiver();
 
         Attempts.setText("Attempts Left: 10");
         Login.setOnClickListener(new View.OnClickListener() {
@@ -47,11 +55,10 @@ public class LoginActivity extends AppCompatActivity {
                 username = Username.getText().toString();
                 password = Password.getText().toString();
                 validateUserLocal();
-                //validateUser(username, password);
+                validateUser(username, password);
 
             }
         });
-
         CreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,6 +67,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(serviceReceiver);
+        super.onDestroy();
     }
 
     //Just testing Authentication on frontend without the server.
@@ -81,22 +94,46 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void sendDataToService() {
+        Intent broadcaster = new Intent();
+        broadcaster.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES); //Don't know what this is for.
+        broadcaster.setAction("Server");
+        if (send != null) {
+            broadcaster.putExtra("toServer", send);
+            sendBroadcast(broadcaster);
+        }
+    }
 
     private void validateUser(String username, String password) {
+        setUserData(username, password);
+        sendDataToService();
+        //May need to add a delay here.
+        receiveCredentialResult();
+        resultLogin();
+    }
 
+    //Enable Activity to receive data.
+    private void enableReceiver() {
+        serviceReceiver = new ServiceToActivity("LoginActivity");
+        IntentFilter filter = new IntentFilter("LoginActivity");
+        registerReceiver(serviceReceiver, filter);
+    }
 
-        try {
-            Socket socket = new Socket("localhost", 3212);
-
-            LoginThread loginRequest = new LoginThread(socket, username, password);
-            loginRequest.run();
-            success = loginRequest.getSuccess();
-
-        } catch (IOException e) {
-            success = true;
+    private void setUserData(String username, String password) {
+        //Sending LoginRequest
+        int lenUser = username.length();
+        int lenPass = password.length();
+        if (lenUser >= 6 && lenUser <= 20 && lenPass >= 8) {
+            send = "LoginRequest " + username + " " + password;
         }
-        if (success) {
-            resultLogin();
+    }
+
+    private void receiveCredentialResult() {
+        String data = serviceReceiver.getData();
+        Scanner scanInput = new Scanner(data);
+        String id = scanInput.next();
+        if (id.equals("LoginResult") && scanInput.hasNextBoolean()) {
+            success = scanInput.nextBoolean();
         }
     }
 
@@ -106,4 +143,9 @@ public class LoginActivity extends AppCompatActivity {
         setResult(RESULT_OK, send);
         finish();
     }
+
+
+
+
+
 }
