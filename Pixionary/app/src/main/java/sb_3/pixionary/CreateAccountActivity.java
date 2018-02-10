@@ -60,7 +60,7 @@ public class CreateAccountActivity extends AppCompatActivity {
      * @param string
      * @return
      */
-    private boolean validateUsername(String string) {
+    protected boolean validateUsername(String string) {
         if(string == ""){
             Username.setError("Enter Username");
             return false;
@@ -81,7 +81,7 @@ public class CreateAccountActivity extends AppCompatActivity {
      * @param string
      * @return
      */
-    private boolean validatePassword(String string){
+    protected boolean validatePassword(String string){
         if(string.equals("")){
             Password.setError("Enter Password");
             return false;

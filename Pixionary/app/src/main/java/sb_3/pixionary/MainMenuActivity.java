@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainMenuActivity extends AppCompatActivity {
-
-    private String username = null;
     public final int LOGIN_REQUEST_ID = 4;
 
 
@@ -22,6 +20,13 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
 
         Button button_joinGame = (Button) findViewById(R.id.button_joinGame);
+        Button button_hostGame = (Button) findViewById(R.id.button_hostGame);
+        Button button_buildGame = (Button) findViewById(R.id.button_buildGame);
+        Button button_login = (Button) findViewById(R.id.button_login);
+
+        TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
+        usernameDisplay.setText("You are currently not logged in");
+
         button_joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,7 +47,7 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
-        Button button_hostGame = (Button) findViewById(R.id.button_hostGame);
+
         button_hostGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,7 +65,7 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
-        Button button_buildGame = (Button) findViewById(R.id.button_buildGame);
+
         button_buildGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +80,7 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
-        Button button_login = (Button) findViewById(R.id.button_login);
+
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,8 +90,6 @@ public class MainMenuActivity extends AppCompatActivity {
         });
 
 
-        TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
-        usernameDisplay.setText("You are currently not logged in");
 
     }
 
