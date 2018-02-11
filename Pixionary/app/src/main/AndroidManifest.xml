@@ -19,7 +19,8 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
-    </activity>
+        </activity>
+
         <activity
             android:name="sb_3.pixionary.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -28,8 +29,13 @@
         <activity
             android:name="sb_3.pixionary.PlayActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
-        <activity android:name="sb_3.pixionary.CreateAccountActivity" />
-        <activity android:name="sb_3.pixionary.GameBrowserActivity"></activity>
+
+        <activity
+            android:name="sb_3.pixionary.CreateAccountActivity" />
+
+        <activity
+            android:name="sb_3.pixionary.GameBrowserActivity"
+            ></activity>
 
 
     </application>

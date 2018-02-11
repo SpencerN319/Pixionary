@@ -23,8 +23,9 @@ public class LoginActivity extends AppCompatActivity {
     private String[] upPair = new String[2];
     private Button crt_accnt = (Button) findViewById(R.id.button_createAccount);
     private Button login = (Button) findViewById(R.id.button_login);
-    EditText usernameTextbox = (EditText) findViewById(R.id.editText_username);
-    EditText passwordTextbox = (EditText) findViewById(R.id.editText_password);
+    private EditText usernameTextbox = (EditText) findViewById(R.id.editText_username);
+    private EditText passwordTextbox = (EditText) findViewById(R.id.editText_password);
+    private EditText error_disp = (EditText) findViewById(R.id.error_window);
     RequestQueue requestQueue;
 
     @Override
@@ -40,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
                 password = passwordTextbox.getText().toString();
                 if (validateUsername(username) && validatePassword(password)) {
 
-                    LoginRequest loginRequest = new LoginRequest(username, password, new Response.Listener<String>() {
+                    RequestLogin loginRequest = new RequestLogin(username, password, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             try {
@@ -60,20 +61,20 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                //Make into popup widget
-                                usernameTextbox.setError("Bad Response From Server");
+                                error_disp.setVisibility(View.VISIBLE);
+                                error_disp.setText("Bad Response From Server");
                             }
                         }
                     }, new Response.ErrorListener() {
                         @Override
-                        public void onErrorResponse(VolleyError error) { //MAKE POPUPS
+                        public void onErrorResponse(VolleyError error) {
+                            error_disp.setVisibility(View.VISIBLE);
                             if (error instanceof ServerError)
-
-                                Toast.makeText(LoginActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                error_disp.setText("Server Error");
                             else if (error instanceof TimeoutError)
-                                Toast.makeText(LoginActivity.this, "Connection Timed Out", Toast.LENGTH_SHORT).show();
+                                error_disp.setText("Connection Timed Out");
                             else if (error instanceof NetworkError)
-                                Toast.makeText(LoginActivity.this, "Bad Network Connection", Toast.LENGTH_SHORT).show();
+                                error_disp.setText("Bad Network Connection");
                         }
                     });
                     requestQueue.add(loginRequest);

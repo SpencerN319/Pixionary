@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 public class MainMenuActivity extends AppCompatActivity {
     public final int LOGIN_REQUEST_ID = 4;
+    private String username;
 
 
     @Override
@@ -82,10 +83,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
         button_login.setOnClickListener(new View.OnClickListener() {
+            Intent login = new Intent(MainMenuActivity.this, LoginActivity.class);
             @Override
             public void onClick(View v) {
                 if (username == null)
-                    startLoginActivity();
+                    startActivity(login);
             }
         });
 

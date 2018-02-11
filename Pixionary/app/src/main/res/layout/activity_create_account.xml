@@ -55,7 +55,7 @@
         android:ems="10"
         android:hint="Password"
         android:textColor="@color/colorPrimaryText"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,22 +64,41 @@
         app:layout_constraintTop_toBottomOf="@+id/etCreateUser"
         app:layout_constraintVertical_bias="0.007" />
 
-    <TextView
-        android:id="@+id/tvExcited"
+    <EditText
+        android:id="@+id/etConfirmPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="83dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="Confirm Passord"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="@+id/etCreatePass"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvExcited"
+        app:layout_constraintVertical_bias="0.564"
+        android:layout_marginLeft="83dp" />
+
+    <TextView
+        android:id="@+id/tvExcited"
+        android:layout_width="359dp"
+        android:layout_height="73dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textColor="@color/colorPrimaryText"
         android:text="@string/create_message"
+        android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etCreatePass"
+        app:layout_constraintTop_toBottomOf="@+id/etConfirmPass"
+        android:gravity="center"
         app:layout_constraintVertical_bias="0.111" />
+
 
     <Button
         android:id="@+id/btnCreate"
@@ -96,7 +115,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvExcited"
         app:layout_constraintVertical_bias="0.271" />
 
     </android.support.constraint.ConstraintLayout>

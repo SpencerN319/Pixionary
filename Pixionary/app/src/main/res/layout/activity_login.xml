@@ -69,6 +69,7 @@
 
 
 
+
     <Button
         android:id="@+id/button_login"
         android:layout_width="0dp"
@@ -91,7 +92,12 @@
         android:text="Create Account"
         android:textColor="@color/colorPrimaryText"/>
 
-
+    <EditText
+        android:id="@+id/error_window"
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:ems="10"
+        android:clickable="false"/>
 
 
 </android.support.constraint.ConstraintLayout>
