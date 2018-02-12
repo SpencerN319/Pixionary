@@ -15,23 +15,26 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import sb_3.pixionary.Utilities.RequestLogin;
+
 
 public class LoginActivity extends AppCompatActivity {
 
-    private String username = null;
-    private String password = null;
-    private String[] upPair = new String[2];
-    private Button crt_accnt = (Button) findViewById(R.id.button_createAccount);
-    private Button login = (Button) findViewById(R.id.button_login);
-    private EditText usernameTextbox = (EditText) findViewById(R.id.editText_username);
-    private EditText passwordTextbox = (EditText) findViewById(R.id.editText_password);
-    private EditText error_disp = (EditText) findViewById(R.id.error_window);
+    private String username, password;
+    private Button crt_accnt, login;
+    private EditText usernameTextbox, passwordTextbox, error_disp;
     RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        crt_accnt = (Button) findViewById(R.id.button_createAccount);
+        login = (Button) findViewById(R.id.button_login);
+        usernameTextbox = (EditText) findViewById(R.id.editText_username);
+        passwordTextbox = (EditText) findViewById(R.id.editText_password);
+        error_disp = (EditText) findViewById(R.id.error_window);
 
         /* SAMPLE CODE THAT NEEDS TO BE CHANGED */
         login.setOnClickListener(new View.OnClickListener() {
@@ -82,22 +85,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         crt_accnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,6 +92,10 @@ public class LoginActivity extends AppCompatActivity {
                 moveToCreateAccount();
             }
         });
+    }
+
+    private void init(){
+
     }
 
     /**
@@ -148,6 +139,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+
+    /*
     public void returnLoginInfo(View view) {
         upPair[0] = username;
         upPair[1] = password;
@@ -156,6 +149,7 @@ public class LoginActivity extends AppCompatActivity {
         setResult(RESULT_OK, retval);
         finish();
     }
+    */
 
     public void moveToCreateAccount() {
         Intent move = new Intent(LoginActivity.this,CreateAccountActivity.class);

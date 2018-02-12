@@ -13,16 +13,15 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import sb_3.pixionary.ImageBuilder.RequestRegister;
+import sb_3.pixionary.Utilities.RequestRegister;
 
 
 public class CreateAccountActivity extends AppCompatActivity {
 
-    private Button Create = (Button) findViewById(R.id.btnCreate); ;
+    private Button Create;
     private EditText Username, Password, Conf_Password;
     private TextView error_disp;
-    private String success = String.format("%s", "Account Created!");
-    private String fail = String.format("%s", "Error, Try Again");
+
     RequestQueue requestQueue;
 
 
@@ -31,8 +30,11 @@ public class CreateAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
+        Create = (Button) findViewById(R.id.btnCreate);
         error_disp = (TextView) findViewById(R.id.tvExcited);
         requestQueue = Volley.newRequestQueue(CreateAccountActivity.this);
+        final String success = String.format("%s", "Account Created!");
+        final String fail = String.format("%s", "Error, Try Again");
 
         Create.setOnClickListener(new View.OnClickListener() {
             @Override

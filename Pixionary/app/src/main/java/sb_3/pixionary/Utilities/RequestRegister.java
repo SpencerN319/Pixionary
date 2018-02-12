@@ -1,4 +1,4 @@
-package sb_3.pixionary.ImageBuilder;
+package sb_3.pixionary.Utilities;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;

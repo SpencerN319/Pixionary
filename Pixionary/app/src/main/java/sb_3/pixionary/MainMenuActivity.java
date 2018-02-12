@@ -132,12 +132,14 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
 
+
     public void startLoginActivity() {
         Intent login = new Intent(MainMenuActivity.this, LoginActivity.class);
-        TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
-        usernameDisplay.setText("You are not currently logged in");
-        startActivityForResult(login, LOGIN_REQUEST_ID);
-
+        //TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
+        //usernameDisplay.setText("You are not currently logged in");
+        //startActivityForResult(login, LOGIN_REQUEST_ID);
+        startActivity(login);
     }
+
 
 }

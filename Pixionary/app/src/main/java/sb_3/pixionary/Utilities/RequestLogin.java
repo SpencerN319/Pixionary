@@ -1,4 +1,4 @@
-package sb_3.pixionary;
+package sb_3.pixionary.Utilities;
 /**
  * Created by spencern319 on 2/10/18.
  */
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestLogin extends StringRequest{
-    private static final String LOGIN_URL = ""; //needs login url
+    private static final String LOGIN_URL = "proj-309-sb-3.cs.iastate.edu"; //needs login url
     private Map<String, String> parameters;
 
     public RequestLogin(String username, String password, Response.Listener<String> listener, Response.ErrorListener errorListener) {
