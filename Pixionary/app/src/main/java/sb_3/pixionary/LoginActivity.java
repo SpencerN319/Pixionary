@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                 username = Username.getText().toString();
                 password = Password.getText().toString();
                 validateUserLocal();
-                //validateUser(username, password);
+                validateUser(username, password);
 
             }
         });
