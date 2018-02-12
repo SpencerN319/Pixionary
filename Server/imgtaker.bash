@@ -1,9 +1,9 @@
 #!/bin/bash
-#uses duckduckgo api to download the first image result for the word given as an arg
+#uses webcrawler to download the first image result for the word given as an arg
 
-part1='https://api.duckduckgo.com/?q=';
-part2='&format=json&pretty=1';
-website=$part1$1$part2;
+part1='http://www.webcrawler.com/serp?qc=images&q=';
+
+website=$part1$1;
 
 echo $website;
 wget -O url.txt $website;
