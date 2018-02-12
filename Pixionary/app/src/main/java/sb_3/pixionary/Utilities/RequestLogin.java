@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestLogin extends StringRequest{
-    private static final String LOGIN_URL = "proj-309-sb-3.cs.iastate.edu"; //needs login url
+    private static final String LOGIN_URL = "http://proj-309-sb-3.cs.iastate.edu:80/login.php";
     private Map<String, String> parameters;
 
     public RequestLogin(String username, String password, Response.Listener<String> listener, Response.ErrorListener errorListener) {
