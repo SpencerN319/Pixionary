@@ -23,10 +23,10 @@ import sb_3.pixionary.Utilities.RequestRegister;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
-    private EditText Username, Password, Conf_Password;
+    private EditText et_username, et_password, et_conf_password;
     private TextView error_disp;
     private String user_type = "general";
-
+    private String username, password, conf_password;
     RequestQueue requestQueue;
 
 
@@ -37,18 +37,21 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         Button Create = (Button) findViewById(R.id.btnCreate);
         error_disp = (TextView) findViewById(R.id.tvExcited);
+        et_username = (EditText) findViewById(R.id.etCreateUser);
+        et_password = (EditText) findViewById(R.id.etCreatePass);
+        et_conf_password = (EditText) findViewById(R.id.etConfirmPass);
         requestQueue = Volley.newRequestQueue(CreateAccountActivity.this);
         final String fail = String.format("%s", "Error, Try Again");
 
         Create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Username = (EditText) findViewById(R.id.etCreateUser);
-                Password = (EditText) findViewById(R.id.etCreatePass);
-                Conf_Password = (EditText) findViewById(R.id.etConfirmPass);
+                username = et_username.getText().toString();
+                password = et_password.getText().toString();
+                conf_password = et_conf_password.getText().toString();
 
                 //Validate username and passwords
-                if ( validateUsername(Username.getText().toString()) && validatePassword(Password.getText().toString(),Conf_Password.getText().toString())) {
+                if ( validateUsername(username) && validatePassword(password,conf_password)) {
 
                     final ProgressDialog progressDialog = new ProgressDialog(CreateAccountActivity.this);
                     progressDialog.setTitle("Please Wait");
@@ -56,7 +59,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                     progressDialog.setCancelable(false);
                     progressDialog.show();
 
-                    RequestRegister requestRegister = new RequestRegister(Username.getText().toString(), Password.getText().toString(), user_type, new Response.Listener<String>() {
+                    RequestRegister requestRegister = new RequestRegister(username, password, user_type, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             Log.i("Create Account Response", response);
@@ -64,7 +67,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if (jsonObject.getBoolean("success")) {
                                     progressDialog.dismiss();
-                                    returnUsernameAndFinish(Username.getText().toString());
+                                    returnUsernameAndFinish(username);
                                 } else {
                                     progressDialog.dismiss();
                                     error_disp.setText(fail);

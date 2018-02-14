@@ -87,7 +87,7 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (username == null)
-                    startActivity(login);
+                    startLoginActivity();
             }
         });
 
@@ -117,7 +117,7 @@ public class MainMenuActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    /*
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent returnedData){
         if(returnedData == null){
@@ -131,7 +131,7 @@ public class MainMenuActivity extends AppCompatActivity {
                 usernameDisplay.setText("You are currently logged in as " + username);
         }
     }
-
+    */
 
     public void startLoginActivity() {
         Intent login = new Intent(MainMenuActivity.this, LoginActivity.class);

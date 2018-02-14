@@ -24,7 +24,8 @@ import sb_3.pixionary.Utilities.RequestLogin;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText username, password, error_disp;
+    EditText et_username, et_password, error_disp;
+    private String username, password;
     RequestQueue requestQueue;
 
     @Override
@@ -32,16 +33,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Button crt_accnt = (Button) findViewById(R.id.button_createAccount);
-        Button login = (Button) findViewById(R.id.button_login);
-        username = (EditText) findViewById(R.id.editText_username);
-        password = (EditText) findViewById(R.id.editText_password);
+        Button login = (Button) findViewById(R.id.bt_login);
+        et_username = (EditText) findViewById(R.id.editText_username);
+        et_password = (EditText) findViewById(R.id.editText_password);
         error_disp = (EditText) findViewById(R.id.error_window);
 
         /* SAMPLE CODE THAT NEEDS TO BE CHANGED */
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((validateUsername(username.getText().toString()) && validatePassword(password.getText().toString()))) {
+                username = et_username.getText().toString();
+                password = et_username.getText().toString();
+                if(validateUsername(username) && validatePassword(password)) {
 
                     final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
                     progressDialog.setTitle("Please Wait");
@@ -49,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                     progressDialog.setCancelable(false);
                     progressDialog.show();
 
-                    RequestLogin loginRequest = new RequestLogin(username.getText().toString(), password.getText().toString(), new Response.Listener<String>() {
+                    RequestLogin loginRequest = new RequestLogin(username, password, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             try {
@@ -58,13 +61,16 @@ public class LoginActivity extends AppCompatActivity {
                                 if (jsonObject.getBoolean("success")) { //TODO USE GETTERS AND SETTERS HERE!
                                     progressDialog.dismiss();
                                     Intent loggedIn = new Intent(LoginActivity.this, MainMenuActivity.class);
+                                    loggedIn.putExtra("username", username);
                                     startActivity(loggedIn);
                                     finish();
                                 } else {
                                     if(jsonObject.getString("status").equals("INVALID")) {
-                                        username.setError("Invalid Username");
+                                        error_disp.setVisibility(View.VISIBLE);
+                                        error_disp.setError("Invalid Username");
                                     } else{
-                                        password.setError("Invalid Password");
+                                        error_disp.setVisibility(View.VISIBLE);
+                                        error_disp.setError("Invalid Password");
                                     }
                                 }
                             } catch (JSONException e) {
