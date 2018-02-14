@@ -1,7 +1,10 @@
 package sb_3.pixionary;
+
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,46 +24,47 @@ import sb_3.pixionary.Utilities.RequestLogin;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private String username, password;
-    private Button crt_accnt, login;
-    private EditText usernameTextbox, passwordTextbox, error_disp;
+    EditText username, password, error_disp;
     RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        crt_accnt = (Button) findViewById(R.id.button_createAccount);
-        login = (Button) findViewById(R.id.button_login);
-        usernameTextbox = (EditText) findViewById(R.id.editText_username);
-        passwordTextbox = (EditText) findViewById(R.id.editText_password);
+        Button crt_accnt = (Button) findViewById(R.id.button_createAccount);
+        Button login = (Button) findViewById(R.id.button_login);
+        username = (EditText) findViewById(R.id.editText_username);
+        password = (EditText) findViewById(R.id.editText_password);
         error_disp = (EditText) findViewById(R.id.error_window);
 
         /* SAMPLE CODE THAT NEEDS TO BE CHANGED */
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                username = usernameTextbox.getText().toString();
-                password = passwordTextbox.getText().toString();
-                if (validateUsername(username) && validatePassword(password)) {
+                if ((validateUsername(username.getText().toString()) && validatePassword(password.getText().toString()))) {
 
-                    RequestLogin loginRequest = new RequestLogin(username, password, new Response.Listener<String>() {
+                    final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+                    progressDialog.setTitle("Please Wait");
+                    progressDialog.setMessage("Logging In");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+
+                    RequestLogin loginRequest = new RequestLogin(username.getText().toString(), password.getText().toString(), new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             try {
+                                Log.i("Login Response", response);
                                 JSONObject jsonObject = new JSONObject(response);
-                                if (jsonObject.getBoolean("success")) {
-                                    Intent loginSuccess = new Intent(LoginActivity.this, MainMenuActivity.class);
-                                    //Passing all received data from server to next activity
-                                    loginSuccess.putExtra("name", jsonObject.getString("name"));
-                                    startActivity(loginSuccess);
+                                if (jsonObject.getBoolean("success")) { //TODO USE GETTERS AND SETTERS HERE!
+                                    progressDialog.dismiss();
+                                    Intent loggedIn = new Intent(LoginActivity.this, MainMenuActivity.class);
+                                    startActivity(loggedIn);
                                     finish();
                                 } else {
                                     if(jsonObject.getString("status").equals("INVALID")) {
-                                        usernameTextbox.setError("Invalid Username");
+                                        username.setError("Invalid Username");
                                     } else{
-                                        passwordTextbox.setError("Invalid Password");
+                                        password.setError("Invalid Password");
                                     }
                                 }
                             } catch (JSONException e) {
@@ -88,14 +93,9 @@ public class LoginActivity extends AppCompatActivity {
         crt_accnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Method to send new User data to the server... eventually
                 moveToCreateAccount();
             }
         });
-    }
-
-    private void init(){
-
     }
 
     /**
@@ -105,18 +105,19 @@ public class LoginActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validateUsername(String string) {
+        /*
         if(string == ""){
             usernameTextbox.setError("Enter Username");
             return false;
         } else if(string.length() > 20){
             usernameTextbox.setError("Max 20 Characters");
             return false;
-        } else if(string.length() < 6){
+        } else if(string.length() < 4){
             usernameTextbox.setError("Minimum 6 Characters");
             return false;
-        } else {
-            return true;
         }
+        */
+        return true;
     }
 
     /**
@@ -125,31 +126,20 @@ public class LoginActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validatePassword(String string){
+        /*
         if(string.equals("")){
             passwordTextbox.setError("Enter Password");
             return false;
-        } else if(string.length() < 6){
+        } else if(string.length() < 4){
             passwordTextbox.setError("Minimum 6 Characters");
             return false;
         } else if(string.length() > 8){
             passwordTextbox.setError("Max 8 Characters");
             return false;
-        } else {
-            return true;
         }
+        */
+        return true;
     }
-
-
-    /*
-    public void returnLoginInfo(View view) {
-        upPair[0] = username;
-        upPair[1] = password;
-        Intent retval = new Intent();
-        retval.putExtra("upPair",upPair);
-        setResult(RESULT_OK, retval);
-        finish();
-    }
-    */
 
     public void moveToCreateAccount() {
         Intent move = new Intent(LoginActivity.this,CreateAccountActivity.class);

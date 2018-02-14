@@ -1,9 +1,11 @@
 package sb_3.pixionary;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +23,6 @@ import sb_3.pixionary.Utilities.RequestRegister;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
-    private Button Create;
     private EditText Username, Password, Conf_Password;
     private TextView error_disp;
     private String user_type = "general";
@@ -34,10 +35,9 @@ public class CreateAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
-        Create = (Button) findViewById(R.id.btnCreate);
+        Button Create = (Button) findViewById(R.id.btnCreate);
         error_disp = (TextView) findViewById(R.id.tvExcited);
         requestQueue = Volley.newRequestQueue(CreateAccountActivity.this);
-        final String success = String.format("%s", "Account Created!");
         final String fail = String.format("%s", "Error, Try Again");
 
         Create.setOnClickListener(new View.OnClickListener() {
@@ -46,17 +46,27 @@ public class CreateAccountActivity extends AppCompatActivity {
                 Username = (EditText) findViewById(R.id.etCreateUser);
                 Password = (EditText) findViewById(R.id.etCreatePass);
                 Conf_Password = (EditText) findViewById(R.id.etConfirmPass);
-                //perform validation by calling all the validate functions inside the IF condition
+
+                //Validate username and passwords
                 if ( validateUsername(Username.getText().toString()) && validatePassword(Password.getText().toString(),Conf_Password.getText().toString())) {
-                    //Validation Success
+
+                    final ProgressDialog progressDialog = new ProgressDialog(CreateAccountActivity.this);
+                    progressDialog.setTitle("Please Wait");
+                    progressDialog.setMessage("Registering New Account");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+
                     RequestRegister requestRegister = new RequestRegister(Username.getText().toString(), Password.getText().toString(), user_type, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
+                            Log.i("Create Account Response", response);
                             try {
-                                if (new JSONObject(response).getBoolean("success")) {
-                                    error_disp.setText(success);
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (jsonObject.getBoolean("success")) {
+                                    progressDialog.dismiss();
                                     returnUsernameAndFinish(Username.getText().toString());
                                 } else {
+                                    progressDialog.dismiss();
                                     error_disp.setText(fail);
                                 }
                             } catch (JSONException e) {
@@ -71,13 +81,15 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
 
     }
-    
+
+
     public void returnUsernameAndFinish(String username){
         Intent retInt = new Intent(CreateAccountActivity.this, MainMenuActivity.class);
         retInt.putExtra("username", username);
         setResult(Activity.RESULT_OK, retInt);
         finish();
     }
+
 
 
     /**
@@ -87,6 +99,7 @@ public class CreateAccountActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validateUsername(String name) {
+        /*
         if(name == ""){
             Username.setError("Enter Username");
             return false;
@@ -97,7 +110,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             Username.setError("Minimum 6 Characters");
             return false;
         }
-
+        */
         return true;
     }
 
@@ -108,6 +121,7 @@ public class CreateAccountActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validatePassword(String pass1, String pass2){
+        /*
         if(pass1.equals("")){
             Password.setError("Enter Password");
             return false;
@@ -120,7 +134,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         } else if (!(pass1.equals(pass2))){
             Password.setError("Passwords Don't Match");
         }
-
+        */
         return true;
     }
 
