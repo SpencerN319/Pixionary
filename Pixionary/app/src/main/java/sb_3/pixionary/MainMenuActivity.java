@@ -1,18 +1,26 @@
 package sb_3.pixionary;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
+import android.graphics.Bitmap;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
+import java.io.InputStream;
 
 public class MainMenuActivity extends AppCompatActivity {
     public final int LOGIN_REQUEST_ID = 4;
+    public static final int SETTINGS_REQUEST_ID = 5;
     private String username;
+    TextView usernameDisplay;
 
 
     @Override
@@ -24,8 +32,9 @@ public class MainMenuActivity extends AppCompatActivity {
         Button button_hostGame = (Button) findViewById(R.id.button_hostGame);
         Button button_buildGame = (Button) findViewById(R.id.button_buildGame);
         Button button_login = (Button) findViewById(R.id.button_login);
+        ImageButton button_settings = (ImageButton) findViewById(R.id.button_settings);
 
-        TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
+        usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
         usernameDisplay.setText("You are currently not logged in");
 
         button_joinGame.setOnClickListener(new View.OnClickListener() {
@@ -36,18 +45,11 @@ public class MainMenuActivity extends AppCompatActivity {
                     startLoginActivity();
                 }
                 else{
-                    Snackbar.make(view, "Open join game activity", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
                     Intent i = new Intent(MainMenuActivity.this, GameBrowserActivity.class);
                     startActivity(i);
                 }
-
-                Snackbar.make(view, "Open join game activity", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
             }
         });
-
 
         button_hostGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +68,6 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
-
         button_buildGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,7 +82,6 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
-
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,8 +90,12 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
-
-
+        button_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startSettingsActivity();
+            }
+        });
     }
 
     @Override
@@ -124,10 +128,15 @@ public class MainMenuActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, returnedData);
         switch (requestCode){
-            case 4:
-                TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
+            case LOGIN_REQUEST_ID:
                 username = returnedData.getStringExtra("username");
                 usernameDisplay.setText("You are currently logged in as " + username);
+            case SETTINGS_REQUEST_ID:
+                boolean logout = returnedData.getBooleanExtra("logout", false);
+                if (logout) {
+                    username = null;
+                    usernameDisplay.setText("Logged Out!");
+                }
         }
     }
 
@@ -137,6 +146,11 @@ public class MainMenuActivity extends AppCompatActivity {
         TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
         usernameDisplay.setText("You are not currently logged in");
         startActivityForResult(login, LOGIN_REQUEST_ID);
+    }
+
+    public void startSettingsActivity() {
+        Intent settingsIntent = new Intent(this, SettingsDialog.class);
+        startActivityForResult(settingsIntent, SETTINGS_REQUEST_ID);
     }
 
 

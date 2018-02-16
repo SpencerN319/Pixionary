@@ -22,7 +22,6 @@
         </activity>
 
         <activity
-            android:parentActivityName=".MainMenuActivity"
             android:name="sb_3.pixionary.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
@@ -32,12 +31,14 @@
             android:windowSoftInputMode="stateAlwaysVisible" />
 
         <activity
-            android:parentActivityName=".MainMenuActivity"
             android:name="sb_3.pixionary.CreateAccountActivity" />
 
         <activity
             android:name="sb_3.pixionary.GameBrowserActivity"
-            ></activity>
+            />
+        <activity
+            android:name=".SettingsDialog"
+            android:theme="@android:style/Theme.Dialog" />
 
 
     </application>
