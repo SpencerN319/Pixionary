@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         final String invalid = String.format("%s", "invalid username or password");
         requestQueue = Volley.newRequestQueue(LoginActivity.this);
 
-        /* SAMPLE CODE THAT NEEDS TO BE CHANGED */
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +105,6 @@ public class LoginActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validateUsername(String string) {
-        /*
         if(string == ""){
             usernameTextbox.setError("Enter Username");
             return false;
@@ -116,7 +115,6 @@ public class LoginActivity extends AppCompatActivity {
             usernameTextbox.setError("Minimum 6 Characters");
             return false;
         }
-        */
         return true;
     }
 
@@ -126,7 +124,6 @@ public class LoginActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validatePassword(String string){
-        /*
         if(string.equals("")){
             passwordTextbox.setError("Enter Password");
             return false;
@@ -137,7 +134,6 @@ public class LoginActivity extends AppCompatActivity {
             passwordTextbox.setError("Max 8 Characters");
             return false;
         }
-        */
         return true;
     }
 
