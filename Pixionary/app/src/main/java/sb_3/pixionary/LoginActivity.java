@@ -1,5 +1,6 @@
 package sb_3.pixionary;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.android.volley.toolbox.Volley;
 
 import sb_3.pixionary.Utilities.RequestLogin;
 
@@ -37,13 +36,15 @@ public class LoginActivity extends AppCompatActivity {
         et_username = (EditText) findViewById(R.id.editText_username);
         et_password = (EditText) findViewById(R.id.editText_password);
         error_disp = (EditText) findViewById(R.id.error_window);
+        final String invalid = String.format("%s", "invalid username or password");
+        requestQueue = Volley.newRequestQueue(LoginActivity.this);
 
         /* SAMPLE CODE THAT NEEDS TO BE CHANGED */
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 username = et_username.getText().toString();
-                password = et_username.getText().toString();
+                password = et_password.getText().toString();
                 if(validateUsername(username) && validatePassword(password)) {
 
                     final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
@@ -55,28 +56,14 @@ public class LoginActivity extends AppCompatActivity {
                     RequestLogin loginRequest = new RequestLogin(username, password, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            try {
-                                Log.i("Login Response", response);
-                                JSONObject jsonObject = new JSONObject(response);
-                                if (jsonObject.getBoolean("success")) { //TODO USE GETTERS AND SETTERS HERE!
-                                    progressDialog.dismiss();
-                                    Intent loggedIn = new Intent(LoginActivity.this, MainMenuActivity.class);
-                                    loggedIn.putExtra("username", username);
-                                    startActivity(loggedIn);
-                                    finish();
-                                } else {
-                                    if(jsonObject.getString("status").equals("INVALID")) {
-                                        error_disp.setVisibility(View.VISIBLE);
-                                        error_disp.setError("Invalid Username");
-                                    } else{
-                                        error_disp.setVisibility(View.VISIBLE);
-                                        error_disp.setError("Invalid Password");
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                error_disp.setVisibility(View.VISIBLE);
-                                error_disp.setText("Bad Response From Server");
+                            Log.i("user error", password);
+                            progressDialog.dismiss();
+                            if(response.equals("success")){
+                                returnUsernameAndFinish(username);
+                            } else if (response.equals("invalid username or password")){
+                                error_disp.setText(invalid);
+                            } else {
+                                error_disp.setText(invalid);
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -102,6 +89,13 @@ public class LoginActivity extends AppCompatActivity {
                 moveToCreateAccount();
             }
         });
+    }
+
+    public void returnUsernameAndFinish(String username){
+        Intent retInt = new Intent(LoginActivity.this, MainMenuActivity.class);
+        retInt.putExtra("username", username);
+        setResult(Activity.RESULT_OK, retInt);
+        finish();
     }
 
     /**
