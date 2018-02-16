@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText et_username, et_password, error_disp;
     private String username, password;
-    RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
+    RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
