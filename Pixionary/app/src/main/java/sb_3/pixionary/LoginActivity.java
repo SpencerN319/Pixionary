@@ -138,11 +138,11 @@ public class LoginActivity extends AppCompatActivity {
         if(string.equals("")){
             et_password.setError("Enter Password");
             return false;
-        } else if(string.length() < 4){
+        } else if(string.length() < 6){
             et_password.setError("Minimum 6 Characters");
             return false;
-        } else if(string.length() > 8){
-            et_password.setError("Max 8 Characters");
+        } else if(string.length() > 24){
+            et_password.setError("Max 24 Characters");
             return false;
         }
         return true;
