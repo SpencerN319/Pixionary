@@ -132,6 +132,7 @@
         android:layout_width="match_parent"
         android:layout_height="95dp"
         android:ems="10"
+        android:gravity="center"
         android:clickable="false"/>
 
 

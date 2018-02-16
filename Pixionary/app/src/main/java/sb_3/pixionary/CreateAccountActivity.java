@@ -15,9 +15,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import sb_3.pixionary.Utilities.RequestRegister;
 
 
@@ -41,7 +38,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         et_password = (EditText) findViewById(R.id.etCreatePass);
         et_conf_password = (EditText) findViewById(R.id.etConfirmPass);
         requestQueue = Volley.newRequestQueue(CreateAccountActivity.this);
-        final String fail = String.format("%s", "Error, Try Again");
+        final String fail = String.format("%s", "Username Already Exists");
 
         Create.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,21 +60,19 @@ public class CreateAccountActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             Log.i("Create Account Response", response);
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                if (jsonObject.getBoolean("success")) {
-                                    progressDialog.dismiss();
-                                    returnUsernameAndFinish(username);
-                                } else {
-                                    progressDialog.dismiss();
-                                    error_disp.setText(fail);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            progressDialog.dismiss();
+                            if(response.equals("success")){
+                                returnUsernameAndFinish(username);
+                            } else if(response.equals("username already exists")){
+                                error_disp.setText(fail);
+                            }
+
+                            else {
+                                progressDialog.show();
+                                progressDialog.setMessage(response);
                             }
                         }
                     });
-
                     requestQueue.add(requestRegister);
                 }
             }
@@ -102,18 +97,16 @@ public class CreateAccountActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validateUsername(String name) {
-        /*
         if(name == ""){
-            Username.setError("Enter Username");
+            et_username.setError("Enter Username");
             return false;
         } else if(name.length() > 20){
-            Username.setError("Max 20 Characters");
+            et_username.setError("Max 20 Characters");
             return false;
         } else if(name.length() < 6){
-            Username.setError("Minimum 6 Characters");
+            et_username.setError("Minimum 6 Characters");
             return false;
         }
-        */
         return true;
     }
 
@@ -124,20 +117,18 @@ public class CreateAccountActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validatePassword(String pass1, String pass2){
-        /*
         if(pass1.equals("")){
-            Password.setError("Enter Password");
+            et_password.setError("Enter Password");
             return false;
         } else if(pass1.length() < 6){
-            Password.setError("Minimum 6 Characters");
+            et_password.setError("Minimum 6 Characters");
             return false;
-        } else if(pass1.length() > 8){
-            Password.setError("Max 8 Characters");
+        } else if(pass1.length() > 24){
+            et_password.setError("Max 8 Characters");
             return false;
         } else if (!(pass1.equals(pass2))){
-            Password.setError("Passwords Don't Match");
+            et_password.setError("Passwords Don't Match");
         }
-        */
         return true;
     }
 
