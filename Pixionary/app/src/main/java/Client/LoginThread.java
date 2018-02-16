@@ -1,6 +1,5 @@
 package Client;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -31,7 +30,7 @@ public class LoginThread extends Thread {
     public void run() {
         while(true) {
             try {
-                String loginInfo = "LoginRequest: " + username + "," + password;
+                String loginInfo = "LoginRequest " + username + " " + password;
 
                 //Send the login request
                 out = new PrintWriter(socket.getOutputStream());
@@ -51,10 +50,6 @@ public class LoginThread extends Thread {
 
     }
 
-    //Return the success of the login.
-    public boolean getSuccess() {
-        return success;
-    }
 
 
 

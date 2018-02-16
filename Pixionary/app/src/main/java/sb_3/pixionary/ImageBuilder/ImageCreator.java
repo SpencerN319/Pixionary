@@ -25,6 +25,9 @@ public class ImageCreator {
     private boolean[] pixelUsed;
     private int[] pixels;
 
+    private Handler handler;
+    private Runnable runnable;
+
     //Local Image creator
     public ImageCreator(Context context, String[] imageNames, int index) {
 
@@ -41,12 +44,12 @@ public class ImageCreator {
 
     }
 
-    //Getting data from server.
-    public ImageCreator(Context context, BuildImageThread builder) {
+    //Building image from the data on server.
+    public ImageCreator(int imageWidth, int imageHeight) {
 
-        //Set width and height
-        imgWidth = builder.getImgWidth();
-        imgHeight = builder.getImgHeight();
+        //Create
+        this.imgWidth = imageWidth;
+        this.imgHeight = imageHeight;
 
         //Create Bitmap
         image = Bitmap.createBitmap(imgWidth, imgHeight, Bitmap.Config.ARGB_8888);
@@ -57,32 +60,26 @@ public class ImageCreator {
     }
 
 
-    //Normally need to pass a Pixel in. --to receive from server-side.
+    //This is for local demo.
     public void updateImageLocal() {
         pixels = breaker.getPixels();
         pixelUsed = new boolean[pixels.length];
         Arrays.fill(pixelUsed, false);
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
+        handler = new Handler();
+        runnable = new Runnable() {
             @Override
             public void run() {
-                postPixel(image, getUnusedPixel());
-                handler.postDelayed(this, 3);
+                Pixel pix = getUnusedPixel();
+                postPixel(image, pix);
+                handler.postDelayed(runnable, 3);
+
             }
         };
+        
         handler.postDelayed(runnable, 3);
 
+
     }
-
-    //Receiving Pixels from server
-    public void updateImage(ReceivePixelThread updater) {
-        updater.run();
-        if (updater.isReceived()) {
-            postPixel(image, updater.getNewPixel());
-        }
-    }
-
-
 
     //Currently adding randomly without checking if its been used.
     private Pixel getUnusedPixel() {
@@ -99,7 +96,7 @@ public class ImageCreator {
         return pix;
     }
 
-    public void postPixel(Bitmap bitmap, Pixel pixel) {
+    private void postPixel(Bitmap bitmap, Pixel pixel) {
         int x = pixel.getXPosition();
         int y = pixel.getYPosition();
         int pixIndex = (y*imgWidth) + x;

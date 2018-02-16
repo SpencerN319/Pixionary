@@ -9,6 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Button;
+import java.util.Scanner;
+import Client.ServiceToActivity;
 
 import com.android.volley.NetworkError;
 import com.android.volley.RequestQueue;
@@ -22,6 +26,18 @@ import sb_3.pixionary.Utilities.RequestLogin;
 
 
 public class LoginActivity extends AppCompatActivity {
+    //Local stuff
+    private EditText Username;
+    private EditText Password;
+    private TextView Attempts;
+    private Button Login;
+    private Button CreateAccount;
+    private int attemptsLeft = 10;
+    private boolean success = false;
+    private String username;
+    private String password;
+
+
 
     EditText et_username, et_password, error_disp;
     private String username, password;

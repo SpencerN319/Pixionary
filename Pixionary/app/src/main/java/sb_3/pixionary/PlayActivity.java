@@ -36,6 +36,9 @@ public class PlayActivity extends AppCompatActivity {
     private int imagenum = 0;
 
     Socket socket;
+    private ImageCreator builder;
+    private boolean bitmapCreated;
+    private boolean imageRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +54,9 @@ public class PlayActivity extends AppCompatActivity {
         images = new String[]{"cat.jpg", "cow.jpg", "dog.jpg", "horse.jpg"};
         nextImage();
 
-        //Server connecting, creating and updating image.
-//        try {
-//            Socket socket = new Socket("localhost", 9092);
-//            presentImage(socket);
-//
-//        } catch(IOException e) {
-//            e.printStackTrace();
-//        }
-
-
-        images = new String[]{"cat.jpg", "cow.jpg", "dog.jpg", "horse.jpg"};
-
-        nextImage();
+        //Handling all image building and updating.
+        //imageStart();
+        //imageRun();
 
         btnGuess.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,14 +72,36 @@ public class PlayActivity extends AppCompatActivity {
                     } else {
                         nextImage();
                     }
-                }
-                else {
+                } else {
                     wrongGuessDialog();
                 }
             }
         });
 
     }
+
+    private void imageStart() {
+        try {
+            Socket socket = new Socket("localhost", 9092);
+            bitmapCreated = readyImage(socket);
+            socket.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void imageRun() {
+        try {
+            Socket socket = new Socket("localhost", 9093);
+            ReceivePixelThread thread = new ReceivePixelThread(socket, bitmap);
+            thread.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     private String cutExtension(String fileName) {
         int dot = fileName.lastIndexOf(".");
@@ -122,10 +137,7 @@ public class PlayActivity extends AppCompatActivity {
         endBuilder.setPositiveButton("Exit to Main Menu", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-//                Intent i = new Intent(PlayActivity.this, MainMenuActivity.class);
-//                startActivity(i);
                 finish();
-
             }
         });
         endBuilder.create();
@@ -145,18 +157,17 @@ public class PlayActivity extends AppCompatActivity {
 
     }
 
-    private void presentImage(Socket socket) {
-        BuildImageThread builder = new BuildImageThread(socket);
-        builder.run();
+    private boolean readyImage(Socket socket) {
+        BuildImageThread thread = new BuildImageThread(socket);
+        thread.start();
+        if (thread.isCreated()) {
+            builder = thread.getbuilder();
+            bitmap = builder.getImage();
+            picGuess.setImageBitmap(bitmap);
+            return thread.isCreated();
+        }
 
-        editImage = new ImageCreator(getApplicationContext(), builder);
-
-        ReceivePixelThread updater = new ReceivePixelThread(socket);
-        updater.run();
-
-        editImage.updateImage(updater);
-
-
+        return false;
     }
 
     private void  sendGuess(String guess) {
@@ -175,6 +186,9 @@ public class PlayActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    public boolean isImageRunning() { return imageRunning; }
+
 }
 
 
