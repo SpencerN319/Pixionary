@@ -10,9 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Button;
-import java.util.Scanner;
-import Client.ServiceToActivity;
 
 import com.android.volley.NetworkError;
 import com.android.volley.RequestQueue;
@@ -20,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText et_username, et_password, error_disp;
     private String username, password;
-    RequestQueue requestQueue;
+    RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
