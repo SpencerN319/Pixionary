@@ -9,10 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Button;
-import java.util.Scanner;
-import Client.ServiceToActivity;
 
 import com.android.volley.NetworkError;
 import com.android.volley.RequestQueue;
@@ -26,18 +22,6 @@ import sb_3.pixionary.Utilities.RequestLogin;
 
 
 public class LoginActivity extends AppCompatActivity {
-    //Local stuff
-    private EditText Username;
-    private EditText Password;
-    private TextView Attempts;
-    private Button Login;
-    private Button CreateAccount;
-    private int attemptsLeft = 10;
-    private boolean success = false;
-    private String username;
-    private String password;
-
-
 
     EditText et_username, et_password, error_disp;
     private String username, password;
@@ -122,13 +106,13 @@ public class LoginActivity extends AppCompatActivity {
      */
     protected boolean validateUsername(String string) {
         if(string == ""){
-            usernameTextbox.setError("Enter Username");
+            et_username.setError("Enter Username");
             return false;
         } else if(string.length() > 20){
-            usernameTextbox.setError("Max 20 Characters");
+            et_username.setError("Max 20 Characters");
             return false;
         } else if(string.length() < 4){
-            usernameTextbox.setError("Minimum 6 Characters");
+            et_username.setError("Minimum 6 Characters");
             return false;
         }
         return true;
@@ -141,13 +125,13 @@ public class LoginActivity extends AppCompatActivity {
      */
     protected boolean validatePassword(String string){
         if(string.equals("")){
-            passwordTextbox.setError("Enter Password");
+            et_password.setError("Enter Password");
             return false;
         } else if(string.length() < 4){
-            passwordTextbox.setError("Minimum 6 Characters");
+            et_password.setError("Minimum 6 Characters");
             return false;
         } else if(string.length() > 8){
-            passwordTextbox.setError("Max 8 Characters");
+            et_password.setError("Max 8 Characters");
             return false;
         }
         return true;
