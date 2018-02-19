@@ -29,10 +29,9 @@
         <activity android:name=".CreateAccountActivity" />
         <activity android:name=".GameBrowserActivity" />
         <activity
-            android:parentActivityName=".MainMenuActivity"
             android:name=".SettingsDialog"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".LeaderboardActivity"></activity>
+        <activity android:name=".ProfileActivity"></activity>
     </application>
 
 </manifest>
