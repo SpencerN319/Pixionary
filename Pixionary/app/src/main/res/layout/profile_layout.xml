@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="Category"
         tools:layout_editor_absoluteX="119dp"
-        android:textSize="15dp"
+        android:textSize="25dp"
         android:textColor="@color/colorPrimaryText"
         tools:layout_editor_absoluteY="101dp"
         android:layout_weight="50"/>
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:text="Values"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="15dp"
+        android:textSize="25dp"
         tools:layout_editor_absoluteX="294dp"
         tools:layout_editor_absoluteY="111dp"
         android:layout_weight="50"
