@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="sb_3.pixionary.LeaderboardActivity"
+    android:background="@drawable/layout_border">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="30dp">
+
+
+        <TextView
+            android:id="@+id/et_label_username"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryText"
+            android:text="Username" />
+
+        <TextView
+            android:id="@+id/et_label_score"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="30dp"
+            android:text="Score"
+            android:textColor="@color/colorPrimaryText"
+            android:gravity="center"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp">
+
+
+            <TextView
+                android:id="@+id/etOne_username"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryText"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/etOne_score"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryText"
+                android:text="TextView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp">
+
+
+            <TextView
+                android:id="@+id/etTwo_username"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryText"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/etTwo_score"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryText"
+                android:text="TextView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp">
+
+
+            <TextView
+                android:id="@+id/etThree_username"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryText"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/etThree_score"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryText"
+                android:text="TextView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp">
+
+
+            <TextView
+                android:id="@+id/etFour_username"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryText"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/etFour_score"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryText"
+                android:text="TextView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp">
+
+
+            <TextView
+                android:id="@+id/etFive_username"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryText"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/etFive_score"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryText"
+                android:text="TextView" />
+        </LinearLayout>
+
+        </LinearLayout>
+</RelativeLayout>
