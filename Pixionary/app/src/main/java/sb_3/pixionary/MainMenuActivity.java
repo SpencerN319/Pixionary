@@ -177,7 +177,7 @@ public class MainMenuActivity extends AppCompatActivity {
             //Creates the db helper.
             requestQueue = Volley.newRequestQueue(MainMenuActivity.this);
             db = new UserDataDBHandler(this);
-            user = db.getUserById(0);
+            user = db.getUser("0");
             if (user != null) {
                 RequestLogin request = new RequestLogin(user.getUsername(), user.getPassword(), new Response.Listener<String>() {
                     @Override
