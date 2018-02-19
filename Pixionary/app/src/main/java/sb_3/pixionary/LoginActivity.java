@@ -10,9 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Button;
-import java.util.Scanner;
-import Client.ServiceToActivity;
 
 import com.android.volley.NetworkError;
 import com.android.volley.RequestQueue;
@@ -22,32 +19,26 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+
+import org.json.JSONObject;
+
+import SaveData.UserDataDBHandler;
+import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestLogin;
 
 
 public class LoginActivity extends AppCompatActivity {
-    //Local stuff
-    private EditText Username;
-    private EditText Password;
-    private TextView Attempts;
-    private Button Login;
-    private Button CreateAccount;
-    private int attemptsLeft = 10;
-    private boolean success = false;
-    private String username;
-    private String password;
-
-
 
     EditText et_username, et_password, error_disp;
     private String username, password;
-    RequestQueue requestQueue;
+    private UserDataDBHandler db;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Button crt_accnt = (Button) findViewById(R.id.button_createAccount);
+        Button crt_accnt = (Button) findViewById(R.id.button_create_account);
         Button login = (Button) findViewById(R.id.bt_login);
         et_username = (EditText) findViewById(R.id.editText_username);
         et_password = (EditText) findViewById(R.id.editText_password);
@@ -72,15 +63,20 @@ public class LoginActivity extends AppCompatActivity {
                     RequestLogin loginRequest = new RequestLogin(username, password, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.i("user error", password);
-                            progressDialog.dismiss();
-                            if(response.equals("success")){
-                                returnUsernameAndFinish(username);
-                            } else if (response.equals("invalid username or password")){
-                                error_disp.setText(invalid);
-                            } else {
-                                error_disp.setText(invalid);
+                            try {
+                                JSONObject success = new JSONObject(response);
+                                progressDialog.dismiss();
+                                if(success.getBoolean("success")){
+                                    saveLoginData();
+                                    returnUsernameAndFinish(username);
+                                } else {
+                                    error_disp.setText(invalid);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
+
+
                         }
                     }, new Response.ErrorListener() {
                         @Override
@@ -122,16 +118,17 @@ public class LoginActivity extends AppCompatActivity {
      */
     protected boolean validateUsername(String string) {
         if(string == ""){
-            usernameTextbox.setError("Enter Username");
+            et_username.setError("Enter Username");
             return false;
         } else if(string.length() > 20){
-            usernameTextbox.setError("Max 20 Characters");
+            et_username.setError("Max 20 Characters");
             return false;
-        } else if(string.length() < 4){
-            usernameTextbox.setError("Minimum 6 Characters");
+        } else if(string.length() < 6){
+            et_username.setError("Minimum 6 Characters");
             return false;
         }
         return true;
+
     }
 
     /**
@@ -141,16 +138,22 @@ public class LoginActivity extends AppCompatActivity {
      */
     protected boolean validatePassword(String string){
         if(string.equals("")){
-            passwordTextbox.setError("Enter Password");
+            et_password.setError("Enter Password");
             return false;
-        } else if(string.length() < 4){
-            passwordTextbox.setError("Minimum 6 Characters");
+        } else if(string.length() < 6){
+            et_password.setError("Minimum 6 Characters");
             return false;
-        } else if(string.length() > 8){
-            passwordTextbox.setError("Max 8 Characters");
+        } else if(string.length() > 24){
+            et_password.setError("Max 24 Characters");
             return false;
         }
         return true;
+    }
+
+    private void saveLoginData() {
+        db = new UserDataDBHandler(this);
+        User user = new User(0, username, password, "general"); //Hard coded usertype for now.
+        db.addUser(user);
     }
 
     public void moveToCreateAccount() {
