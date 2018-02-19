@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.android.volley.NetworkError;
 import com.android.volley.RequestQueue;
@@ -19,7 +18,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
-
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import SaveData.UserDataDBHandler;
@@ -64,10 +63,11 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             try {
-                                JSONObject success = new JSONObject(response);
+                                Log.i("JSONObject: ", response);
+                                JSONObject jsonObject = new JSONObject(response);
                                 progressDialog.dismiss();
-                                if(success.getBoolean("success")){
-                                    saveLoginData();
+                                if(jsonObject.getBoolean("success")){
+                                    saveLoginData(jsonObject);
                                     returnUsernameAndFinish(username);
                                 } else {
                                     error_disp.setText(invalid);
@@ -150,9 +150,17 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    private void saveLoginData() {
+    private void saveLoginData(JSONObject jsonObject) throws JSONException {
         db = new UserDataDBHandler(this);
-        User user = new User(0, username, password, "general"); //Hard coded usertype for now.
+        String username = jsonObject.getString("username");
+        String password = jsonObject.getString("password");
+        String user_id = jsonObject.getString("user_id");
+        String user_type = jsonObject.getString("user_type");
+        int games_played = jsonObject.getInt("games_played");
+        int score = jsonObject.getInt("score");
+        int category_count = jsonObject.getInt("category_count");
+        int image_count = jsonObject.getInt("image_count");
+        User user = new User(username, password, user_id, user_type, games_played, score, category_count, image_count);
         db.addUser(user);
     }
 
