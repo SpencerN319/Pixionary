@@ -139,5 +139,4 @@ public class MainMenuActivity extends AppCompatActivity {
         startActivityForResult(login, LOGIN_REQUEST_ID);
     }
 
-
 }

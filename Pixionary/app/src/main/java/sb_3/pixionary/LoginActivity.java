@@ -18,6 +18,9 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import sb_3.pixionary.Utilities.RequestLogin;
 
 
@@ -43,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                username = et_username.getText().toString();
+                username = et_username.getText().toString().toLowerCase();
                 password = et_password.getText().toString();
                 if(validateUsername(username) && validatePassword(password)) {
 
@@ -56,14 +59,19 @@ public class LoginActivity extends AppCompatActivity {
                     RequestLogin loginRequest = new RequestLogin(username, password, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.i("user error", password);
+                            Log.i("Login Response", response);
                             progressDialog.dismiss();
-                            if(response.equals("success")){
-                                returnUsernameAndFinish(username);
-                            } else if (response.equals("invalid username or password")){
-                                error_disp.setText(invalid);
-                            } else {
-                                error_disp.setText(invalid);
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if(jsonObject.getBoolean("success")){
+                                    returnUsernameAndFinish(username);
+                                } else {
+                                    if(jsonObject.getString("status").equals("invalid")){
+                                        error_disp.setText(invalid);
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -83,6 +91,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+        //Move to Create Account activity
         crt_accnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,6 +101,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     *  Returns the Username to main menu
+     * @param username
+     */
     public void returnUsernameAndFinish(String username){
         Intent retInt = new Intent(LoginActivity.this, MainMenuActivity.class);
         retInt.putExtra("username", username);
@@ -112,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
             et_username.setError("Max 20 Characters");
             return false;
         } else if(string.length() < 4){
-            et_username.setError("Minimum 6 Characters");
+            et_username.setError("Minimum 4 Characters");
             return false;
         }
         return true;
@@ -127,18 +142,22 @@ public class LoginActivity extends AppCompatActivity {
         if(string.equals("")){
             et_password.setError("Enter Password");
             return false;
-        } else if(string.length() < 4){
+        } else if(string.length() < 6){
             et_password.setError("Minimum 6 Characters");
             return false;
-        } else if(string.length() > 8){
-            et_password.setError("Max 8 Characters");
+        } else if(string.length() > 24){
+            et_password.setError("Max 24 Characters");
             return false;
         }
         return true;
     }
 
+
+    /**
+     * Move to Create Account Activity
+     */
     public void moveToCreateAccount() {
-        Intent move = new Intent(LoginActivity.this,CreateAccountActivity.class);
+        Intent move = new Intent(LoginActivity.this, CreateAccountActivity.class);
         startActivity(move);
     }
 }
