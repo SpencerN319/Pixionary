@@ -79,14 +79,15 @@ public final class UserDataDBHandler extends SQLiteOpenHelper {
                 new String[] { String.valueOf(id)}, null,
                 null, null, null);
 
-
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
+            User user = new User(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1), cursor.getString(2),
+                    cursor.getString(3));
+            return user;
         }
-        User user = new User(Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1), cursor.getString(2),
-                cursor.getString(3));
-        return user;
+        return null;
+
     }
 
     public User getUserByName(String username) {
@@ -95,7 +96,7 @@ public final class UserDataDBHandler extends SQLiteOpenHelper {
                 new String[] { String.valueOf(username)}, null, null,
                 null, null);
 
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
         User user = new User(Integer.parseInt(cursor.getString(0)),
