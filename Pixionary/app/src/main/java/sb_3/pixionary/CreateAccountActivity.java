@@ -66,7 +66,6 @@ public class CreateAccountActivity extends AppCompatActivity {
                             } else if(response.equals("username already exists")){
                                 error_disp.setText(fail);
                             }
-
                             else {
                                 progressDialog.show();
                                 progressDialog.setMessage(response);
@@ -128,6 +127,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             return false;
         } else if (!(pass1.equals(pass2))){
             et_password.setError("Passwords Don't Match");
+            return false;
         }
         return true;
     }

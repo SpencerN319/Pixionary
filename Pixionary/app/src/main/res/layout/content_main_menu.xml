@@ -138,4 +138,13 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
+    <ImageButton
+        android:id="@+id/button_settings"
+        android:layout_width="52dp"
+        android:layout_height="47dp"
+        android:background="@color/colorPrimaryPurple"
+        android:src="@mipmap/ic_settings_white_48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

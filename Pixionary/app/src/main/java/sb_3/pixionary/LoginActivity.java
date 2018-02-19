@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.volley.NetworkError;
 import com.android.volley.RequestQueue;
@@ -18,9 +19,11 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONException;
+
 import org.json.JSONObject;
 
+import SaveData.UserDataDBHandler;
+import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestLogin;
 
 
@@ -28,13 +31,14 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText et_username, et_password, error_disp;
     private String username, password;
-    RequestQueue requestQueue;
+    private UserDataDBHandler db;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Button crt_accnt = (Button) findViewById(R.id.button_createAccount);
+        Button crt_accnt = (Button) findViewById(R.id.button_create_account);
         Button login = (Button) findViewById(R.id.bt_login);
         et_username = (EditText) findViewById(R.id.editText_username);
         et_password = (EditText) findViewById(R.id.editText_password);
@@ -46,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                username = et_username.getText().toString().toLowerCase();
+                username = et_username.getText().toString();
                 password = et_password.getText().toString();
                 if(validateUsername(username) && validatePassword(password)) {
 
@@ -59,20 +63,20 @@ public class LoginActivity extends AppCompatActivity {
                     RequestLogin loginRequest = new RequestLogin(username, password, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.i("Login Response", response);
-                            progressDialog.dismiss();
                             try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                if(jsonObject.getBoolean("success")){
+                                JSONObject success = new JSONObject(response);
+                                progressDialog.dismiss();
+                                if(success.getBoolean("success")){
+                                    saveLoginData();
                                     returnUsernameAndFinish(username);
                                 } else {
-                                    if(jsonObject.getString("status").equals("invalid")){
-                                        error_disp.setText(invalid);
-                                    }
+                                    error_disp.setText(invalid);
                                 }
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+
                         }
                     }, new Response.ErrorListener() {
                         @Override
@@ -91,8 +95,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
-        //Move to Create Account activity
         crt_accnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,11 +103,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
-    /**
-     *  Returns the Username to main menu
-     * @param username
-     */
     public void returnUsernameAndFinish(String username){
         Intent retInt = new Intent(LoginActivity.this, MainMenuActivity.class);
         retInt.putExtra("username", username);
@@ -126,11 +123,12 @@ public class LoginActivity extends AppCompatActivity {
         } else if(string.length() > 20){
             et_username.setError("Max 20 Characters");
             return false;
-        } else if(string.length() < 4){
-            et_username.setError("Minimum 4 Characters");
+        } else if(string.length() < 6){
+            et_username.setError("Minimum 6 Characters");
             return false;
         }
         return true;
+
     }
 
     /**
@@ -152,12 +150,14 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
+    private void saveLoginData() {
+        db = new UserDataDBHandler(this);
+        User user = new User(0, username, password, "general"); //Hard coded usertype for now.
+        db.addUser(user);
+    }
 
-    /**
-     * Move to Create Account Activity
-     */
     public void moveToCreateAccount() {
-        Intent move = new Intent(LoginActivity.this, CreateAccountActivity.class);
+        Intent move = new Intent(LoginActivity.this,CreateAccountActivity.class);
         startActivity(move);
     }
 }
