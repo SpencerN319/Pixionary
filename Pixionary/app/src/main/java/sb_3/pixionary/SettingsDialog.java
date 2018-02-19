@@ -56,7 +56,7 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
                 break;
             case R.id.button_leaderboard:
                 i = 2;
-                //selectedActivity = LeaderboardActivity.class;
+                selectedActivity = LeaderboardActivity.class;
                 break;
             case R.id.button_blank:
                 i = 3;
@@ -72,7 +72,7 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
                 break;
         }
         if (i != 5 && i != 0) {
-            //nextActivity(selectedActivity); -- Uncomment when profile and leaderboard are ready.
+            nextActivity(selectedActivity);// -- Uncomment when profile and leaderboard are ready.
         }
         finish();
     }

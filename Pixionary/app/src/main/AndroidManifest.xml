@@ -12,35 +12,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="sb_3.pixionary.MainMenuActivity" >
+        <activity android:name=".MainMenuActivity">
             android:label="@string/app_name"
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
         <activity
-            android:name="sb_3.pixionary.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name="sb_3.pixionary.PlayActivity"
+            android:name=".PlayActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
-
+        <activity android:name=".CreateAccountActivity" />
+        <activity android:name=".GameBrowserActivity" />
         <activity
-            android:name="sb_3.pixionary.CreateAccountActivity" />
-
-        <activity
-            android:name="sb_3.pixionary.GameBrowserActivity"
-            />
-        <activity
+            android:parentActivityName=".MainMenuActivity"
             android:name=".SettingsDialog"
             android:theme="@android:style/Theme.Dialog" />
-
-
+        <activity android:name=".LeaderboardActivity"></activity>
     </application>
 
 </manifest>
