@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
 
 import sb_3.pixionary.Utilities.POJO.User;
 
@@ -81,9 +80,11 @@ public final class UserDataDBHandler extends SQLiteOpenHelper {
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
-            User user = new User(Integer.parseInt(cursor.getString(0)),
+            User user = new User(cursor.getString(0),
                     cursor.getString(1), cursor.getString(2),
-                    cursor.getString(3));
+                    cursor.getString(3),Integer.parseInt(cursor.getString(4)),
+                    Integer.parseInt(cursor.getString(5)), Integer.parseInt(cursor.getString(6)),
+                    Integer.parseInt(cursor.getString(7)));
             return user;
         }
         return null;
@@ -99,9 +100,11 @@ public final class UserDataDBHandler extends SQLiteOpenHelper {
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
         }
-        User user = new User(Integer.parseInt(cursor.getString(0)),
+        User user = new User(cursor.getString(0),
                 cursor.getString(1), cursor.getString(2),
-                cursor.getString(3));
+                cursor.getString(3),Integer.parseInt(cursor.getString(4)),
+                Integer.parseInt(cursor.getString(5)), Integer.parseInt(cursor.getString(6)),
+                Integer.parseInt(cursor.getString(7)));
         return user;
     }
 
