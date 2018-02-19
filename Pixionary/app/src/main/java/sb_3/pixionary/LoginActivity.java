@@ -20,22 +20,19 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 
+import org.json.JSONObject;
+
+import SaveData.UserDataDBHandler;
+import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestLogin;
 
 
 public class LoginActivity extends AppCompatActivity {
-    //Local stuff
-    private EditText Username;
-    private EditText Password;
-    private TextView Attempts;
-    private Button Login;
-    private Button CreateAccount;
-    private int attemptsLeft = 10;
-    private boolean success = false;
 
     EditText et_username, et_password, error_disp;
     private String username, password;
-    RequestQueue requestQueue;
+    private UserDataDBHandler db;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +63,20 @@ public class LoginActivity extends AppCompatActivity {
                     RequestLogin loginRequest = new RequestLogin(username, password, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.i("user error", password);
-                            progressDialog.dismiss();
-                            if(response.equals("success")){
-                                returnUsernameAndFinish(username);
-                            } else if (response.equals("invalid username or password")){
-                                error_disp.setText(invalid);
-                            } else {
-                                error_disp.setText(invalid);
+                            try {
+                                JSONObject success = new JSONObject(response);
+                                progressDialog.dismiss();
+                                if(success.getBoolean("success")){
+                                    saveLoginData();
+                                    returnUsernameAndFinish(username);
+                                } else {
+                                    error_disp.setText(invalid);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
+
+
                         }
                     }, new Response.ErrorListener() {
                         @Override
@@ -121,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
         } else if(string.length() > 20){
             et_username.setError("Max 20 Characters");
             return false;
-        } else if(string.length() < 4){
+        } else if(string.length() < 6){
             et_username.setError("Minimum 6 Characters");
             return false;
         }
@@ -146,6 +148,12 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private void saveLoginData() {
+        db = new UserDataDBHandler(this);
+        User user = new User(0, username, password, "general"); //Hard coded usertype for now.
+        db.addUser(user);
     }
 
     public void moveToCreateAccount() {

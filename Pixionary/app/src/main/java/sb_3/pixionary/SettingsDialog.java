@@ -9,6 +9,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import SaveData.UserDataDBHandler;
+
 /**
  * Created by fastn on 2/16/2018.
  */
@@ -76,6 +78,8 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
     }
 
     private void logOut() {
+        UserDataDBHandler db = new UserDataDBHandler(this);
+        db.deleteOne(0);
         boolean set = true;
         Intent retIntent = getIntent();
         retIntent.putExtra("logout", set);

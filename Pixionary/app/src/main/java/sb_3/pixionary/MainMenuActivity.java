@@ -1,5 +1,6 @@
 package sb_3.pixionary;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -14,14 +15,30 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+
 import java.io.InputStream;
+
+import SaveData.UserDataDBHandler;
+import sb_3.pixionary.Utilities.POJO.User;
+import sb_3.pixionary.Utilities.RequestLogin;
 
 public class MainMenuActivity extends AppCompatActivity {
     public final int LOGIN_REQUEST_ID = 4;
     public static final int SETTINGS_REQUEST_ID = 5;
     private String username;
+    private User user;
     TextView usernameDisplay;
 
+    //Automated login
+    UserDataDBHandler db;
+    RequestQueue requestQueue;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +50,10 @@ public class MainMenuActivity extends AppCompatActivity {
         Button button_buildGame = (Button) findViewById(R.id.button_buildGame);
         Button button_login = (Button) findViewById(R.id.button_login);
         ImageButton button_settings = (ImageButton) findViewById(R.id.button_settings);
-
         usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
         usernameDisplay.setText("You are currently not logged in");
+
+        automaticLogin();
 
         button_joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,5 +171,54 @@ public class MainMenuActivity extends AppCompatActivity {
         startActivityForResult(settingsIntent, SETTINGS_REQUEST_ID);
     }
 
+    private void automaticLogin() {
+        if (username == null) {
+            startProgressDialog();
+            //Creates the db helper.
+            requestQueue = Volley.newRequestQueue(MainMenuActivity.this);
+            db = new UserDataDBHandler(this);
+            user = db.getUserById(0);
+            if (user != null) {
+                RequestLogin request = new RequestLogin(user.getUsername(), user.getPassword(), new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject success = new JSONObject(response);
+                            if (success.getBoolean("success")) {
+                                username = user.getUsername();
+                                usernameDisplay.setText("You are currently logged in as " + username);
+                                progressDialog.dismiss();
+                            } else {
+                                progressDialog.setTitle("Failed");
+                                progressDialog.setMessage("No user data found, please login!");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("AutoLoginAttempt", "Failed with Errors.");
+                    }
+                });
+                requestQueue.add(request);
+            } else {
+                progressDialog.setTitle("Failed");
+                progressDialog.setMessage("No user data found, please login!");
+                progressDialog.setCancelable(true);
+            }
+        }
+    }
+
+    private void startProgressDialog() {
+        progressDialog = new ProgressDialog(MainMenuActivity.this);
+        progressDialog.setTitle("Please Wait");
+        progressDialog.setMessage("Logging In");
+        progressDialog.setCancelable(true);
+        progressDialog.show();
+    }
 
 }
