@@ -5,6 +5,10 @@
     $password = $_POST["password"];
     $user_type = $_POST["user_type"];
     $user_id = uniqid();
+	    
+    $username = mysqli_real_escape_string($con,$username);
+    $password = mysqli_real_escape_string($con,$password);
+    $user_type = mysqli_real_escape_string($con,$user_type);
 
     //check if user exists
     $check = mysqli_query($con, "SELECT * FROM User WHERE username = '$username'");
@@ -16,8 +20,11 @@
             $user_id = uniqid();
         }
         //insert user data
-        $sql0 = "INSERT INTO User (username, password, user_id, user_type)
-                 VALUES ('$username','$password','$user_id','$user_type')";
+	$salt = substr(md5(rand()), 24);
+	$prehash = $password.$salt;
+	$hash = hash('sha256', $prehash);
+        $sql0 = "INSERT INTO User (username, salt, hash, user_id, user_type)
+                 VALUES ('$username','$salt''$hash','$user_id','$user_type')";
 
         if($con->query($sql0)){
             echo "success";
@@ -26,5 +33,5 @@
             echo ("failure" . mysqli_error($con));
         }
     }
-    include "dbClose.php";
+    include 'dbClose.php';
  ?>
