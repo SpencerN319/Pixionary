@@ -39,8 +39,8 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
             button.setOnClickListener(this);
         }
         //Disables unused buttons for now.
-        buttons[2].setEnabled(false);
-        buttons[3].setEnabled(false);
+        //buttons[2].setEnabled(false);
+        //buttons[3].setEnabled(false);
     }
 
     @Override
