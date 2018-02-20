@@ -89,8 +89,10 @@
         app:layout_constraintTop_toBottomOf="@+id/editText_username" />
 
 
+
+
     <Button
-        android:id="@+id/button_login"
+        android:id="@+id/bt_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimaryOrange"
@@ -112,7 +114,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="10dp"/>
+
+
+    <EditText
+        android:id="@+id/error_window"
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:ems="10"
+        android:gravity="center"
+        android:clickable="false"/>
+
 
     <TextView
         android:id="@+id/tvAttempts"
