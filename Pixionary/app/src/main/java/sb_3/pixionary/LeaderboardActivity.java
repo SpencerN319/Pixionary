@@ -11,7 +11,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import sb_3.pixionary.Utilities.RequestLeaderboard;
 
 public class LeaderboardActivity extends AppCompatActivity {
     private static final String URL = "http://proj-309-sb-3.cs.iastate.edu:80/leaderboard.php";
@@ -23,12 +26,13 @@ public class LeaderboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_leaderboard);
         requestQueue = Volley.newRequestQueue(LeaderboardActivity.this);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL, null,
-                new Response.Listener<JSONObject>() {
+        RequestLeaderboard jsonObjectRequest = new RequestLeaderboard( null,
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONArray response) {
                         try{
                             Log.i("TAG1", response.toString());
+                            //Read all the values into an array of users.
 
                         } catch (Exception e){
                             e.printStackTrace();
