@@ -21,6 +21,7 @@ public class ConnectedClient implements Runnable{
     this.gamesList = gamesList;
   }
 
+  
   public void run(){
     try{
       openComs();
@@ -34,7 +35,8 @@ public class ConnectedClient implements Runnable{
     }
   }
 
-  //This method is what connects input strings to their proper actions. It returns a string regarding the success of the action.
+  //This method is what connects input strings to their proper actions. It returns a string regarding the success of the action
+  /* probably just ignore this whole thing to make it springboot style
   private String doAction(String input){
     if(input == null){
       return null;
@@ -60,7 +62,7 @@ public class ConnectedClient implements Runnable{
     }
     return "User input did not activate in switch.";
   }
-
+	*/
   private String readInputLine(){
     if(!connected){
       return null;

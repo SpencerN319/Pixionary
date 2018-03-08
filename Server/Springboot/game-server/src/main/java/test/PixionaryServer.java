@@ -13,11 +13,11 @@ import java.util.ArrayList;
 
 public class PixionaryServer {
 
-  private ServerSocket serverSocket;
-  private final int portNumber;
-  private ArrayList<ConnectedClient> connectedClients = new ArrayList<ConnectedClient>();
+  public ServerSocket serverSocket;
+  public final int portNumber;
+  public ArrayList<ConnectedClient> connectedClients = new ArrayList<ConnectedClient>();
 
-  private GamesList gamesList = new GamesList();
+  public GamesList gamesList = new GamesList();
 
   public PixionaryServer(int portNumber){
     this.portNumber = portNumber;
@@ -33,6 +33,7 @@ public class PixionaryServer {
 
   public void start(){
     //Accept clients, and start their threads
+	  //TODO: make this happen when they connect to a game or create a game
     while(true){
       try{
         Socket socket = serverSocket.accept();
