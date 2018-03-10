@@ -18,6 +18,10 @@
     <string name="menu_build_game">Build Custom Game</string>
     <string name="menu_login">Login</string>
     <string name="dialog_settings">Settings</string>
+    //Leaderboard
+    <string name="leaderboard_title">Leaderboard</string>
+    <string name="next_text">Next</string>
+    <string name="previous_text">Previous</string>
     //Gameplay
     <string name="remain_images">Images Remaining: 15</string>
     <string name="answer_hint">Your Answer Here</string>

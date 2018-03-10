@@ -1,4 +1,4 @@
-package sb_3.pixionary;
+package sb_3.pixionary.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import sb_3.pixionary.Utilities.POJO.User;
+import sb_3.pixionary.R;
 
 /**
  * Created by fastn on 2/19/2018.
