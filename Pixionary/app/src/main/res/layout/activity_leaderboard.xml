@@ -1,160 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="sb_3.pixionary.LeaderboardActivity"
-    android:background="@drawable/layout_border">
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="30dp">
+    android:background="@color/colorPrimaryRed"
+    tools:context="sb_3.pixionary.LeaderboardActivity">
 
+    <TextView
+        android:id="@+id/leaderboard"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/leaderboard_title"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
-        <TextView
-            android:id="@+id/et_label_username"
-            android:layout_width="35dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textColor="@color/colorPrimaryText"
-            android:text="Username" />
+    <ListView
+        android:id="@+id/leaderboard_you"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimaryYellow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leaderboard"
+        app:layout_constraintVertical_bias="0.011" />
 
-        <TextView
-            android:id="@+id/et_label_score"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="30dp"
-            android:text="Score"
-            android:textColor="@color/colorPrimaryText"
-            android:gravity="center"/>
-    </LinearLayout>
+    <Button
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorPrimaryOrange"
+        android:text="@string/next_text"
+        android:textColor="@color/colorPrimaryText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leaderboard_list_view"
+        app:layout_constraintVertical_bias="0.2" />
 
+    <Button
+        android:id="@+id/previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorPrimaryOrange"
+        android:text="@string/previous_text"
+        android:textColor="@color/colorPrimaryText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leaderboard_list_view"
+        app:layout_constraintVertical_bias="0.2" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="30dp"
-        android:orientation="vertical">
+    <ListView
+        android:id="@+id/leaderboard_list_view"
+        android:layout_width="350dp"
+        android:layout_height="370dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimaryYellow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leaderboard_you"
+        app:layout_constraintVertical_bias="0.0" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="50dp">
-
-
-            <TextView
-                android:id="@+id/etOne_username"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimaryText"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/etOne_score"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimaryText"
-                android:text="TextView" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="50dp">
-
-
-            <TextView
-                android:id="@+id/etTwo_username"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimaryText"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/etTwo_score"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimaryText"
-                android:text="TextView" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="50dp">
-
-
-            <TextView
-                android:id="@+id/etThree_username"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimaryText"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/etThree_score"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimaryText"
-                android:text="TextView" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="50dp">
-
-
-            <TextView
-                android:id="@+id/etFour_username"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimaryText"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/etFour_score"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimaryText"
-                android:text="TextView" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="50dp">
-
-
-            <TextView
-                android:id="@+id/etFive_username"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimaryText"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/etFive_score"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimaryText"
-                android:text="TextView" />
-        </LinearLayout>
-
-        </LinearLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

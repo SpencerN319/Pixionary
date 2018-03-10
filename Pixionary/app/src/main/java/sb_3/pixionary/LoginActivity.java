@@ -45,7 +45,6 @@ public class LoginActivity extends AppCompatActivity {
         final String invalid = String.format("%s", "invalid username or password");
         requestQueue = Volley.newRequestQueue(LoginActivity.this);
 
-
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,8 +74,6 @@ public class LoginActivity extends AppCompatActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
-
                         }
                     }, new Response.ErrorListener() {
                         @Override
