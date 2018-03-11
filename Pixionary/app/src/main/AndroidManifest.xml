@@ -22,7 +22,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PlayActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
@@ -31,8 +31,9 @@
         <activity
             android:name=".SettingsDialog"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".ProfileActivity"/>
-        <activity android:name=".LeaderboardActivity"/>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".LeaderboardActivity" />
+        <activity android:name=".HostGameActivity"></activity>
     </application>
 
 </manifest>

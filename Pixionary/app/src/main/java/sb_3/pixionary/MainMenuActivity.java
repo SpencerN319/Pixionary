@@ -77,12 +77,9 @@ public class MainMenuActivity extends AppCompatActivity {
                     startLoginActivity();
                 }
                 else{
-                    Snackbar.make(view, "Open host game activity", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    Intent i = new Intent(MainMenuActivity.this, HostGameActivity.class);
+                    startActivity(i);
                 }
-
-                Snackbar.make(view, "Open host game activity", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
         });
 

@@ -8,12 +8,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import sb_3.pixionary.Adapters.ListAdapter;
 
 
 public class GameBrowserActivity extends AppCompatActivity {
 
-    String[] items;
+    ArrayList<String> items;
     Context context;
 
     @Override
@@ -29,9 +32,10 @@ public class GameBrowserActivity extends AppCompatActivity {
             }
         });
 
-        items = getResources().getStringArray(R.array.games);
+        String[] itemarr = getResources().getStringArray(R.array.games);
+        items.addAll(Arrays.asList(itemarr));
 
-        ListAdapter adapter = new ListAdapter(context, R.layout.child_listview,R.id.textForBox, items);
+        ListAdapter adapter = new ListAdapter(context, R.layout.child_listview,R.id.textForBox, items, "Play!");
 
         games.setAdapter(adapter);
 

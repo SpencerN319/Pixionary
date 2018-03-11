@@ -19,15 +19,16 @@ import sb_3.pixionary.R;
 public class ListAdapter extends ArrayAdapter<String> {
 
     int id;
-    String[] items;
-    ArrayList<String> itemArrList;
+    ArrayList<String> items;
+    String buttonName;
     Context context;
 
-    public ListAdapter(Context context,int vg, int id, String[] items) {
+    public ListAdapter(Context context,int vg, int id, ArrayList<String> items, String buttonName) {
         super(context, vg, id, items);
         this.id = vg;
         this.items = items;
         this.context = context;
+        this.buttonName = buttonName;
     }
 
     static class ViewHolder {
@@ -49,8 +50,8 @@ public class ListAdapter extends ArrayAdapter<String> {
 
         //Set text for each view.
         ViewHolder hold = (ViewHolder) view.getTag();
-        hold.text.setText(items[position]);
-        hold.btn.setText("Play!");
+        hold.text.setText(items.get(position));
+        hold.btn.setText(buttonName);
 
         return view;
     }
