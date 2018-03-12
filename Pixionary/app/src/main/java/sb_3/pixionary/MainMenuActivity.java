@@ -2,14 +2,12 @@ package sb_3.pixionary;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
-import android.graphics.Bitmap;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -22,11 +20,10 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-import java.io.InputStream;
-
 import SaveData.UserDataDBHandler;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestLogin;
+import sb_3.pixionary.hostgame.HostGameActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
     public final int LOGIN_REQUEST_ID = 4;

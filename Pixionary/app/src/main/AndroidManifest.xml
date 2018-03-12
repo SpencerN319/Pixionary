@@ -24,7 +24,7 @@
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PlayActivity"
+            android:name=".gameplay.PlayActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity android:name=".CreateAccountActivity" />
         <activity android:name=".GameBrowserActivity" />
@@ -33,7 +33,9 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".LeaderboardActivity" />
-        <activity android:name=".HostGameActivity"></activity>
+        <activity android:name=".hostgame.HostGameActivity" />
+        <activity android:name=".hostgame.CategoriesSelectActivity" />
+        <activity android:name=".gameplay.HostWaitActivity"></activity>
     </application>
 
 </manifest>

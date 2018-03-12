@@ -1,4 +1,4 @@
-package sb_3.pixionary;
+package sb_3.pixionary.hostgame;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.android.volley.RequestQueue;
@@ -21,61 +20,46 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import SaveData.UserDataDBHandler;
-import sb_3.pixionary.Adapters.ListAdapter;
+import sb_3.pixionary.Adapters.PlaylistsAdapter;
+import sb_3.pixionary.R;
+import sb_3.pixionary.Utilities.POJO.GameClasses.Playlist;
 import sb_3.pixionary.Utilities.POJO.User;
-import sb_3.pixionary.Utilities.RequestCategories;
+import sb_3.pixionary.Utilities.RequestPlaylists;
 
-public class HostGameActivity extends AppCompatActivity {
 
-    private static final String TAG = HostGameActivity.class.getSimpleName();
+public class CategoriesSelectActivity extends AppCompatActivity {
+    private static final String TAG = CategoriesSelectActivity.class.getSimpleName();
     private Context context;
     private Activity activity;
     private RequestQueue requestQueue;
 
-    private String nameGame;
-    private String gameID;
-    private static final String url = ""; //Declare some url here.
-    private int pageNum = 0;
-
-    private EditText nameET;
-    private Button categorySelection;
-    private Button playAI;
-    private Button play1v1;
-
-    private ListAdapter adapter;
+    private PlaylistsAdapter adapter;
     private ListView listView;
     private Button previous;
     private Button next;
 
+    private int pageNum = 0;
+    private ArrayList<Playlist> playlistsList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_host_game);
-        context = HostGameActivity.this;
+        setContentView(R.layout.activity_categories_select);
+        context = CategoriesSelectActivity.this;
         //Initialize new RequestQueue
         requestQueue = Volley.newRequestQueue(context);
 
-        nameET = (EditText) findViewById(R.id.et_game_name);
-        categorySelection = (Button) findViewById(R.id.button_category);
         listView = (ListView) findViewById(R.id.categories_list);
         previous = (Button) findViewById(R.id.previous_btn);
         next = (Button) findViewById(R.id.next_btn);
-        playAI = (Button) findViewById(R.id.button_play_ai);
-        play1v1 = (Button) findViewById(R.id.button_play_1v1);
 
-        categorySelection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setContentView(R.layout.activity_host_game_categories);
-                requestCategoriesPage();
-            }
-        });
+        requestPlaylistsPage();
 
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pageNum--;
-                requestCategoriesPage();
+                requestPlaylistsPage();
             }
         });
 
@@ -83,37 +67,45 @@ public class HostGameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pageNum++;
-                requestCategoriesPage();
+                requestPlaylistsPage();
             }
         });
     }
+
     //We could clean both this and leaderboard page up by making a class specifically for the both of them?
-    private void requestCategoriesPage() {
+    private void requestPlaylistsPage() {
         UserDataDBHandler db = new UserDataDBHandler(context);
         User user = db.getUser("0");
         if(user != null) {
             String username = user.getUsername();
             //Request the different category names. -- Should receive a list of 10 possible choices.
-            RequestCategories categoryRequest = new RequestCategories(username, pageNum, new Response.Listener<String>() {
+            RequestPlaylists categoryRequest = new RequestPlaylists(username, pageNum, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    try{
-                        Log.i(TAG, response);
-                        JSONObject jsonLeaderboard = new JSONObject(response); //Gets the response
-                        if(jsonLeaderboard.getBoolean("success")) {
-                            pageLogic(jsonLeaderboard.getInt("total")); //Enables or disables buttons according to total users.
-                            JSONArray jsonCategoriesArr = jsonLeaderboard.getJSONArray("data"); //This might be changing.
-                            ArrayList<String> categoryList = new ArrayList<>();
-                            for (int i = 0; i < jsonCategoriesArr.length(); i++) {
-                                //This single line creates a ShortUser object from a response and adds to the ArrayList
-                                categoryList.add(jsonCategoriesArr.getString(i));
-                            }
-                            adapter = new ListAdapter(context, R.layout.child_listview, R.id.textForBox, categoryList, "Preview");
-                            listView.setAdapter(adapter);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+//                    try{
+//                        Log.i(TAG, response);
+//                        JSONObject jsonPlaylists = new JSONObject(response); //Gets the response
+//                        if(jsonPlaylists.getBoolean("success")) {
+//                            pageLogic(jsonPlaylists.getInt("total")); //Enables or disables buttons according to total users.
+//                            JSONArray jsonPlaylistArr = jsonPlaylists.getJSONArray("data"); //This might be changing.
+//                            playlistsList = new ArrayList<>();
+//                            for (int i = 0; i < jsonPlaylistArr.length(); i++) {
+//                                //This single line creates a Playlist object for every item in Json array.
+//                                playlistsList.add(new Playlist(jsonPlaylistArr.getJSONObject(i)));
+//                            }
+//                            adapter = new PlaylistsAdapter(context, playlistsList);
+//                            listView.setAdapter(adapter);
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+                    //FIXME TEMPORARY FOR TESTING
+                    playlistsList = new ArrayList<>();
+                    for (int i = 0; i < 10; i++) {
+                        playlistsList.add(new Playlist("Name" + i, i*100, "Creator" + i));
                     }
+                    adapter = new PlaylistsAdapter(context, playlistsList);
+                    listView.setAdapter(adapter);
                 }
             }, new Response.ErrorListener() {
                 @Override

@@ -1,8 +1,7 @@
-package sb_3.pixionary;
+package sb_3.pixionary.gameplay;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import java.net.Socket;
 import Client.BuildImageThread;
 import Client.GuessThread;
 import Client.ReceivePixelThread;
+import sb_3.pixionary.R;
 
 public class PlayActivity extends AppCompatActivity {
 

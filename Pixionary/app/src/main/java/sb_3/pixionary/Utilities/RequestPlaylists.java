@@ -12,11 +12,11 @@ import java.util.Map;
  * Created by fastn on 3/11/2018.
  */
 
-public class RequestCategories extends StringRequest {
+public class RequestPlaylists extends StringRequest {
     private static final String CATEGORIES_URL = "http://proj-309-sb-3.cs.iastate.edu:80/register.php"; //TODO URL needs to be changed.
     private Map<String, String> parameters;
 
-    public RequestCategories(String username, int pageRequested, Response.Listener<String> listener, Response.ErrorListener errorListener) {
+    public RequestPlaylists(String username, int pageRequested, Response.Listener<String> listener, Response.ErrorListener errorListener) {
         super(Request.Method.POST, CATEGORIES_URL, listener, errorListener);
         String page = String.valueOf(pageRequested);
         parameters = new HashMap<>();

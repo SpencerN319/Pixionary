@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryOrange"
-    tools:context="sb_3.pixionary.HostGameActivity">
+    tools:context="sb_3.pixionary.hostgame.HostGameActivity">
 
     <TextView
         android:id="@+id/tv_title"

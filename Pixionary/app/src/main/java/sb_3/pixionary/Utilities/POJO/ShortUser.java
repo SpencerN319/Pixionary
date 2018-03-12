@@ -1,5 +1,6 @@
 package sb_3.pixionary.Utilities.POJO;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -10,6 +11,7 @@ public class ShortUser {
 
     private String username;
     private int score;
+    private boolean success;
 
     public ShortUser() {
         //empty ShortUser
@@ -18,6 +20,7 @@ public class ShortUser {
     public ShortUser(String username, int score) {
         this.score = score;
         this.username = username;
+        this.success = true;
     }
 
     public ShortUser(JSONObject jsonObject) {
@@ -25,12 +28,17 @@ public class ShortUser {
             try {
                 this.username = jsonObject.getString("username");
                 this.score = jsonObject.getInt("score");
+                this.success = true;
             } catch(Exception e) {
                 e.printStackTrace();
+                this.username = null;
+                this.score = -1;
+                this.success = false;
             }
         } else {
             this.username = null;
             this.score = -1;
+            this.success = false;
         }
     }
 

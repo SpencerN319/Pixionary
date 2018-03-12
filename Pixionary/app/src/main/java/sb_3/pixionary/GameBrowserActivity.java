@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import sb_3.pixionary.Adapters.ListAdapter;
+import sb_3.pixionary.gameplay.PlayActivity;
 
 
 public class GameBrowserActivity extends AppCompatActivity {
