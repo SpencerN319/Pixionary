@@ -18,14 +18,14 @@ public class GamesList{
     return namesAndGames.get(gameName);
   }
 
-  public Game startGame(ConnectedClient host, String gameName){
+  public Game createGame(ConnectedClient host, String gameName){
     if(gameExists(gameName)){
       return null;
     }
     Game newGame = new Game(this, host, gameName);
     namesAndGames.put(gameName, newGame);
-    System.out.println("Game started: " + gameName);
-    System.out.println("# of games running:" + namesAndGames.size());
+    System.out.println("Game created: " + gameName);
+    System.out.println("# of games existing:" + namesAndGames.size());
     return newGame;
   }
 

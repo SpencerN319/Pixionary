@@ -7,7 +7,9 @@ public class Game{
   ConnectedClient host;
   GamesList gamesList;
   ArrayList<ConnectedClient> gameMembers = new ArrayList<ConnectedClient>();
+  //we need some sort of unique game identifier, maybe make gameName have to be unique. for now lets trust end users to do dat
   final String gameName;
+  boolean playing = false;
 
   public Game(GamesList gamesList, ConnectedClient host, String gameName){
     this.gamesList = gamesList;
@@ -16,6 +18,11 @@ public class Game{
     gameMembers.add(host);
   }
 
+  public void startGame()
+  {
+	  playing = true;
+	  this.playRound();
+  }
   public void addMember(ConnectedClient joiningMember){
     gameMembers.add(joiningMember);
   }
@@ -58,6 +65,17 @@ public class Game{
 
   public String getName(){
     return gameName;
+  }
+  
+  public boolean getGameStatus()
+  {
+	  return playing;
+  }
+  
+  public void playRound()
+  {
+	  Imgbreak I = new Imgbreak(null, "Cat",null, this);
+	  
   }
 
   public void delete(){

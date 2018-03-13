@@ -14,6 +14,7 @@ public class ConnectedClient implements Runnable{
   private Game gameSession;
   private final String ACTION_SUCCESS = "success";
   private boolean connected = true;
+  public int userID;
 
   public ConnectedClient(PixionaryServer currentServer, GamesList gamesList, Socket socket){
     this.socket = socket;

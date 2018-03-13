@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClientController {
 
 	@RequestMapping("/connect")
+	//TODO: pass game ID instead of the entire game and then search fo it.
 	public void connect(Game g)
 	{
 		 try{
