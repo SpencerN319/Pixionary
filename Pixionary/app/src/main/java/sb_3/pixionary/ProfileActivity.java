@@ -7,6 +7,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import SaveData.UserDataDBHandler;
+import sb_3.pixionary.Adapters.ProfileAdapter;
 import sb_3.pixionary.Utilities.POJO.User;
 
 public class ProfileActivity extends AppCompatActivity {
