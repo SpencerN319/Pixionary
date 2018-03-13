@@ -24,6 +24,7 @@ import SaveData.UserDataDBHandler;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestLogin;
 import sb_3.pixionary.hostgame.HostGameActivity;
+import sb_3.pixionary.joingame.GameBrowserActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
     public final int LOGIN_REQUEST_ID = 4;

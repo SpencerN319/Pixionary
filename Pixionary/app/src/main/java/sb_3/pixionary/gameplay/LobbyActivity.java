@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import sb_3.pixionary.R;
 
-public class HostWaitActivity extends AppCompatActivity {
+public class LobbyActivity extends AppCompatActivity {
 
     TextView id;
     @Override
@@ -21,7 +21,7 @@ public class HostWaitActivity extends AppCompatActivity {
         if (bundle != null) {
             value = bundle.getInt("id");
         }
-        id.setText(value);
+        id.setText(String.valueOf(value));
 
     }
 }

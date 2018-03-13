@@ -25,7 +25,6 @@ import SaveData.UserDataDBHandler;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestLogin;
 
-
 public class LoginActivity extends AppCompatActivity {
 
     EditText et_username, et_password, error_disp;

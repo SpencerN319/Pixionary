@@ -1,6 +1,5 @@
 package sb_3.pixionary.hostgame;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,11 +25,9 @@ import sb_3.pixionary.Utilities.POJO.GameClasses.Playlist;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestPlaylists;
 
-
 public class CategoriesSelectActivity extends AppCompatActivity {
     private static final String TAG = CategoriesSelectActivity.class.getSimpleName();
     private Context context;
-    private Activity activity;
     private RequestQueue requestQueue;
 
     private PlaylistsAdapter adapter;
@@ -82,30 +79,24 @@ public class CategoriesSelectActivity extends AppCompatActivity {
             RequestPlaylists categoryRequest = new RequestPlaylists(username, pageNum, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-//                    try{
-//                        Log.i(TAG, response);
-//                        JSONObject jsonPlaylists = new JSONObject(response); //Gets the response
-//                        if(jsonPlaylists.getBoolean("success")) {
-//                            pageLogic(jsonPlaylists.getInt("total")); //Enables or disables buttons according to total users.
-//                            JSONArray jsonPlaylistArr = jsonPlaylists.getJSONArray("data"); //This might be changing.
-//                            playlistsList = new ArrayList<>();
-//                            for (int i = 0; i < jsonPlaylistArr.length(); i++) {
-//                                //This single line creates a Playlist object for every item in Json array.
-//                                playlistsList.add(new Playlist(jsonPlaylistArr.getJSONObject(i)));
-//                            }
-//                            adapter = new PlaylistsAdapter(context, playlistsList);
-//                            listView.setAdapter(adapter);
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-                    //FIXME TEMPORARY FOR TESTING
-                    playlistsList = new ArrayList<>();
-                    for (int i = 0; i < 10; i++) {
-                        playlistsList.add(new Playlist("Name" + i, i*100, "Creator" + i));
+                    try{
+                        Log.i(TAG, response);
+                        JSONObject jsonPlaylists = new JSONObject(response); //Gets the response
+                        if(jsonPlaylists.getBoolean("success")) {
+                            pageLogic(jsonPlaylists.getInt("total")); //Enables or disables buttons according to total users.
+                            JSONArray jsonPlaylistArr = jsonPlaylists.getJSONArray("data"); //This might be changing.
+                            playlistsList = new ArrayList<>();
+                            for (int i = 0; i < jsonPlaylistArr.length(); i++) {
+                                //This single line creates a Playlist object for every item in Json array.
+                                playlistsList.add(new Playlist(jsonPlaylistArr.getJSONObject(i)));
+                            }
+                            adapter = new PlaylistsAdapter(context, playlistsList);
+                            listView.setAdapter(adapter);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    adapter = new PlaylistsAdapter(context, playlistsList);
-                    listView.setAdapter(adapter);
+
                 }
             }, new Response.ErrorListener() {
                 @Override

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryPurple"
-    tools:context="sb_3.pixionary.GameBrowserActivity">
+    tools:context="sb_3.pixionary.joingame.GameBrowserActivity">
 
     <TextView
         android:id="@+id/textView"
@@ -16,9 +16,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/game_browser"
-        android:textSize="40dp"
-        android:textColor="@color/colorPrimaryText"
         android:textAlignment="center"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="40dp"
         app:layout_constraintBottom_toTopOf="@+id/gameList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,11 +28,44 @@
     <ListView
         android:id="@+id/gameList"
         android:layout_width="350dp"
-        android:layout_height="530dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="411dp"
+        android:layout_marginBottom="76dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".9" />
+
+    <Button
+        android:id="@+id/next_gameS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@color/colorPrimaryOrange"
+        android:text="@string/next_text"
+        android:textColor="@color/colorPrimaryText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline21"
+        app:layout_constraintTop_toTopOf="@+id/guideline21" />
+
+    <Button
+        android:id="@+id/previous_gameS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="@color/colorPrimaryOrange"
+        android:text="@string/previous_text"
+        android:textColor="@color/colorPrimaryText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline21"
+        app:layout_constraintTop_toTopOf="@+id/guideline21" />
+
+
 </android.support.constraint.ConstraintLayout>

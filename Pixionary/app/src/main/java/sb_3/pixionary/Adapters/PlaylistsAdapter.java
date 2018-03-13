@@ -11,7 +11,7 @@ import android.widget.*;
 
 import java.util.ArrayList;
 
-import sb_3.pixionary.gameplay.HostWaitActivity;
+import sb_3.pixionary.gameplay.LobbyActivity;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.GameClasses.Playlist;
 
@@ -82,7 +82,7 @@ public class PlaylistsAdapter extends BaseAdapter implements android.widget.List
     }
 
     private void startHostWaitScreen(int position) {
-        Intent intent = new Intent(context, HostWaitActivity.class);
+        Intent intent = new Intent(context, LobbyActivity.class);
         Bundle gameAccess = new Bundle();
         gameAccess.putInt("id", items.get(position).getId());
         intent.putExtras(gameAccess);

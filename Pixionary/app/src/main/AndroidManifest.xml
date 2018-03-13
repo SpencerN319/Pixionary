@@ -27,7 +27,7 @@
             android:name=".gameplay.PlayActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity android:name=".CreateAccountActivity" />
-        <activity android:name=".GameBrowserActivity" />
+        <activity android:name=".joingame.GameBrowserActivity" />
         <activity
             android:name=".SettingsDialog"
             android:theme="@android:style/Theme.Dialog" />
@@ -35,7 +35,7 @@
         <activity android:name=".LeaderboardActivity" />
         <activity android:name=".hostgame.HostGameActivity" />
         <activity android:name=".hostgame.CategoriesSelectActivity" />
-        <activity android:name=".gameplay.HostWaitActivity"></activity>
+        <activity android:name=".gameplay.LobbyActivity"></activity>
     </application>
 
 </manifest>
