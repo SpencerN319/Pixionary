@@ -18,7 +18,7 @@ public class Playlist  {
         //empty constructor
     }
 
-    public Playlist(String name, int id, String creator) {
+    public Playlist(int id, String name, String creator) {
         this.name = name;
         this.id = id;
         this.creator = creator;

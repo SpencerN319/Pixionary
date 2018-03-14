@@ -1,6 +1,8 @@
 package sb_3.pixionary.hostgame;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,9 +26,11 @@ import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.GameClasses.Playlist;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestPlaylists;
+import sb_3.pixionary.interfaces.DataTransferInterface;
 
-public class CategoriesSelectActivity extends AppCompatActivity {
-    private static final String TAG = CategoriesSelectActivity.class.getSimpleName();
+public class PlaylistSelectActivity extends AppCompatActivity implements DataTransferInterface {
+    private static final String TAG = PlaylistSelectActivity.class.getSimpleName();
+    private DataTransferInterface dataTransferInterface;
     private Context context;
     private RequestQueue requestQueue;
 
@@ -42,7 +46,8 @@ public class CategoriesSelectActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories_select);
-        context = CategoriesSelectActivity.this;
+        context = PlaylistSelectActivity.this;
+        dataTransferInterface = this;
         //Initialize new RequestQueue
         requestQueue = Volley.newRequestQueue(context);
 
@@ -90,7 +95,7 @@ public class CategoriesSelectActivity extends AppCompatActivity {
                                 //This single line creates a Playlist object for every item in Json array.
                                 playlistsList.add(new Playlist(jsonPlaylistArr.getJSONObject(i)));
                             }
-                            adapter = new PlaylistsAdapter(context, playlistsList);
+                            adapter = new PlaylistsAdapter(context, playlistsList, dataTransferInterface);
                             listView.setAdapter(adapter);
                         }
                     } catch (Exception e) {
@@ -126,12 +131,25 @@ public class CategoriesSelectActivity extends AppCompatActivity {
         }
     }
 
-    private void disableButton(Button button) {
-        button.setEnabled(false);
+    //TODO possibly add some sort of alpha to the color of these when they are disabled.
+    private void disableButton(Button button) { button.setEnabled(false); }
 
+    private void enableButton(Button button) { button.setEnabled(true); }
+
+    @Override
+    public void setValuesAndReact(int position) {
+        sendResultingPlaylist(playlistsList.get(position));
     }
 
-    private void enableButton(Button button) {
-        button.setEnabled(true);
+    private void sendResultingPlaylist(Playlist playlist) {
+        Intent intent = new Intent(context, HostGameActivity.class);
+        intent.putExtra("PlaylistID", playlist.getId());
+        intent.putExtra("PlaylistName", playlist.getName());
+        intent.putExtra("PlaylistCreator", playlist.getCreator());
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
+
+
+
 }

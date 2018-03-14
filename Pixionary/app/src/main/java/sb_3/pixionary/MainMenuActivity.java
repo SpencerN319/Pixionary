@@ -77,8 +77,9 @@ public class MainMenuActivity extends AppCompatActivity {
                     startLoginActivity();
                 }else {
                     updateDBUserType("host");
-                    Intent i = new Intent(MainMenuActivity.this, HostGameActivity.class);
-                    startActivity(i);
+                    Intent intent = new Intent(MainMenuActivity.this, HostGameActivity.class);
+                    intent.putExtra("username", username);
+                    startActivity(intent);
                 }
             }
         });

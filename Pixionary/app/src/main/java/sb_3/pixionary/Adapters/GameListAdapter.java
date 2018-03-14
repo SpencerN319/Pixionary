@@ -43,7 +43,7 @@ public class GameListAdapter extends BaseAdapter implements android.widget.ListA
 
     @Override
     public long getItemId(int position) {
-        return items.get(position).getId();
+        return items.get(position).getGameId();
     }
 
     public View getView(final int position, View convert, ViewGroup parent) {
@@ -56,7 +56,7 @@ public class GameListAdapter extends BaseAdapter implements android.widget.ListA
 
         //Set text for Name.
         TextView tvGameName = (TextView) view.findViewById(R.id.textGameName);
-        tvGameName.setText(items.get(position).getName());
+        tvGameName.setText(items.get(position).getGameName());
 
         //Set text for host.
         TextView tvHost = (TextView) view.findViewById(R.id.textGameHost);
@@ -77,7 +77,7 @@ public class GameListAdapter extends BaseAdapter implements android.widget.ListA
     private void startWaitScreen(int position) {
         Intent intent = new Intent(context, LobbyActivity.class);
         Bundle gameAccess = new Bundle();
-        gameAccess.putInt("id", items.get(position).getId());
+        gameAccess.putInt("id", items.get(position).getGameId());
         intent.putExtras(gameAccess);
         context.startActivity(intent);
         ((Activity)context).finish();

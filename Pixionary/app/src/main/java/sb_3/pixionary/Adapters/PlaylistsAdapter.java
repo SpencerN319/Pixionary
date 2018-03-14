@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import sb_3.pixionary.gameplay.LobbyActivity;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.GameClasses.Playlist;
+import sb_3.pixionary.hostgame.HostGameActivity;
+import sb_3.pixionary.interfaces.DataTransferInterface;
 
 /**
  * Created by fastn on 3/12/2018.
@@ -22,12 +24,15 @@ import sb_3.pixionary.Utilities.POJO.GameClasses.Playlist;
 //TODO Add a functionality to the preview button where it will display a preview image of the playlist.
 public class PlaylistsAdapter extends BaseAdapter implements android.widget.ListAdapter {
 
-    ArrayList<Playlist> items;
-    Context context;
+    DataTransferInterface dtInterface;
 
-    public PlaylistsAdapter(Context context, ArrayList<Playlist> items) {
+    private ArrayList<Playlist> items;
+    private Context context;
+
+    public PlaylistsAdapter(Context context, ArrayList<Playlist> items, DataTransferInterface dtInterface) {
         this.items = items;
         this.context = context;
+        this.dtInterface = dtInterface;
     }
 
     @Override
@@ -74,11 +79,22 @@ public class PlaylistsAdapter extends BaseAdapter implements android.widget.List
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startHostWaitScreen(position);
+//                returnPlaylistAndFinish(position);
+                dtInterface.setValuesAndReact(position);
             }
         });
 
         return view;
+    }
+
+
+    private void returnPlaylistAndFinish(int position) {
+        Intent intent = new Intent(context, HostGameActivity.class);
+        intent.putExtra("PlaylistName", items.get(position).getName());
+        intent.putExtra("PlaylistCreator", items.get(position).getCreator());
+        intent.putExtra("PlaylistID", items.get(position).getId());
+        ((Activity)context).setResult(Activity.RESULT_OK, intent);
+        ((Activity)context).finish();
     }
 
     private void startHostWaitScreen(int position) {

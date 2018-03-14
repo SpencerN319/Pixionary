@@ -7,6 +7,7 @@ import java.util.List;
  * Created by fastn on 3/8/2018.
  */
 
+//TODO this is a work in progress dependent upon what we need from the server.
 public class Game {
 
     private String host, title;

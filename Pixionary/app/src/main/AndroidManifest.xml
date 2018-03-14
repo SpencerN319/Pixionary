@@ -34,7 +34,7 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".LeaderboardActivity" />
         <activity android:name=".hostgame.HostGameActivity" />
-        <activity android:name=".hostgame.CategoriesSelectActivity" />
+        <activity android:name=".hostgame.PlaylistSelectActivity" />
         <activity android:name=".gameplay.LobbyActivity"></activity>
     </application>
 

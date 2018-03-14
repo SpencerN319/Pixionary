@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import SaveData.UserDataDBHandler;
 import sb_3.pixionary.Adapters.GameListAdapter;
 import sb_3.pixionary.R;
+import sb_3.pixionary.Utilities.POJO.GameClasses.Playlist;
 import sb_3.pixionary.Utilities.POJO.GameClasses.ShortGame;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestGamesAvailable;
-import sb_3.pixionary.Utilities.RequestPlaylists;
 import sb_3.pixionary.gameplay.PlayActivity;
 
 
@@ -92,8 +92,9 @@ public class GameBrowserActivity extends AppCompatActivity {
 //                            JSONArray jsonGameArr = jsonGameList.getJSONArray("data"); //This might be changing.
 //                            gamesList = new ArrayList<>();
 //                            for (int i = 0; i < jsonGameArr.length(); i++) {
-//                                //This single line creates a Playlist object for every item in Json array.
-//                                gamesList.add(new ShortGame(jsonGameArr.getJSONObject(i)));
+//                                ShortGame shortGame = new ShortGame();
+//                                shortGame.setShortGameFromJSON(jsonGameArr.getJSONObject(i));
+//                                gamesList.add(shortGame);
 //                            }
 //                            adapter = new GameListAdapter(context, gamesList);
 //                            listView.setAdapter(adapter);
@@ -114,7 +115,8 @@ public class GameBrowserActivity extends AppCompatActivity {
         //FIXME temporary for testing.
         gamesList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            gamesList.add(new ShortGame("host" + i, "gameName" + i, i * 100));
+            gamesList.add(new ShortGame(i, "host" + i,
+                    "gameName" + i, i * 100, null));
         }
         adapter = new GameListAdapter(context, gamesList);
         listView.setAdapter(adapter);

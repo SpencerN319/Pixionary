@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
  * Created by fastn on 3/12/2018.
  */
 
+//FIXME not sure if this is going to be needed.
 public class RealTimeClient {
     URI uri;
     WebSocketClient webSocketClient;
@@ -26,5 +27,5 @@ public class RealTimeClient {
             e.printStackTrace();
         }
     }
-    //TODO not sure if this is going to be needed.
+
 }
