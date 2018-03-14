@@ -15,11 +15,13 @@ public class Game{
   //we need some sort of unique game identifier, maybe make gameName have to be unique. for now lets trust end users to do dat
   final String gameName;
   boolean playing = false;
+  String category;
 
-  public Game(GamesList gamesList, ConnectedClient host, String gameName){
+  public Game(GamesList gamesList, ConnectedClient host, String gameName, String category){
     this.gamesList = gamesList;
     this.host = host;
     this.gameName = gameName;
+    this.category = category;
     gameMembers.add(host);
   }
 

@@ -18,11 +18,11 @@ public class GamesList{
     return namesAndGames.get(gameName);
   }
 
-  public Game createGame(ConnectedClient host, String gameName){
+  public Game createGame(ConnectedClient host, String gameName,  String category){
     if(gameExists(gameName)){
       return null;
     }
-    Game newGame = new Game(this, host, gameName);
+    Game newGame = new Game(this, host, gameName, category);
     namesAndGames.put(gameName, newGame);
     System.out.println("Game created: " + gameName);
     System.out.println("# of games existing:" + namesAndGames.size());

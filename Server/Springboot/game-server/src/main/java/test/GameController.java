@@ -12,7 +12,7 @@ public class GameController {
 
 	@RequestMapping("/creategame")
 	//creates game, begins socket connection
-	public String makeGame(String gameName)
+	public String makeGame(String gameName, String category)
 	{	
 		try {
 			
@@ -23,7 +23,7 @@ public class GameController {
         System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
         Thread newThread = new Thread(newClient);
         newThread.start();
-        Main.server.gamesList.createGame(newClient, gameName);
+        Main.server.gamesList.createGame(newClient, gameName, category);
 		
 	
 		}catch(IOException e){
