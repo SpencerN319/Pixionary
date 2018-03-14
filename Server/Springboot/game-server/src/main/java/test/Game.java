@@ -1,6 +1,11 @@
 package test;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 public class Game{
 
@@ -23,6 +28,7 @@ public class Game{
 	  playing = true;
 	  this.playRound();
   }
+  
   public void addMember(ConnectedClient joiningMember){
     gameMembers.add(joiningMember);
   }
@@ -51,6 +57,8 @@ public class Game{
     }
   }
 
+  
+  /* we aren't treating the host any different
   private void sendStringToHost(String output){
     host.sendStringToClient(output);
   }
@@ -62,6 +70,7 @@ public class Game{
       }
     }
   }
+  */
 
   public String getName(){
     return gameName;
@@ -74,8 +83,26 @@ public class Game{
   
   public void playRound()
   {
-	  Imgbreak I = new Imgbreak(null, "Cat",null, this);
+	  //reset correct guess status
+	  for(int i = 0; i < gameMembers.size(); i++){
+	      gameMembers.get(i).setGuessed(false);
+	      }
+	  String URL = "https://i.imgur.com/AEWms1M.jpg";
+	  Imgloader il = new Imgloader(URL);
+	  il.runScript();
+	  BufferedImage img = null;
 	  
+	  try {
+	      img = ImageIO.read(new File("image.jpg"));
+	  } catch (IOException e) {
+
+	      System.out.println("Failed to load image: ");
+		  e.printStackTrace();
+	  }
+	  
+	  Imgbreak i = new Imgbreak(img, "cat",null, this);
+	  i.breakImage();
+	  i.sendPixels();
   }
 
   public void delete(){

@@ -25,7 +25,7 @@ public class GameController {
 			 g.startGame();
 			 */
 	}
-	
+	@RequestMapping("/startgame")
 	public String startGame(Game g)
 	{
 		g.startGame();

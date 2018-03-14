@@ -1,7 +1,7 @@
 package test;
 import java.awt.image.BufferedImage;
 import java.util.Random;
-import java.util.Scanner;
+
 
 //breaks the image into pixels, transfers them, handles guesses, and more.
 public class Imgbreak{
@@ -28,7 +28,7 @@ public class Imgbreak{
     public Imgbreak (BufferedImage i, String correctword, String[] thesynonyms, Game g)
     {
 	img = i;
-	word = correctword;
+	word = correctword.toLowerCase();
 	synonyms = thesynonyms;
 	game = g;
     }
@@ -88,17 +88,20 @@ public class Imgbreak{
 
     	public void getGuess(ConnectedClient c)
 	{
-
+    		//ignore guesses from people who already guessed.
+    	if (!c.getGuessed())
+    	{
 	    //c.getStringFromClient?????
-		Scanner scan = new Scanner(System.in);
-		String guess = scan.next();
+		
+		String guess = c.readInputLine();
+			guess = guess.toLowerCase();
 		if (guess.equals(word))
 				{
 				    //send string to one player
 					c.sendStringToClient("CORRECT!");
 					//give points or something here
 					int score = (totalpixels - sent) * 100 / totalpixels + 1;
-					//c.incrementScore(score); 
+					c.incrementScore(score); 
 				}
 			else 
 			{
@@ -111,13 +114,14 @@ public class Imgbreak{
 				
 			
 			}
-		scan.close();
-
+	
+    	}
 	}
-    
+    /* if we want the game to stop when one person guesses it
     public void setGuessed()
     {
 	guessed = true;
     }
+    */
         
 }

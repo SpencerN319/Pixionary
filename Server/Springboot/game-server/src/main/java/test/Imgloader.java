@@ -1,11 +1,12 @@
 package test;
-//we might not ever need to run this sever side but idk
+
 import java.lang.ProcessBuilder;
 import java.io.IOException;
-public class Imgtaker
-{
+
+public class Imgloader {
     String w;
-    public Imgtaker(String word)
+    
+    public Imgloader(String word)
     {
 	w = word;
     }
@@ -13,7 +14,7 @@ public class Imgtaker
     public void runScript()
     {
 	try {
-	ProcessBuilder pb = new ProcessBuilder("imggrabber.sh", w);
+	ProcessBuilder pb = new ProcessBuilder("imgloader.sh", w);
 	pb.start();
 	} catch (IOException e)
 	    {
@@ -21,5 +22,4 @@ public class Imgtaker
 	    }
     }
 
-    
 }

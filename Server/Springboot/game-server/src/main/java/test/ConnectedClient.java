@@ -12,10 +12,13 @@ public class ConnectedClient implements Runnable{
   private String username = "tempUsername";
   private GamesList gamesList;
   private Game gameSession;
-  private final String ACTION_SUCCESS = "success";
+  //private final String ACTION_SUCCESS = "success";
   private boolean connected = true;
+  
   public int userID;
-
+  public int localScore;
+  public boolean guessed;
+  
   public ConnectedClient(PixionaryServer currentServer, GamesList gamesList, Socket socket){
     this.socket = socket;
     this.currentServer = currentServer;
@@ -32,7 +35,8 @@ public class ConnectedClient implements Runnable{
       return;
     }
     while(connected){
-        doAction(readInputLine());
+    	//wtf is this
+    	//  doAction(readInputLine());
     }
   }
 
@@ -64,7 +68,7 @@ public class ConnectedClient implements Runnable{
     return "User input did not activate in switch.";
   }
 	*/
-  private String readInputLine(){
+  public String readInputLine(){
     if(!connected){
       return null;
     }
@@ -82,7 +86,7 @@ public class ConnectedClient implements Runnable{
       return null;
     }
   }
-
+/* probably not needed
   private boolean startGame(String gameName){
     if(gameSession != null){
       leaveGame();
@@ -112,14 +116,14 @@ public class ConnectedClient implements Runnable{
     //Game didn't exist
     return false;
   }
-
+	*/
   public void leaveGame(){
     if(gameSession != null){
        gameSession.removeMemberFromMembersList(this);
        gameSession = null;
     }
   }
-
+	
   //Properly removes client from the server
   public void delete(){
     if(!connected){
@@ -153,7 +157,7 @@ public class ConnectedClient implements Runnable{
       System.out.println("Failed to close comms.");
     }
   }
-
+  //what do dis do
   public void sendStringToClient(String output){
     if(!connected){
       return;
@@ -166,6 +170,20 @@ public class ConnectedClient implements Runnable{
     }
   }
 
+  public void incrementScore(int a)
+  {
+	  localScore+=a;
+  }
+  
+  public void setGuessed(boolean b)
+  {
+	  guessed = b;
+  }
+  
+  public boolean getGuessed()
+  {
+	  return guessed;
+  }
   public String getUsername(){
     return username;
   }
