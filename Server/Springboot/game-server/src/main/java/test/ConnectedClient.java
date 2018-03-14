@@ -141,7 +141,7 @@ public class ConnectedClient implements Runnable{
   }
 
   private void closeComs(){
-    boolean comsOpen = false;
+ //   boolean comsOpen = false;
     try{
       if(in != null){
         in.close();
