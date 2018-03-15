@@ -45,6 +45,8 @@
     <string name="chat_button">Chat</string>
     <string name="leave_button">Leave Game</string>
     <string name="start_button">Start Game</string>
+    <string name="removed_player">Removed: %1$s</string>
+    <string name="added_player">Added: %1$s</string>
 
 
 

@@ -3,12 +3,12 @@ package sb_3.pixionary.gameplay;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,23 +27,25 @@ import SaveData.UserDataDBHandler;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.ShortUser;
 import sb_3.pixionary.Utilities.POJO.User;
-//TODO lots to work on here. -- 3/13/2018 at 10:20pm when you stopped for the night.
+//TODO still need to add a view to see the players in the lobby.
 public class LobbyActivity extends AppCompatActivity {
 
     private static final String TAG = LobbyActivity.class.getSimpleName();
 
-    Context context;
-    ConstraintLayout constraintLayout;
+    private Context context;
     private TextView lobbyName;
     private TextView gameName;
+    private TextView playerUpdate;
     private ImageView previewImage;
     private Button chatButton;
     private Button startButton;
     private Button leaveButton;
 
     private int gameID;
+    private int gameType;
     private User user;
     private ArrayList<ShortUser> players;
+    private ArrayList<String> chat;
     WebSocketClient webSocketClient;
 
 
@@ -61,88 +63,79 @@ public class LobbyActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     sendStart();
-                    Intent intent = new Intent(context, PlayActivity.class);
-                    intent.putExtra("gameId", gameID);
-                    startActivity(intent);
-                    finish();
+                    startGame();
                 }
             });
         }
 
         context = this;
-        gameID = getIDFromExtra();
-        connectWebSocket();
+        gameID = getIntent().getIntExtra("gameId", -1);
+        gameType = getIntent().getIntExtra("gameType", -1);
         players = new ArrayList<>();
+        connectWebSocket();
+
 
         lobbyName = (TextView) findViewById(R.id.tv_lobby_label);
         gameName = (TextView) findViewById(R.id.tv_game_name);
+        playerUpdate = (TextView) findViewById(R.id.tv_player_update);
         previewImage = (ImageView) findViewById(R.id.lobby_image_preview);
         chatButton = (Button) findViewById(R.id.open_chat);
         leaveButton = (Button) findViewById(R.id.leave_button);
 
-        constraintLayout = new ConstraintLayout(this);
-        constraintLayout.setId(R.id.lobby_full_view);
-
         chatButton.setEnabled(false);
-
-
 
         leaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendLeft();
                 webSocketClient.close();
-                finish();            }
+                finish();
+            }
         });
-
     }
-
-    private int getIDFromExtra() { return getIntent().getIntExtra("gameId", -1); }
 
     private void connectWebSocket() {
         URI uri;
         try {
             uri = new URI("ws://echo.websocket.org"); //TODO this will need to be changed.
+            webSocketClient = new WebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake serverHandshake) {
+                    Log.i(TAG, "opened");
+                    JSONObject object = new JSONObject();
+                    try {
+                        object.put("access", gameID);
+                        object.put("username", user.getUsername());
+                        webSocketClient.send(object.toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void onMessage(String s) {
+                    final String message = s;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            messageReceived(message);
+                        }
+                    });
+                }
+                @Override
+                public void onClose(int i, String s, boolean b) {
+                    Log.i(TAG, "Closed" + s);
+                    sendLeft();
+                }
+                @Override
+                public void onError(Exception e) {
+                    Log.i(TAG, "Error " + e.getMessage());
+                }
+            };
+            webSocketClient.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            return;
         }
-        webSocketClient = new WebSocketClient(uri) {
-            @Override
-            public void onOpen(ServerHandshake serverHandshake) {
-                Log.i(TAG, "opened");
-                JSONObject object = new JSONObject();
-                try {
-                    object.put("access", gameID);
-                    object.put("username", user.getUsername());
-                    webSocketClient.send(object.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onMessage(String s) {
-                final String message = s;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        messageReceived(message);
-                    }
-                });
-            }
-
-            @Override
-            public void onClose(int i, String s, boolean b) {
-                Log.i(TAG, "Closed" + s);
-                sendLeft();
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.i(TAG, "Error " + e.getMessage());
-            }
-        };
-        webSocketClient.connect();
     }
 
     private void sendStart() {
@@ -154,7 +147,6 @@ public class LobbyActivity extends AppCompatActivity {
             webSocketClient.send(startGame.toString());
         } catch (JSONException e) {
             e.printStackTrace();
-            return;
         }
     }
 
@@ -166,7 +158,6 @@ public class LobbyActivity extends AppCompatActivity {
             webSocketClient.send(leftGame.toString());
         } catch (JSONException e) {
             e.printStackTrace();
-            return;
         }
     }
 
@@ -195,11 +186,11 @@ public class LobbyActivity extends AppCompatActivity {
             lobbyName.setText(getString(R.string.lobby_dynamic, object.getString("host")));
             gameName.setText(getString(R.string.lobby_game_name_dynamic, object.getString("name")));
             previewImage.setImageBitmap(getImage(object.getJSONObject("image")));
+            gameType = object.getInt("gameType");
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     private Bitmap getImage(JSONObject object) {
@@ -223,31 +214,76 @@ public class LobbyActivity extends AppCompatActivity {
         try {
             String username = object.getString("username");
             int score = object.getInt("score");
-            //TODO add some sort of display that a new user joined.
+            displayPlayerUpdate(0, username);
             players.add(new ShortUser(username, score));
-            //TODO If game is a 1v1 then start the game now.
+            if (players.size() == 1 && gameType == 0) {
+                sendStart();
+                startGame();
+            } else if(players.size() == 2 && gameType == 1) {
+                sendStart();
+                startGame();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
-            return;
         }
     }
 
     private void removePlayer(JSONObject object) {
         try {
             String username = object.getString("username");
-            //TODO add some sort of display that a user left
+            displayPlayerUpdate(1, username);
             int i = 0;
             while(true) {
                 if (username.equals(players.get(i).getUsername())) {
                     players.remove(i);
                     break;
+                } else {
+                    i++;
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            return;
         }
+    }
 
+    private void startGame() {
+        Intent intent = new Intent(context, PlayActivity.class);
+        intent.putExtra("gameId", gameID);
+        intent.putExtra("gameType", gameType);
+        startActivity(intent);
+        finish();
+    }
+
+    /**
+     * This method is used to show when a person joins or leaves the lobby.
+     * @param command adding player=0 removed player=1
+     * @param username username to display
+     */
+    private void displayPlayerUpdate(int command, String username) {
+        final Animation out = new AlphaAnimation(1.0f, 0.0f);
+        out.setDuration(2000);
+        if (command == 0) {
+            playerUpdate.setText(getString(R.string.added_player, username));
+        } else if (command == 1) {
+            playerUpdate.setText(getString(R.string.removed_player, username));
+        }
+        playerUpdate.startAnimation(out);
+        out.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                //Nothing
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                playerUpdate.setText("");
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                //Nothing
+            }
+        });
     }
 
 }

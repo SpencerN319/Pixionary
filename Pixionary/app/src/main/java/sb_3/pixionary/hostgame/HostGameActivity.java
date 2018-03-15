@@ -158,19 +158,9 @@ public class HostGameActivity extends AppCompatActivity {
      * @param gameType used to determine what activity is next.
      */
     private void directToGame(int gameID, int gameType) {
-        Intent intent;
-        Class activity;
-
-        if(gameType == 0) {
-            activity = PlayActivity.class;
-        } else if(gameType == 1 || gameType == 2) {
-            activity = LobbyActivity.class;
-        } else {
-            //FIXME temporary for error assigning class
-            activity = MainMenuActivity.class;
-        }
-        intent = new Intent(context, activity);
+        Intent intent = new Intent(context, LobbyActivity.class);
         intent.putExtra("gameId", gameID);
+        intent.putExtra("gameType", gameType);
         startActivity(intent);
         finish();
     }

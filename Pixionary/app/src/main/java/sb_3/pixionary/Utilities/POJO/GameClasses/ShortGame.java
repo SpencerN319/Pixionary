@@ -47,8 +47,6 @@ public class ShortGame {
         this.gameName = gameName;
         this.gameType = gameType;
         this.playlist = playlist;
-
-
     }
 
     /**
