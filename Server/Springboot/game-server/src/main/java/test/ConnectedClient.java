@@ -17,6 +17,7 @@ public class ConnectedClient implements Runnable{
   
   public int userID;
   public int localScore;
+  public int roundScore;
   public boolean guessed;
   
   public ConnectedClient(PixionaryServer currentServer, GamesList gamesList, Socket socket){
@@ -173,6 +174,17 @@ public class ConnectedClient implements Runnable{
   public void incrementScore(int a)
   {
 	  localScore+=a;
+	  roundScore=a;
+  }
+  
+  public int getRoundScore()
+  {
+	  return roundScore;
+  }
+  
+  public void resetRoundScore()
+  {
+	   roundScore = 0;
   }
   
   public void setGuessed(boolean b)
