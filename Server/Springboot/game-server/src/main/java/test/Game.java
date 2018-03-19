@@ -1,5 +1,5 @@
 package test;
-//TODO: correct jdbc connection
+//TODO: gameover
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,17 +31,17 @@ public class Game{
 	  playing = true;
 	 
       try {
-          // TODO: set this correctly
+         
           Connection conn1;
-          String dbUrl = "jdbc:mysql://localhost:3306/db363kwswesey";
-          String user = "root";
-          String password = "";
+          String dbUrl = "jdbc:mysql://mysql.cs.iastate.edu:3306/db309sb3";
+          String user = "dbu309sb3";
+          String password = "Fx3tvTaq";
                conn1 = DriverManager.getConnection(dbUrl, user, password);
           System.out.println("*** Connected to the database ***");
           
           Statement statement = conn1.createStatement();
           ResultSet rs;
-          rs = statement.executeQuery("select Word, Link from Images where Category="+category+";");
+          rs = statement.executeQuery("select Word, Link from Images where Category'="+category+"';");
         
           //get them words and links
           while (rs.next()) {
@@ -145,27 +145,27 @@ public class Game{
 	  for(int j = 0; j < gameMembers.size(); j++){
 	      int roundscore = gameMembers.get(j).getRoundScore();
 	      try {
-	          // TODO: set this correctly
+	        
 	          Connection conn1;
-	          String dbUrl = "jdbc:mysql://localhost:3306/db363kwswesey";
-	          String user = "root";
-	          String password = "";
+	          String dbUrl = "jdbc:mysql://mysql.cs.iastate.edu:3306/db309sb3";
+	          String user = "dbu309sb3";
+	          String password = "Fx3tvTaq";
 	               conn1 = DriverManager.getConnection(dbUrl, user, password);
 	          System.out.println("*** Connected to the database ***");
 	          
 	          Statement statement = conn1.createStatement();
 	          ResultSet rs;
-	          rs = statement.executeQuery("select score from Players where Name="+gameMembers.get(j).getUsername()+";");
+	          rs = statement.executeQuery("select Score from Players where Name='"+gameMembers.get(j).getUsername()+"';");
 	          int totalScore = rs.getInt("Score");
 	          totalScore+=roundscore;
-	          statement.executeQuery("UPDATE Customers SET Score ="+totalScore+" WHERE Name ="+gameMembers.get(j).getUsername()+";");
+	          statement.executeUpdate("UPDATE Customers SET Score ="+totalScore+" WHERE Name ='"+gameMembers.get(j).getUsername()+"';");
 	          
 	      } catch (SQLException e) {
 	          System.out.println("SQLException: " + e.getMessage());
 	          System.out.println("SQLState: " + e.getSQLState());
 	          System.out.println("VendorError: " + e.getErrorCode());
 	      }
-	      //JDBC query
+	      //JDBC query. I forget why I put this comment here, hopefully i just misplaced it.
 	      }
   }
 
