@@ -40,4 +40,8 @@ public class Bot {
         this.word_list = list;
     }
 
+    public int get_difficulty(){
+        return this.level;
+    }
+
 }
