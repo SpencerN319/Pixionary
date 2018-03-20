@@ -60,6 +60,8 @@ public class Game{
       //hard coded 3 games
       for (int count = 0; count < 3; count++)
 	  this.playRound();
+      this.sendStringToAllMembers("GG");
+      this.delete();
       
       //something to indicate that the game has ended
   }
