@@ -1,37 +1,59 @@
 package test;
-//TODO: gameover
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.sql.*;
 import javax.imageio.ImageIO;
+
 
 public class Game{
 
   ConnectedClient host;
-  GamesList gamesList;
+  
   ArrayList<ConnectedClient> gameMembers = new ArrayList<ConnectedClient>();
   //we need some sort of unique game identifier, maybe make gameName have to be unique. for now lets trust end users to do dat
   final String gameName;
+  int gameID;
   boolean playing = false;
   String category;
   ArrayList<WordLink> words = new ArrayList<WordLink>();
 
-  public Game(GamesList gamesList, ConnectedClient host, String gameName, String category){
-    this.gamesList = gamesList;
+  
+  public Game(ConnectedClient host, String gameName, String category){
+    
     this.host = host;
     this.gameName = gameName;
     this.category = category;
     gameMembers.add(host);
+    int possibleID = 0;
+    boolean found = false;
+
+    while (found == false)
+    {
+    	found=true;
+    Random r = new Random(50000);
+    for (Game g : Main.server.gamesList)
+    {
+    	possibleID=r.nextInt();
+    	if (g.gameID == possibleID)
+    		found=false;
+    }
+    this.gameID = possibleID;
+    
+    }
+    
+    //TODO: insert into table
   }
 
   public void startGame()
   {
 	  playing = true;
-	 
+	  this.sendStringToAllMembers("START");
       try {
-         
+       
           Connection conn1;
           String dbUrl = "jdbc:mysql://mysql.cs.iastate.edu:3306/db309sb3";
           String user = "dbu309sb3";
@@ -50,6 +72,7 @@ public class Game{
         	  	String link = rs.getString("Link");
         	  	WordLink wl = new WordLink(word, link);
         	  	words.add(wl);
+        	  	this.sendStringToAllMembers("WORD:"+word+":");
           }
           
       } catch (SQLException e) {
@@ -113,6 +136,11 @@ public class Game{
     return gameName;
   }
   
+  public int getID()
+  {
+	  return gameID; 
+  }
+  
   public boolean getGameStatus()
   {
 	  return playing;
@@ -120,6 +148,9 @@ public class Game{
   
   public void playRound()
   {
+	  
+	  this.sendStringToAllMembers("ROUNDBEGIN");
+
 	  //reset correct guess status and points
 	  for(int i = 0; i < gameMembers.size(); i++){
 	      gameMembers.get(i).setGuessed(false);
@@ -139,9 +170,14 @@ public class Game{
 		  e.printStackTrace();
 	  }
 	  
+	  int height = img.getHeight();
+	  int width = img.getWidth();
+	  this.sendStringToAllMembers("HEIGHT:"+height+" WIDTH:" + width);
+	  
 	  Imgbreak i = new Imgbreak(img, "cat",null, this);
 	  i.breakImage();
 	  i.sendPixels();
+	  this.sendStringToAllMembers("ROUNDEND");
 	  
 	  //update mysql with points from the round
 	  for(int j = 0; j < gameMembers.size(); j++){
@@ -169,6 +205,7 @@ public class Game{
 	      }
 	      //JDBC query. I forget why I put this comment here, hopefully i just misplaced it.
 	      }
+	  //TODO: update client with every player's score
   }
 
   public void delete(){
@@ -178,7 +215,7 @@ public class Game{
       }
     }
     //All except host is gone, and host is currently leaving.
-    gamesList.removeGameFromActiveGames(gameName);
+    Main.server.gamesList.remove(this);
     return;
   }
 

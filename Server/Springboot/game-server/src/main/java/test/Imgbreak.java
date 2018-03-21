@@ -72,6 +72,10 @@ public class Imgbreak{
 		    }
 		used [pixy][pixx] = true;
 
+		
+		for(int i = 0; i < game.gameMembers.size(); i++){
+		      getGuess(game.gameMembers.get(i));
+		    }
 		try {
 		Thread.sleep(1);
 		}catch (InterruptedException e)
@@ -91,9 +95,11 @@ public class Imgbreak{
     		//ignore guesses from people who already guessed.
     	if (!c.getGuessed())
     	{
-	    //c.getStringFromClient?????
+	   
 		
 		String guess = c.readInputLine();
+		if (guess != null)
+		{
 			guess = guess.toLowerCase();
 		if (guess.equals(word))
 				{
@@ -102,7 +108,9 @@ public class Imgbreak{
 					//give points or something here
 					int score = (totalpixels - sent) * 100 / totalpixels + 1;
 					c.incrementScore(score); 
+		/* commented out since this feature is no longer in scope
 				}
+		
 			else 
 			{
 				for( String s : synonyms)
@@ -114,6 +122,8 @@ public class Imgbreak{
 				
 			
 			}
+			*/
+		}
 	
     	}
 	}

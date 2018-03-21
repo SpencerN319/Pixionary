@@ -10,7 +10,7 @@ public class ConnectedClient implements Runnable{
   private BufferedReader in;
   private PrintWriter out;
   private String username = "tempUsername";
-  private GamesList gamesList;
+
   private Game gameSession;
   //private final String ACTION_SUCCESS = "success";
   private boolean connected = true;
@@ -20,10 +20,10 @@ public class ConnectedClient implements Runnable{
   public int roundScore;
   public boolean guessed;
   
-  public ConnectedClient(PixionaryServer currentServer, GamesList gamesList, Socket socket){
+  public ConnectedClient(PixionaryServer currentServer, Socket socket){
     this.socket = socket;
     this.currentServer = currentServer;
-    this.gamesList = gamesList;
+
   }
 
   

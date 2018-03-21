@@ -17,8 +17,8 @@ public class PixionaryServer {
   public final int portNumber;
   public ArrayList<ConnectedClient> connectedClients = new ArrayList<ConnectedClient>();
 
-  public GamesList gamesList = new GamesList();
-
+  //public GamesList gamesList = new GamesList();
+  public ArrayList<Game> gamesList = new ArrayList<Game>();
   public PixionaryServer(int portNumber){
     this.portNumber = portNumber;
     try{
@@ -37,7 +37,7 @@ public class PixionaryServer {
     while(true){
       try{
         Socket socket = serverSocket.accept();
-        ConnectedClient newClient = new ConnectedClient(this, gamesList, socket);
+        ConnectedClient newClient = new ConnectedClient(this, socket);
         connectedClients.add(newClient);
         System.out.println("Now serving " + connectedClients.size() + " clients.");
         Thread newThread = new Thread(newClient);

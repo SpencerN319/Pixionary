@@ -18,13 +18,14 @@ public class GameController {
 			
 		ServerSocket serverSocket = Main.server.serverSocket;
         Socket socket = serverSocket.accept();
-        ConnectedClient newClient = new ConnectedClient(Main.server, Main.server.gamesList, socket);
+        ConnectedClient newClient = new ConnectedClient(Main.server,  socket);
         Main.server.connectedClients.add(newClient);
         System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
         Thread newThread = new Thread(newClient);
         newThread.start();
-        Main.server.gamesList.createGame(newClient, gameName, category);
-		
+       
+		Game g = new Game (newClient, gameName, category);
+		Main.server.gamesList.add(g);
 	
 		}catch(IOException e){
 	        System.out.println("Accept failed on port " + Main.server.portNumber);
@@ -36,23 +37,29 @@ public class GameController {
 	
 	
 	@RequestMapping("/joingame")
-	//TODO: pass ID value of game
-	public String joinGame(String gameName)
+
+	public String joinGame(int gameID)
 	{
 		try {
 			
 			ServerSocket serverSocket = Main.server.serverSocket;
 	        Socket socket = serverSocket.accept();
-	        ConnectedClient newClient = new ConnectedClient(Main.server, Main.server.gamesList, socket);
+	        ConnectedClient newClient = new ConnectedClient(Main.server, socket);
 	        Main.server.connectedClients.add(newClient);
 	        System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
 	        Thread newThread = new Thread(newClient);
 	        newThread.start();
 	        
-			
-	        Game g = Main.server.gamesList.getGame(gameName);
+			for (Game g : Main.server.gamesList)
+			{
+				if (g.getID() == gameID)
+				{
+					g.addMember(newClient);
+					break;
+				}
 		     
-			g.addMember(newClient);
+			}
+			
 			}catch(IOException e){
 		        System.out.println("Accept failed on port " + Main.server.portNumber);
 		        return ("Accept failed on port " + Main.server.portNumber);
@@ -68,10 +75,17 @@ public class GameController {
 			 */
 	}
 	@RequestMapping("/startgame")
-	public String startGame(String gameName)
+	public String startGame(int gameID)
 	{
-		Game g = Main.server.gamesList.getGame(gameName);
-		g.startGame();
+		for (Game g : Main.server.gamesList)
+		{
+			if (g.getID() == gameID)
+			{
+				g.startGame();
+				break;
+			}
+	     
+		}
 		return("game has been started");
 	}
 	

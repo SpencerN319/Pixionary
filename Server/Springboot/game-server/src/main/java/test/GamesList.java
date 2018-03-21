@@ -1,4 +1,7 @@
+/*
 package test;
+//TODO: completely rewrite this wtf is a hashtable
+OK LETS JUST IGNORE THIS WHOLE SEHEBANG
 
 import java.util.Hashtable;
 
@@ -36,3 +39,4 @@ public class GamesList{
   }
 
 }
+*/

@@ -18,7 +18,7 @@ public class ClientController {
 		 try{
 			 ServerSocket serverSocket = Main.server.serverSocket;
 		        Socket socket = serverSocket.accept();
-		        ConnectedClient newClient = new ConnectedClient(Main.server, Main.server.gamesList, socket);
+		        ConnectedClient newClient = new ConnectedClient(Main.server,  socket);
 		        Main.server.connectedClients.add(newClient);
 		        System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
 		        Thread newThread = new Thread(newClient);
