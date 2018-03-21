@@ -46,7 +46,7 @@ public class PlayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_play);
 
         btnGuess = (Button) findViewById(R.id.btnSendGuess);
-        etGuess = (EditText) findViewById(R.id.etGuess);
+//        etGuess = (EditText) findViewById(R.id.etGuess);
         picGuess = (ImageView) findViewById(R.id.imgGame);
         imagesRemaining = (TextView) findViewById(R.id.images_remaining);
 

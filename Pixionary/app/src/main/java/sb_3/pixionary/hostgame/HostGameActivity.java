@@ -148,7 +148,7 @@ public class HostGameActivity extends AppCompatActivity {
 
     //FIXME Temporary for testing
     private void requestGameTest() {
-        directToGame(100, 1);
+        directToGame(100, 0);
     }
 
     /**

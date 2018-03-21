@@ -24,6 +24,7 @@
     <string name="previous_text">Previous</string>
     //Gameplay
     <string name="remain_images">Images Remaining: 15</string>
+    <string name="remain_dynamic">Images Remaining: %1$d</string>
     <string name="answer_hint">Your Answer Here</string>
     <string name="guess">Guess</string>
     <string name="game_browser">Game Browser</string>
