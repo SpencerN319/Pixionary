@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryPurple"
-    tools:context="sb_3.pixionary.PlayActivity">
+    tools:context="sb_3.pixionary.gameplay.PlayActivity">
 
     <View
         android:id="@+id/gameover"

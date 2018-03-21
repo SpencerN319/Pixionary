@@ -1,10 +1,14 @@
 package sb_3.pixionary.Utilities;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -14,13 +18,21 @@ import org.json.JSONArray;
  * This will return 10 games that match to the current "page."
  */
 
-public class RequestGamesAvailable extends JsonArrayRequest {
+public class RequestGamesAvailable extends StringRequest {
 
-    private static final String GAMES_URL = "http://proj-309-sb-3.cs.iastate.edu:80/somethingToDoWithLeaderboards";
+    private static final String GAMES_URL = "http://proj-309-sb-3.cs.iastate.edu:80/somethingToDoWithLeaderboards"; //TODO set actual URL
+    private Map<String, String> parameters;
 
-    //Receiving an
-    public RequestGamesAvailable(JSONArray jsonArray, Response.Listener<JSONArray> listener, Response.ErrorListener errorListener) {
-        super(Method.GET, GAMES_URL, jsonArray, listener, errorListener);
+    public RequestGamesAvailable(String username, int pageRequested, Response.Listener<String> listener, Response.ErrorListener errorListener) {
+        super(Method.POST, GAMES_URL, listener, errorListener);
+        String page = String.valueOf(pageRequested);
+        parameters = new HashMap<>();
+        parameters.put("usernane", username);
+        parameters.put("page", page);
+    }
 
+    @Override
+    protected Map<String, String> getParams() throws AuthFailureError {
+        return parameters;
     }
 }

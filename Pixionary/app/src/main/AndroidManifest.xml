@@ -22,17 +22,20 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PlayActivity"
+            android:name=".gameplay.PlayActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity android:name=".CreateAccountActivity" />
-        <activity android:name=".GameBrowserActivity" />
+        <activity android:name=".joingame.GameBrowserActivity" />
         <activity
             android:name=".SettingsDialog"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".ProfileActivity"/>
-        <activity android:name=".LeaderboardActivity"/>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".LeaderboardActivity" />
+        <activity android:name=".hostgame.HostGameActivity" />
+        <activity android:name=".hostgame.PlaylistSelectActivity" />
+        <activity android:name=".gameplay.LobbyActivity"></activity>
     </application>
 
 </manifest>

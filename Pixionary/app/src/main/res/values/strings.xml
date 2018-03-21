@@ -27,6 +27,27 @@
     <string name="answer_hint">Your Answer Here</string>
     <string name="guess">Guess</string>
     <string name="game_browser">Game Browser</string>
+    //Hosting
+    <string name="host_game_title">Host Game</string>
+    <string name="name_game">Title</string>
+    <string name="playlist_label">Playlist: Select One</string>
+    <string name="playlist_dynamic">Playlist: %1$s</string>
+    <string name="creator_label">Creator: Select Playlist</string>
+    <string name="creator_dynamic">Creator: %1$s</string>
+    <string name="select">Select</string>
+    <string name="ai">Play A.I.</string>
+    <string name="one_v_one">1 V 1</string>
+    //Lobby
+    <string name="lobby_label">Lobby</string>
+    <string name="lobby_dynamic">%1$s\'s Lobby</string>
+    <string name="lobby_game_name_label">Game Name</string>
+    <string name="lobby_game_name_dynamic">%1$s</string>
+    <string name="chat_button">Chat</string>
+    <string name="leave_button">Leave Game</string>
+    <string name="start_button">Start Game</string>
+    <string name="removed_player">Removed: %1$s</string>
+    <string name="added_player">Added: %1$s</string>
+
 
 
 </resources>

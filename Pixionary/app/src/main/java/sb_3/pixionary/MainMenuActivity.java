@@ -1,15 +1,14 @@
 package sb_3.pixionary;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
-import android.graphics.Bitmap;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -22,13 +21,15 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-import java.io.InputStream;
-
 import SaveData.UserDataDBHandler;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestLogin;
+import sb_3.pixionary.hostgame.HostGameActivity;
+import sb_3.pixionary.joingame.GameBrowserActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
+
+    private Context context;
     public final int LOGIN_REQUEST_ID = 4;
     public static final int SETTINGS_REQUEST_ID = 5;
     private String username;
@@ -44,6 +45,7 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        context = this;
 
         Button button_joinGame = (Button) findViewById(R.id.button_joinGame);
         Button button_hostGame = (Button) findViewById(R.id.button_hostGame);
@@ -58,11 +60,10 @@ public class MainMenuActivity extends AppCompatActivity {
         button_joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if(username == null){
                     startLoginActivity();
-                }
-                else{
+                }else {
+                    updateDBUserType("player");
                     Intent i = new Intent(MainMenuActivity.this, GameBrowserActivity.class);
                     startActivity(i);
                 }
@@ -72,28 +73,23 @@ public class MainMenuActivity extends AppCompatActivity {
         button_hostGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if(username == null){
                     startLoginActivity();
+                }else {
+                    updateDBUserType("host");
+                    Intent intent = new Intent(MainMenuActivity.this, HostGameActivity.class);
+                    intent.putExtra("username", username);
+                    startActivity(intent);
                 }
-                else{
-                    Snackbar.make(view, "Open host game activity", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-
-                Snackbar.make(view, "Open host game activity", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
         });
 
         button_buildGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if(username == null){
                     startLoginActivity();
-                }
-                else{
+                }else {
                     Snackbar.make(view, "Open build game activity", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
@@ -158,15 +154,21 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
 
-
-    public void startLoginActivity() {
+    private void updateDBUserType(String userType) {
+        UserDataDBHandler db = new UserDataDBHandler(context);
+        User user = db.getUser("0");
+        user.setUserType(userType);
+        db.deleteOne(0);
+        db.addUser(user);
+    }
+    private void startLoginActivity() {
         Intent login = new Intent(MainMenuActivity.this, LoginActivity.class);
         TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
         usernameDisplay.setText("You are not currently logged in");
         startActivityForResult(login, LOGIN_REQUEST_ID);
     }
 
-    public void startSettingsActivity() {
+    private void startSettingsActivity() {
         Intent settingsIntent = new Intent(this, SettingsDialog.class);
         startActivityForResult(settingsIntent, SETTINGS_REQUEST_ID);
     }
