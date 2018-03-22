@@ -38,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Button crt_accnt = (Button) findViewById(R.id.button_create_account);
         Button login = (Button) findViewById(R.id.bt_login);
+        Button guest = (Button) findViewById(R.id.bt_guest);
         et_username = (EditText) findViewById(R.id.editText_username);
         et_password = (EditText) findViewById(R.id.editText_password);
         error_disp = (EditText) findViewById(R.id.error_window);
@@ -97,6 +98,13 @@ public class LoginActivity extends AppCompatActivity {
                 moveToCreateAccount();
             }
         });
+
+        guest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                create_guest(username);
+            }
+        });
     }
 
     public void returnUsernameAndFinish(String username){
@@ -116,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
         if(string == ""){
             et_username.setError("Enter Username");
             return false;
-        } else if(string.length() > 20){
+        } else if(string.length() > 12){
             et_username.setError("Max 20 Characters");
             return false;
         } else if(string.length() < 6){
@@ -163,5 +171,29 @@ public class LoginActivity extends AppCompatActivity {
     public void moveToCreateAccount() {
         Intent move = new Intent(LoginActivity.this,CreateAccountActivity.class);
         startActivity(move);
+    }
+
+    public void create_guest(String user_name){
+        //Needs to create User
+        Intent retInt = new Intent(LoginActivity.this, MainMenuActivity.class);
+        retInt.putExtra("username", user_name);
+        setResult(6, retInt);
+        finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent returnedData){
+        if(returnedData == null){
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, returnedData);
+        switch (requestCode){
+            case MainMenuActivity.CREATEACCOUNT_REQUEST_ID:
+                username = returnedData.getStringExtra("username");
+                Intent retInt = new Intent(LoginActivity.this, MainMenuActivity.class);
+                retInt.putExtra("username", username);
+                setResult(4, retInt);
+                finish();
+        }
     }
 }

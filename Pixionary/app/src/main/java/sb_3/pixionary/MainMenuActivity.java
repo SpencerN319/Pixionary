@@ -30,8 +30,9 @@ import sb_3.pixionary.joingame.GameBrowserActivity;
 public class MainMenuActivity extends AppCompatActivity {
 
     private Context context;
-    public final int LOGIN_REQUEST_ID = 4;
+    public static final int LOGIN_REQUEST_ID = 4;
     public static final int SETTINGS_REQUEST_ID = 5;
+    public static final int CREATEACCOUNT_REQUEST_ID = 6;
     private String username;
     private User user;
     TextView usernameDisplay;
