@@ -32,7 +32,8 @@ public class MainMenuActivity extends AppCompatActivity {
     private Context context;
     public static final int LOGIN_REQUEST_ID = 4;
     public static final int SETTINGS_REQUEST_ID = 5;
-    public static final int CREATEACCOUNT_REQUEST_ID = 6;
+    public static final int GUEST_REQUEST_ID = 6;
+    public static final int CREATEACCOUNT_REQUEST_ID = 7;
     private String username;
     public static  User user;
     TextView usernameDisplay;
@@ -54,7 +55,7 @@ public class MainMenuActivity extends AppCompatActivity {
         Button button_login = (Button) findViewById(R.id.button_login);
         ImageButton button_settings = (ImageButton) findViewById(R.id.button_settings);
         usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
-        usernameDisplay.setText("You are currently not logged in");
+        usernameDisplay.setText("Currently not logged in");
 
         automaticLogin();
 
@@ -145,13 +146,16 @@ public class MainMenuActivity extends AppCompatActivity {
         switch (requestCode){
             case LOGIN_REQUEST_ID:
                 username = returnedData.getStringExtra("username");
-                usernameDisplay.setText("You are currently logged in as " + username);
+                usernameDisplay.setText("Logged in as: " + username);
             case SETTINGS_REQUEST_ID:
                 boolean logout = returnedData.getBooleanExtra("logout", false);
                 if (logout) {
                     username = null;
-                    usernameDisplay.setText("Logged Out!");
+                    usernameDisplay.setText("Currently not logged in");
                 }
+            case GUEST_REQUEST_ID:
+                username = returnedData.getStringExtra("username");
+                usernameDisplay.setText("Logged in as: " + username);
         }
     }
 
@@ -164,8 +168,8 @@ public class MainMenuActivity extends AppCompatActivity {
     }
     private void startLoginActivity() {
         Intent login = new Intent(MainMenuActivity.this, LoginActivity.class);
-        TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
-        usernameDisplay.setText("You are not currently logged in");
+        //TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
+        //usernameDisplay.setText("You are not currently logged in");
         startActivityForResult(login, LOGIN_REQUEST_ID);
     }
 

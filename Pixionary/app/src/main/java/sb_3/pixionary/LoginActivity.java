@@ -1,6 +1,5 @@
 package sb_3.pixionary;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -102,15 +101,18 @@ public class LoginActivity extends AppCompatActivity {
         guest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                create_guest(username);
+                username = et_username.getText().toString();
+                if(validateUsername(username)){
+                    create_guest(username);
+                }
             }
         });
     }
 
-    public void returnUsernameAndFinish(String username){
+    public void returnUsernameAndFinish(String user_name){
         Intent retInt = new Intent(LoginActivity.this, MainMenuActivity.class);
-        retInt.putExtra("username", username);
-        setResult(Activity.RESULT_OK, retInt);
+        retInt.putExtra("username", user_name);
+        setResult(MainMenuActivity.LOGIN_REQUEST_ID, retInt);
         finish();
     }
 
@@ -121,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validateUsername(String string) {
-        if(string == ""){
+        if(string == null){
             et_username.setError("Enter Username");
             return false;
         } else if(string.length() > 12){
@@ -141,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validatePassword(String string){
-        if(string.equals("")){
+        if(string == null){
             et_password.setError("Enter Password");
             return false;
         } else if(string.length() < 6){
@@ -170,16 +172,15 @@ public class LoginActivity extends AppCompatActivity {
 
     public void moveToCreateAccount() {
         Intent move = new Intent(LoginActivity.this,CreateAccountActivity.class);
-        startActivity(move);
+        startActivityForResult(move, MainMenuActivity.CREATEACCOUNT_REQUEST_ID);
     }
 
     public void create_guest(String user_name){
-        //Needs to create User
         User user = new User(user_name, null, null, "guest", 0, 0, 0, 0);
         MainMenuActivity.set_user(user);
         Intent retInt = new Intent(LoginActivity.this, MainMenuActivity.class);
-        retInt.putExtra("username", user_name);
-        setResult(6, retInt);
+        retInt.putExtra("username", "Guest_"+user_name);
+        setResult(MainMenuActivity.GUEST_REQUEST_ID, retInt);
         finish();
     }
 
@@ -194,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
                 username = returnedData.getStringExtra("username");
                 Intent retInt = new Intent(LoginActivity.this, MainMenuActivity.class);
                 retInt.putExtra("username", username);
-                setResult(4, retInt);
+                setResult(MainMenuActivity.LOGIN_REQUEST_ID, retInt);
                 finish();
         }
     }
