@@ -147,15 +147,18 @@ public class MainMenuActivity extends AppCompatActivity {
             case LOGIN_REQUEST_ID:
                 username = returnedData.getStringExtra("username");
                 usernameDisplay.setText("Logged in as: " + username);
+                break;
             case SETTINGS_REQUEST_ID:
                 boolean logout = returnedData.getBooleanExtra("logout", false);
                 if (logout) {
                     username = null;
                     usernameDisplay.setText("Currently not logged in");
                 }
+                break;
             case GUEST_REQUEST_ID:
                 username = returnedData.getStringExtra("username");
                 usernameDisplay.setText("Logged in as: " + username);
+                break;
         }
     }
 

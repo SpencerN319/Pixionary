@@ -102,8 +102,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 username = et_username.getText().toString();
+                final String username_error = String.format("%s", "Please type a guest username");
                 if(validateUsername(username)){
                     create_guest(username);
+                } else {
+                    error_disp.setText(username_error);
                 }
             }
         });

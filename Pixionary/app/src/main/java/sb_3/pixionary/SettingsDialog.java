@@ -83,7 +83,7 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
         boolean set = true;
         Intent retIntent = getIntent();
         retIntent.putExtra("logout", set);
-        setResult(Activity.RESULT_OK, retIntent);
+        setResult(MainMenuActivity.SETTINGS_REQUEST_ID, retIntent);
     }
 
     private void nextActivity(Class selected) {
