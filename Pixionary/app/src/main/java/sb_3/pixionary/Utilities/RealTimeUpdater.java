@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import sb_3.pixionary.Adapters.GuessListAdapter;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.ShortUser;
 import sb_3.pixionary.Utilities.POJO.User;
@@ -28,7 +29,6 @@ import sb_3.pixionary.Utilities.POJO.User;
  * Created by Steven Rein on 3/12/2018.
  */
 
-//FIXME not sure if this is going to be needed.
 public class RealTimeUpdater {
 
     private static final String TAG = RealTimeUpdater.class.getSimpleName();
@@ -154,12 +154,30 @@ public class RealTimeUpdater {
             JSONObject object = new JSONObject(message);
             String objectType = object.getString("type");
             switch (objectType) {
-                case "init":
+                case "lobby_init":
                     initializeDisplay(object);
+                    break;
                 case "joined":
                     addPlayer(object);
+                    break;
                 case "left":
                     removePlayer(object);
+                    break;
+                case "play_init":
+                    playInit(object);
+                    break;
+                case "next_image":
+                    nextImage(object);
+                    break;
+                case "pixel":
+                    receivePixel(object);
+                    break;
+                case "guess_result":
+                    guessResult();
+                    break;
+                case "end_game":
+                    endGame(object);
+                    break;
                 default:
                     Log.i("Not tracked", message);
             }
@@ -279,6 +297,8 @@ public class RealTimeUpdater {
             for (int i = 0; i < jsonGuesses.length(); i++) {
                 listOfOptions.add(jsonGuesses.getString(i));
             }
+            GuessListAdapter guessListAdapter = new GuessListAdapter(context, listOfOptions);
+            guessList.setAdapter(guessListAdapter);
             numImages = jsonObject.getInt("numberOfImages");
             imagesRemaining.setText(context.getString(R.string.remain_dynamic, numImages));
             int width = jsonObject.getInt("width");
@@ -288,6 +308,35 @@ public class RealTimeUpdater {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void nextImage(JSONObject jsonObject) {
+        try {
+            numImages--;
+            imagesRemaining.setText(context.getString(R.string.remain_dynamic, numImages));
+            int width = jsonObject.getInt("width");
+            int height = jsonObject.getInt("height");
+            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            image.setImageBitmap(bitmap);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void endGame(JSONObject jsonObject) {
+        //TODO create something to display points here and end the game.
+        try {
+            JSONArray playersAndScores = jsonObject.getJSONArray("game_result");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //TODO create a view to display the result of the game
+    }
+
+    public void finishGame() {
+        //TODO for the button to leave after seeing the results.
+        ((Activity)context).finish();
     }
 
     //React to a new pixel
@@ -302,10 +351,9 @@ public class RealTimeUpdater {
         }
     }
 
-    public void sendGuess() {
+    public void sendGuess(int position) {
         //Get the position on the listview, need to create the listview still.
         JSONObject object = new JSONObject();
-        int position = 0;
         try {
             object.put("command", "guess");
             object.put("username", user.getUsername());
@@ -314,6 +362,9 @@ public class RealTimeUpdater {
             e.printStackTrace();
         }
         webSocketClient.send(object.toString());
+    }
 
+    private void guessResult() {
+        //TODO did you guess right? or WRONG?
     }
 }

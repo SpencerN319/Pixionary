@@ -13,23 +13,10 @@
         android:gravity="center"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryText"
-        app:layout_constraintRight_toRightOf="@id/guideline25"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/guideline24"/>
-
-    <TextView
-        android:id="@+id/guess2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="Guess2"
-        android:gravity="center"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimaryText"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/guideline25"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guideline24" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline24"
@@ -38,10 +25,5 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.08" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline25"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent=".5" />
+
 </android.support.constraint.ConstraintLayout>
