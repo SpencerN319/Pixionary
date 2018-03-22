@@ -1,5 +1,5 @@
 package sb_3.pixionary.gameplay;
-//FIXME EVERYTHING COMMENTED OUT IS BEING USED IN REALTIMEUPDATER INSTEAD.
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,7 +32,7 @@ import sb_3.pixionary.Utilities.POJO.ShortUser;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RealTimeUpdater;
 
-//TODO still need to add a view to see the players in the lobby. --- Need to add PlayActivity to this. --- Maybe put most of updates from WebSocket in different class.
+//TODO still need to add a view to see the players in the lobby. --- Not important RN.
 public class LobbyActivity extends AppCompatActivity {
 
     private static final String TAG = LobbyActivity.class.getSimpleName();
@@ -92,14 +92,15 @@ public class LobbyActivity extends AppCompatActivity {
                     finish();
                 }
             });
+        } else {
+            guessList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    realTimeUpdater.sendGuess(position);
+                }
+            });
         }
-
-        guessList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                realTimeUpdater.sendGuess(position);
-            }
-        });
+        //May need to create a listener to do what is doing above when we enter a 1v1.
     }
 
 }
