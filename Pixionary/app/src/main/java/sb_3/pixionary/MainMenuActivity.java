@@ -34,7 +34,7 @@ public class MainMenuActivity extends AppCompatActivity {
     public static final int SETTINGS_REQUEST_ID = 5;
     public static final int CREATEACCOUNT_REQUEST_ID = 6;
     private String username;
-    private User user;
+    public static  User user;
     TextView usernameDisplay;
 
     //Automated login
@@ -222,6 +222,10 @@ public class MainMenuActivity extends AppCompatActivity {
         progressDialog.setMessage("Logging In");
         progressDialog.setCancelable(true);
         progressDialog.show();
+    }
+
+    public static void set_user(User new_user){
+        user = new_user;
     }
 
 }

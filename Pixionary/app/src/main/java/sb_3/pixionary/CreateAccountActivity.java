@@ -1,6 +1,5 @@
 package sb_3.pixionary;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +14,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import SaveData.UserDataDBHandler;
+import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestRegister;
 
 
@@ -24,6 +25,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     private TextView error_disp;
     private String user_type = "general";
     private String username, password, conf_password;
+    private UserDataDBHandler db;
     RequestQueue requestQueue;
 
 
@@ -61,8 +63,8 @@ public class CreateAccountActivity extends AppCompatActivity {
                         public void onResponse(String response) {
                             Log.i("Create Account Response", response);
                             progressDialog.dismiss();
-                            if(response.equals("success")){
-                                returnUsernameAndFinish(username);
+                            if(!response.equals("failure")){
+                                returnUsernameAndFinish(response);
                             } else if(response.equals("username already exists")){
                                 error_disp.setText(fail);
                             }
@@ -80,10 +82,14 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
 
-    public void returnUsernameAndFinish(String username){
-        Intent retInt = new Intent(CreateAccountActivity.this, MainMenuActivity.class);
+    public void returnUsernameAndFinish(String uid){
+        db = new UserDataDBHandler(this);
+        User user = new User(username, password, uid, user_type, 0, 0, 0, 0);
+        db.addUser(user);
+        MainMenuActivity.set_user(user);
+        Intent retInt = new Intent(this, LoginActivity.class);
         retInt.putExtra("username", username);
-        setResult(Activity.RESULT_OK, retInt);
+        setResult(MainMenuActivity.CREATEACCOUNT_REQUEST_ID, retInt);
         finish();
     }
 
@@ -99,7 +105,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         if(name == ""){
             et_username.setError("Enter Username");
             return false;
-        } else if(name.length() > 20){
+        } else if(name.length() > 24){
             et_username.setError("Max 20 Characters");
             return false;
         } else if(name.length() < 6){

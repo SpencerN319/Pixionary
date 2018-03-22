@@ -175,6 +175,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void create_guest(String user_name){
         //Needs to create User
+        User user = new User(user_name, null, null, "guest", 0, 0, 0, 0);
+        MainMenuActivity.set_user(user);
         Intent retInt = new Intent(LoginActivity.this, MainMenuActivity.class);
         retInt.putExtra("username", user_name);
         setResult(6, retInt);
