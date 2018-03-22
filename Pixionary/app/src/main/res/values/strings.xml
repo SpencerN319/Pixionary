@@ -12,6 +12,7 @@
     <string name="guest_login">Guest</string>
     <string name="create_message">Your Almost There!</string>
     <string name="btnCreate">Create Account</string>
+    <string name="btnGuest">Guest</string>
     //Main Menu
     <string name="menu_join_game">Join Game</string>
     <string name="menu_host_game">Host Game</string>
