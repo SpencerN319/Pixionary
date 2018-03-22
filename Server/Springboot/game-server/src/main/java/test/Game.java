@@ -20,11 +20,12 @@ public class Game{
   boolean playing = false;
   String category;
   ArrayList<WordLink> words = new ArrayList<WordLink>();
-
+String hostName;
   
   public Game(ConnectedClient host, String gameName, String category){
     
     this.host = host;
+    hostName = host.getUsername();
     this.gameName = gameName;
     this.category = category;
     gameMembers.add(host);
@@ -45,7 +46,7 @@ public class Game{
     
     }
     
-    //TODO: insert into table
+  
   }
 
   public void startGame()
@@ -135,6 +136,17 @@ public class Game{
   public String getName(){
     return gameName;
   }
+  
+  public String getHostName()
+	  {
+		  return hostName;
+	  }
+  
+  public String getCategory(){
+	  return category;
+  }
+	  
+
   
   public int getID()
   {

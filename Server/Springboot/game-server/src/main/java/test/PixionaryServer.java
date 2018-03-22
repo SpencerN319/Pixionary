@@ -33,7 +33,7 @@ public class PixionaryServer {
 
   public void start(){
     //Accept clients, and start their threads
-	  //TODO: make this happen when they connect to a game or create a game
+	  //maybe do this here also a possibility
     while(true){
       try{
         Socket socket = serverSocket.accept();
