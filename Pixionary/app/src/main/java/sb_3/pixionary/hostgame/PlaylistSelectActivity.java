@@ -93,7 +93,7 @@ public class PlaylistSelectActivity extends AppCompatActivity implements DataTra
                             playlistsList = new ArrayList<>();
                             for (int i = 0; i < jsonPlaylistArr.length(); i++) {
                                 //This single line creates a Playlist object for every item in Json array.
-                                playlistsList.add(new Playlist(jsonPlaylistArr.getJSONObject(i)));
+                                playlistsList.add(new Playlist(jsonPlaylistArr.getString(i)));
                             }
                             adapter = new PlaylistsAdapter(context, playlistsList, dataTransferInterface);
                             listView.setAdapter(adapter);
@@ -143,9 +143,7 @@ public class PlaylistSelectActivity extends AppCompatActivity implements DataTra
 
     private void sendResultingPlaylist(Playlist playlist) {
         Intent intent = new Intent(context, HostGameActivity.class);
-        intent.putExtra("PlaylistID", playlist.getId());
         intent.putExtra("PlaylistName", playlist.getName());
-        intent.putExtra("PlaylistCreator", playlist.getCreator());
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
