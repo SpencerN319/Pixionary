@@ -107,11 +107,11 @@
         app:layout_constraintTop_toTopOf="@id/guideline11" />
 
     <Button
-        android:id="@+id/button_blank2"
+        android:id="@+id/bt_DeleteAccount"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryYellow"
-        android:text="*Later*"
+        android:text="delete account"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline13"
         app:layout_constraintLeft_toLeftOf="parent"
