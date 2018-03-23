@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.sql.*;
 import javax.imageio.ImageIO;
-
+import org.springframework.boot.json.*;
+//TODO: modified URL
 
 public class Game{
 
@@ -29,7 +30,8 @@ String hostName;
     this.gameName = gameName;
     this.category = category;
     gameMembers.add(host);
-    int possibleID = 0;
+    this.gameID = host.userID;
+    /*
     boolean found = false;
 
     while (found == false)
@@ -45,6 +47,7 @@ String hostName;
     this.gameID = possibleID;
     
     }
+    */
     
   
   }

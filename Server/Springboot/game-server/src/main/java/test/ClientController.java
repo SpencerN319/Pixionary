@@ -21,8 +21,10 @@ public class ClientController {
 		        ConnectedClient newClient = new ConnectedClient(Main.server,  socket);
 		        Main.server.connectedClients.add(newClient);
 		        System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
+		        /*
 		        Thread newThread = new Thread(newClient);
 		        newThread.start();
+		        */
 		        g.addMember(newClient);
 		      }
 		      catch(IOException e){

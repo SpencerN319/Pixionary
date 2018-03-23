@@ -43,31 +43,37 @@ public class ConnectedClient implements Runnable{
 
   //This method is what connects input strings to their proper actions. It returns a string regarding the success of the action
   /* probably just ignore this whole thing to make it springboot style
+   * 
   private String doAction(String input){
     if(input == null){
       return null;
     }
-    switch(input){
-      case "startGame":
+    
+      if (input.equals("startGame"))
+    		  {
         String gameName = readInputLine();
         if(gameName != null){
           boolean gameStarted = startGame(gameName);
           if(gameStarted){
-            return ACTION_SUCCESS;
+            return "SUCCESS!";
           }
           return "Game already exists";
         }
         delete();
         break;
-      case "leaveGame":
+    		  }
+      else  if (input.equals("leaveGame"))
+      {
         System.out.println("Leaving Game");
         leaveGame();
-        return ACTION_SUCCESS;
-      default:
+        return "SUCCESS!";
+      }
+      else
         return "Input did not match any expected input.";
-    }
-    return "User input did not activate in switch.";
+    
+
   }
+  
 	*/
   public String readInputLine(){
     if(!connected){
@@ -165,6 +171,7 @@ public class ConnectedClient implements Runnable{
     }
     try{
       out.println(output);
+      
     }
     catch(Exception e){
       System.out.println("Failed to send '" + output + "' to client.");

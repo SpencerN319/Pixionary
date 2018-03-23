@@ -108,9 +108,9 @@ public class Imgbreak{
 					//give points or something here
 					int score = (totalpixels - sent) * 100 / totalpixels + 1;
 					c.incrementScore(score); 
-		/* commented out since this feature is no longer in scope
-				}
 		
+				}
+		/* commented out since this feature is no longer in scope
 			else 
 			{
 				for( String s : synonyms)
