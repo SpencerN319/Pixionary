@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -37,6 +38,8 @@ public class MainMenuActivity extends AppCompatActivity {
     private String username;
     public static  User user;
     TextView usernameDisplay;
+    private Switch switch_admin;
+    private ImageButton admin_settings, button_settings;
 
     //Automated login
     UserDataDBHandler db;
@@ -49,11 +52,18 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
         context = this;
 
+        switch_admin = (Switch) findViewById(R.id.sw_admin);
+        admin_settings = (ImageButton) findViewById(R.id.button_admin_settings);
+        switch_admin.setVisibility(View.INVISIBLE);
+        admin_settings.setVisibility(View.INVISIBLE);
+        switch_admin.setClickable(false);
+        admin_settings.setClickable(false);
+
         Button button_joinGame = (Button) findViewById(R.id.button_joinGame);
         Button button_hostGame = (Button) findViewById(R.id.button_hostGame);
         Button button_buildGame = (Button) findViewById(R.id.button_buildGame);
         Button button_login = (Button) findViewById(R.id.button_login);
-        ImageButton button_settings = (ImageButton) findViewById(R.id.button_settings);
+        button_settings = (ImageButton) findViewById(R.id.button_settings);
         usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
         usernameDisplay.setText("Currently not logged in");
 
@@ -112,6 +122,26 @@ public class MainMenuActivity extends AppCompatActivity {
                 startSettingsActivity();
             }
         });
+
+        switch_admin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(!(switch_admin.isChecked())){
+                    Log.i("switch off", "flip to off");
+                    button_settings.setVisibility(View.VISIBLE);
+                    button_settings.setClickable(true);
+                    admin_settings.setVisibility(View.INVISIBLE);
+                    admin_settings.setClickable(false);
+                } else {
+                    Log.i("switch on", "flip to on");
+                    button_settings.setVisibility(View.INVISIBLE);
+                    button_settings.setClickable(false);
+                    admin_settings.setVisibility(View.VISIBLE);
+                    admin_settings.setClickable(true);
+                }
+            }
+        });
     }
 
     @Override
@@ -147,12 +177,16 @@ public class MainMenuActivity extends AppCompatActivity {
             case LOGIN_REQUEST_ID:
                 username = returnedData.getStringExtra("username");
                 usernameDisplay.setText("Logged in as: " + username);
+                is_admin();
                 break;
             case SETTINGS_REQUEST_ID:
                 boolean logout = returnedData.getBooleanExtra("logout", false);
                 if (logout) {
+                    Log.i("user logout: ", "true");
                     username = null;
                     usernameDisplay.setText("Currently not logged in");
+                    user = null;
+                    is_admin();
                 }
                 break;
             case GUEST_REQUEST_ID:
@@ -171,8 +205,6 @@ public class MainMenuActivity extends AppCompatActivity {
     }
     private void startLoginActivity() {
         Intent login = new Intent(MainMenuActivity.this, LoginActivity.class);
-        //TextView usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
-        //usernameDisplay.setText("You are not currently logged in");
         startActivityForResult(login, LOGIN_REQUEST_ID);
     }
 
@@ -196,8 +228,9 @@ public class MainMenuActivity extends AppCompatActivity {
                             JSONObject success = new JSONObject(response);
                             if (success.getBoolean("success")) {
                                 username = user.getUsername();
-                                usernameDisplay.setText("You are currently logged in as " + username);
+                                usernameDisplay.setText("Logged in as " + username);
                                 progressDialog.dismiss();
+                                is_admin();
                             } else {
                                 progressDialog.setTitle("Failed");
                                 progressDialog.setMessage("No user data found, please login!");
@@ -235,4 +268,15 @@ public class MainMenuActivity extends AppCompatActivity {
         user = new_user;
     }
 
+    private void is_admin(){
+        if(user != null){
+            if(user.getUserType().equals("admin") || user == null){
+                switch_admin.setClickable(true);
+                switch_admin.setVisibility(View.VISIBLE);
+            }
+        } else {
+            switch_admin.setClickable(false);
+            switch_admin.setVisibility(View.INVISIBLE);
+        }
+    }
 }
