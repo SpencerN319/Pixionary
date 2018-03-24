@@ -119,7 +119,7 @@
         app:layout_constraintTop_toTopOf="@id/guideline15" />
 
     <Button
-        android:id="@+id/bt_"
+        android:id="@+id/bt_RemoveCategory"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryRed"

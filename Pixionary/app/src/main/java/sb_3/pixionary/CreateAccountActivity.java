@@ -102,11 +102,11 @@ public class CreateAccountActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validateUsername(String name) {
-        if(name == ""){
+        if(name == null){
             et_username.setError("Enter Username");
             return false;
         } else if(name.length() > 24){
-            et_username.setError("Max 20 Characters");
+            et_username.setError("Max 12 Characters");
             return false;
         } else if(name.length() < 6){
             et_username.setError("Minimum 6 Characters");
@@ -122,7 +122,7 @@ public class CreateAccountActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validatePassword(String pass1, String pass2){
-        if(pass1.equals("")){
+        if(pass1 == null){
             et_password.setError("Enter Password");
             return false;
         } else if(pass1.length() < 6){
