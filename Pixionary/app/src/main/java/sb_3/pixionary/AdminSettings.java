@@ -8,8 +8,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-import SaveData.UserDataDBHandler;
-
 
 
 /**
@@ -29,7 +27,7 @@ public class AdminSettings extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.settings_dialog);
+        setContentView(R.layout.admin_settings_dialog);
         title = (TextView) findViewById(R.id.settings_title);
         buttons[0] = (Button) findViewById(R.id.bt_ViewUsers);
         buttons[1] = (Button) findViewById(R.id.bt_DeleteUser);
@@ -78,14 +76,6 @@ public class AdminSettings extends Activity implements View.OnClickListener {
         finish();
     }
 
-    private void logOut() {
-        UserDataDBHandler db = new UserDataDBHandler(this);
-        db.deleteOne(0);
-        boolean set = true;
-        Intent retIntent = getIntent();
-        retIntent.putExtra("logout", set);
-        setResult(MainMenuActivity.SETTINGS_REQUEST_ID, retIntent);
-    }
 
     private void nextActivity(Class selected) {
         Intent intent = new Intent(this, selected);

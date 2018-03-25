@@ -36,7 +36,9 @@
         <activity android:name=".hostgame.HostGameActivity" />
         <activity android:name=".hostgame.PlaylistSelectActivity" />
         <activity android:name=".gameplay.LobbyActivity" />
-        <activity android:name=".AdminSettings" />
+        <activity
+            android:name=".AdminSettings"
+            android:theme="@android:style/Theme.Dialog"/>
         <activity android:name=".DeleteAccount"></activity>
     </application>
 

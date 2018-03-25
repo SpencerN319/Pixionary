@@ -39,7 +39,7 @@ public class MainMenuActivity extends AppCompatActivity {
     public static  User user;
     TextView usernameDisplay;
     private Switch switch_admin;
-    private ImageButton admin_settings, button_settings;
+    private ImageButton button_AdminSettings, button_settings;
 
     //Automated login
     UserDataDBHandler db;
@@ -53,11 +53,11 @@ public class MainMenuActivity extends AppCompatActivity {
         context = this;
 
         switch_admin = (Switch) findViewById(R.id.sw_admin);
-        admin_settings = (ImageButton) findViewById(R.id.button_admin_settings);
+        button_AdminSettings = (ImageButton) findViewById(R.id.button_admin_settings);
         switch_admin.setVisibility(View.INVISIBLE);
-        admin_settings.setVisibility(View.INVISIBLE);
+        button_AdminSettings.setVisibility(View.INVISIBLE);
         switch_admin.setClickable(false);
-        admin_settings.setClickable(false);
+        button_AdminSettings.setClickable(false);
 
         Button button_joinGame = (Button) findViewById(R.id.button_joinGame);
         Button button_hostGame = (Button) findViewById(R.id.button_hostGame);
@@ -123,6 +123,13 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
+        button_AdminSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAdminSettingsActivity();
+            }
+        });
+
         switch_admin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,14 +138,14 @@ public class MainMenuActivity extends AppCompatActivity {
                     Log.i("switch off", "flip to off");
                     button_settings.setVisibility(View.VISIBLE);
                     button_settings.setClickable(true);
-                    admin_settings.setVisibility(View.INVISIBLE);
-                    admin_settings.setClickable(false);
+                    button_AdminSettings.setVisibility(View.INVISIBLE);
+                    button_AdminSettings.setClickable(false);
                 } else {
                     Log.i("switch on", "flip to on");
                     button_settings.setVisibility(View.INVISIBLE);
                     button_settings.setClickable(false);
-                    admin_settings.setVisibility(View.VISIBLE);
-                    admin_settings.setClickable(true);
+                    button_AdminSettings.setVisibility(View.VISIBLE);
+                    button_AdminSettings.setClickable(true);
                 }
             }
         });
@@ -211,6 +218,11 @@ public class MainMenuActivity extends AppCompatActivity {
     private void startSettingsActivity() {
         Intent settingsIntent = new Intent(this, SettingsDialog.class);
         startActivityForResult(settingsIntent, SETTINGS_REQUEST_ID);
+    }
+
+    private void startAdminSettingsActivity() {
+        Intent admin_settings = new Intent(this, AdminSettings.class);
+        startActivity(admin_settings);
     }
 
     private void automaticLogin() {
