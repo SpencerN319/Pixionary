@@ -32,7 +32,7 @@ import sb_3.pixionary.Utilities.POJO.User;
 public class RealTimeUpdater {
 
     private static final String TAG = RealTimeUpdater.class.getSimpleName();
-    private String url = "ws://echo.websocket.org"; //TODO this will need to be changed.
+    private String url = "ws://proj-309-sb-3.cs.iastate.edu:8080/name"; //TODO this will need to be changed.
     private URI uri;
     private WebSocketClient webSocketClient;
     private Context context;
@@ -120,6 +120,7 @@ public class RealTimeUpdater {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        webSocketClient.connect();
     }
 
     public void close() {

@@ -17,7 +17,7 @@ public class RequestPlaylists extends StringRequest {
     private Map<String, String> parameters;
 
     public RequestPlaylists(String username, int pageRequested, Response.Listener<String> listener, Response.ErrorListener errorListener) {
-        super(Request.Method.POST, CATEGORIES_URL, listener, errorListener);
+        super(Method.POST, CATEGORIES_URL, listener, errorListener);
         String page = String.valueOf(pageRequested);
         parameters = new HashMap<>();
         parameters.put("username", username);

@@ -93,7 +93,8 @@ public class PlaylistSelectActivity extends AppCompatActivity implements DataTra
                             playlistsList = new ArrayList<>();
                             for (int i = 0; i < jsonPlaylistArr.length(); i++) {
                                 //This single line creates a Playlist object for every item in Json array.
-                                playlistsList.add(new Playlist(jsonPlaylistArr.getString(i)));
+                                JSONObject jsonObject = jsonPlaylistArr.getJSONObject(i);
+                                playlistsList.add(new Playlist(jsonObject.getString("category")));
                                 Log.i(TAG, jsonPlaylistArr.getString(i));
                             }
                             adapter = new PlaylistsAdapter(context, playlistsList, dataTransferInterface);
