@@ -2,6 +2,7 @@ package test;
 
 import java.net.Socket;
 
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.*;
@@ -11,7 +12,7 @@ public class ConnectedClient implements Runnable{
   private WebSocketSession socket;
   private PixionaryServer currentServer;
   private BufferedReader in;
-  private PrintWriter out;
+//  private PrintWriter out;
   private String username = "tempUsername";
 
   private Game gameSession;
@@ -32,6 +33,7 @@ public class ConnectedClient implements Runnable{
   
   public void run(){
     try{
+    	
     //  openComs();
     }
     catch(Exception e){
@@ -77,7 +79,7 @@ public class ConnectedClient implements Runnable{
 
   }
   
-	*/
+	*//*
   public String readInputLine(){
     if(!connected){
       return null;
@@ -95,7 +97,9 @@ public class ConnectedClient implements Runnable{
       delete();
       return null;
     }
+    
   }
+  */
 /* probably not needed
   private boolean startGame(String gameName){
     if(gameSession != null){
@@ -174,7 +178,7 @@ public class ConnectedClient implements Runnable{
       return;
     }
     try{
-      out.println(output);
+    	socket.sendMessage(new TextMessage(output));
       
     }
     catch(Exception e){

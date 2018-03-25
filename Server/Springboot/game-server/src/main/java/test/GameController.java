@@ -1,4 +1,4 @@
-//create or start a game, we shall see. right now its just hello world
+//THIS CLASS IS NO LONGER NEEDED AND HAS BEEN COMMENTED OUT TO MAKE THE COMPILER HAPPY
 package test;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -21,6 +21,7 @@ public class GameController {
 	//creates game, begins socket connection
 	public String makeGame(String gameName, String category)
 	{	
+		/*
 		System.out.println("method makeGame called");
 		Game g;
 		try {
@@ -34,6 +35,7 @@ public class GameController {
         Thread newThread = new Thread(newClient);
         newThread.start();
 		*/
+		/*
 		g = new Game (newClient, gameName, category);
 		Main.server.gamesList.add(g);
 	
@@ -65,7 +67,7 @@ public class GameController {
 	          System.out.println("VendorError: " + e.getErrorCode());
 	      }
 		
-		
+		*/
 			return "Game has been created";
 	}
 	
@@ -74,6 +76,7 @@ public class GameController {
 
 	public String joinGame(int gameID)
 	{
+		return "S";/*
 		try {
 			
 			ServerSocket serverSocket = Main.server.serverSocket;
@@ -85,7 +88,7 @@ public class GameController {
 	        Thread newThread = new Thread(newClient);
 	        newThread.start();
 	        */
-	        
+	        /*
 			for (Game g : Main.server.gamesList)
 			{
 				if (g.getID() == gameID)

@@ -89,15 +89,16 @@ public class Imgbreak{
 	    }
 		
     }
-
+    	//TODO: maybe fix this
     	public void getGuess(ConnectedClient c)
 	{
     		//ignore guesses from people who already guessed.
     	if (!c.getGuessed())
     	{
 	   
-		
-		String guess = c.readInputLine();
+		//TODO: GET GUESS SOMEHOW
+		//String guess = c.readInputLine();
+    		String guess="wrong";
 		if (guess != null)
 		{
 			guess = guess.toLowerCase();

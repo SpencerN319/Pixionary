@@ -1,4 +1,4 @@
-//go here to connect to a game (and just connect in general)
+//THIS CLASS IS NO LONGER NEEDED AND HAS BEEN COMMENTED OUT TO MAKE THE COMPILER HAPPY
 //maybe never use idk
 package test;
 import java.io.IOException;
@@ -14,7 +14,7 @@ public class ClientController {
 	@RequestMapping("/connect")
 	//To be used if we want sockets to be formed BEFORE joining a game, instead of while joining.
 	public void connect(Game g)
-	{
+	{	/*
 		 try{
 			 ServerSocket serverSocket = Main.server.serverSocket;
 		        Socket socket = serverSocket.accept();
@@ -25,11 +25,13 @@ public class ClientController {
 		        Thread newThread = new Thread(newClient);
 		        newThread.start();
 		        */
+		/*
 		        g.addMember(newClient);
 		      }
 		      catch(IOException e){
 		        System.out.println("Accept failed on port " + Main.server.portNumber);
 		      }
+		      */
 		
 	}
 }

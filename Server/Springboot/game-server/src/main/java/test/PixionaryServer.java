@@ -35,17 +35,18 @@ public class PixionaryServer {
     //Accept clients, and start their threads
 	  //maybe do this here also a possibility
     while(true){
-      try{
-        Socket socket = serverSocket.accept();
-        ConnectedClient newClient = new ConnectedClient(this, socket);
-        connectedClients.add(newClient);
-        System.out.println("Now serving " + connectedClients.size() + " clients.");
-        Thread newThread = new Thread(newClient);
-        newThread.start();
-      }
-      catch(IOException e){
-        System.out.println("Accept failed on port " + portNumber);
-      }
+    //  try{
+      //  Socket socket = serverSocket.accept();
+       // ConnectedClient newClient = new ConnectedClient(this, socket);
+        //connectedClients.add(newClient);
+        //System.out.println("Now serving " + connectedClients.size() + " clients.");
+        System.out.println("WHY IS pixionaryserver.start() being called?");
+    	  //Thread newThread = new Thread(newClient);
+        //newThread.start();
+    //  }
+     // catch(IOException e){
+      //  System.out.println("Accept failed on port " + portNumber);
+      //}
     }
   }
 
