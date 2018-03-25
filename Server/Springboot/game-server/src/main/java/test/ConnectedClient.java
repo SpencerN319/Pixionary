@@ -1,11 +1,14 @@
 package test;
 
 import java.net.Socket;
+
+import org.springframework.web.socket.WebSocketSession;
+
 import java.io.*;
 
 public class ConnectedClient implements Runnable{
 
-  private Socket socket;
+  private WebSocketSession socket;
   private PixionaryServer currentServer;
   private BufferedReader in;
   private PrintWriter out;
@@ -20,7 +23,7 @@ public class ConnectedClient implements Runnable{
   public int roundScore;
   public boolean guessed;
   
-  public ConnectedClient(PixionaryServer currentServer, Socket socket){
+  public ConnectedClient(PixionaryServer currentServer, WebSocketSession socket){
     this.socket = socket;
     this.currentServer = currentServer;
 
@@ -29,7 +32,7 @@ public class ConnectedClient implements Runnable{
   
   public void run(){
     try{
-      openComs();
+    //  openComs();
     }
     catch(Exception e){
       delete();
@@ -137,11 +140,11 @@ public class ConnectedClient implements Runnable{
       return;
     }
     connected = false;
-    closeComs();
+    //closeComs();
     leaveGame();
     currentServer.removeClient(this);
   }
-
+/*
   private void openComs() throws IOException{
     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     out = new PrintWriter(socket.getOutputStream(), true);
@@ -164,6 +167,7 @@ public class ConnectedClient implements Runnable{
       System.out.println("Failed to close comms.");
     }
   }
+  */
   //what do dis do
   public void sendStringToClient(String output){
     if(!connected){
