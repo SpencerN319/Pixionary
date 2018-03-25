@@ -33,7 +33,7 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
         buttons[0] = (Button) findViewById(R.id.button_profile);
         buttons[1] = (Button) findViewById(R.id.button_leaderboard);
         buttons[2] = (Button) findViewById(R.id.button_blank);
-        buttons[3] = (Button) findViewById(R.id.button_blank2);
+        buttons[3] = (Button) findViewById(R.id.bt_DeleteAccount);
         buttons[4] = (Button) findViewById(R.id.button_logout);
         for (Button button: buttons) {
             button.setOnClickListener(this);
@@ -62,8 +62,9 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
                 i = 3;
                 //Start something here.
                 break;
-            case R.id.button_blank2:
+            case R.id.bt_DeleteAccount:
                 i = 4;
+                selectedActivity = DeleteAccount.class;
                 //Start something here.
                 break;
             case R.id.button_logout:

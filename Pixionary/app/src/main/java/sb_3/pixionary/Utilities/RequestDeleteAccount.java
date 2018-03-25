@@ -12,7 +12,7 @@ import java.util.Map;
  */
 
 public class RequestDeleteAccount extends  StringRequest{
-    private static final String LOGIN_URL = "http://proj-309-sb-3.cs.iastate.edu:80/login.php";
+    private static final String LOGIN_URL = "http://proj-309-sb-3.cs.iastate.edu:80/delete_account.php";
     private Map<String, String> parameters;
 
     public RequestDeleteAccount(String username, String password, Response.Listener<String> listener) {
