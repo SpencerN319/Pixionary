@@ -1,6 +1,5 @@
 package sb_3.pixionary;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,11 +10,13 @@ import android.widget.TextView;
 
 import SaveData.UserDataDBHandler;
 
+
+
 /**
- * Created by fastn on 2/16/2018.
+ * Created by spencern319 on 3/23/18.
  */
 
-public class SettingsDialog extends Activity implements View.OnClickListener {
+public class AdminSettings extends Activity implements View.OnClickListener {
 
     private TextView title;
     private Button[] buttons  = new Button[5];
@@ -30,11 +31,11 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.settings_dialog);
         title = (TextView) findViewById(R.id.settings_title);
-        buttons[0] = (Button) findViewById(R.id.button_profile);
-        buttons[1] = (Button) findViewById(R.id.button_leaderboard);
-        buttons[2] = (Button) findViewById(R.id.button_blank);
-        buttons[3] = (Button) findViewById(R.id.bt_DeleteAccount);
-        buttons[4] = (Button) findViewById(R.id.button_logout);
+        buttons[0] = (Button) findViewById(R.id.bt_ViewUsers);
+        buttons[1] = (Button) findViewById(R.id.bt_DeleteUser);
+        buttons[2] = (Button) findViewById(R.id.bt_AddImage);
+        buttons[3] = (Button) findViewById(R.id.bt_RemoveImage);
+        buttons[4] = (Button) findViewById(R.id.bt_RemoveCategory);
         for (Button button: buttons) {
             button.setOnClickListener(this);
         }
@@ -50,26 +51,25 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
         int i = 0;
 
         switch (v.getId()) {
-            case R.id.button_profile:
+            case R.id.bt_ViewUsers:
                 i = 1;
-                selectedActivity = ProfileActivity.class;
+                //TODO Start view users
                 break;
-            case R.id.button_leaderboard:
+            case R.id.bt_DeleteUser:
                 i = 2;
-                selectedActivity = LeaderboardActivity.class;
+                //TODO start delete user
                 break;
-            case R.id.button_blank:
+            case R.id.bt_AddImage:
                 i = 3;
-                //Start something here.
+                //TODO start add image
                 break;
-            case R.id.bt_DeleteAccount:
+            case R.id.bt_RemoveImage:
                 i = 4;
-                selectedActivity = DeleteAccount.class;
-                //Start something here.
+                //TODO start remove image
                 break;
-            case R.id.button_logout:
+            case R.id.bt_RemoveCategory:
                 i = 5;
-                logOut();
+                //TODO start remove category
                 break;
         }
         if (i != 5 && i != 0) {
@@ -93,3 +93,4 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
     }
 
 }
+

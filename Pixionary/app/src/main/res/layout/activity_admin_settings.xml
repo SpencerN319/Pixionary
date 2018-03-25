@@ -12,7 +12,7 @@
         android:id="@+id/settings_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/dialog_settings"
+        android:text="@string/admin_settings"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline7"
@@ -71,11 +71,11 @@
         app:layout_constraintGuide_percent=".95" />
 
     <Button
-        android:id="@+id/button_profile"
+        android:id="@+id/bt_ViewUsers"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryPurple"
-        android:text="Profile"
+        android:text="View users"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline8"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -83,11 +83,11 @@
         app:layout_constraintTop_toTopOf="@id/guideline7" />
 
     <Button
-        android:id="@+id/button_leaderboard"
+        android:id="@+id/bt_DeleteUser"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryYellow"
-        android:text="Leaderboard"
+        android:text="delete user"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline11"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -95,11 +95,11 @@
         app:layout_constraintTop_toTopOf="@id/guideline8" />
 
     <Button
-        android:id="@+id/button_blank"
+        android:id="@+id/bt_AddImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryPurple"
-        android:text="*Later*"
+        android:text="add image"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline15"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -107,11 +107,11 @@
         app:layout_constraintTop_toTopOf="@id/guideline11" />
 
     <Button
-        android:id="@+id/bt_DeleteAccount"
+        android:id="@+id/bt_RemoveImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryYellow"
-        android:text="delete account"
+        android:text="remove image"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline13"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -119,11 +119,11 @@
         app:layout_constraintTop_toTopOf="@id/guideline15" />
 
     <Button
-        android:id="@+id/button_logout"
+        android:id="@+id/bt_RemoveCategory"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryRed"
-        android:text="Log Out"
+        android:text="remove category"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline14"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -131,6 +131,5 @@
         app:layout_constraintTop_toTopOf="@id/guideline13" />
 
 
-
-
 </android.support.constraint.ConstraintLayout>
+
