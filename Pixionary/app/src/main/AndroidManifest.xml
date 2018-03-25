@@ -38,8 +38,9 @@
         <activity android:name=".gameplay.LobbyActivity" />
         <activity
             android:name=".AdminSettings"
-            android:theme="@android:style/Theme.Dialog"/>
-        <activity android:name=".DeleteAccount"></activity>
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".DeleteAccount" />
+        <activity android:name=".AdminSettingsDialog.ViewUsers"></activity>
     </application>
 
 </manifest>
