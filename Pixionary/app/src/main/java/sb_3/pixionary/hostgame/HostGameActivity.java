@@ -159,6 +159,7 @@ public class HostGameActivity extends AppCompatActivity {
         Intent intent = new Intent(context, LobbyActivity.class);
         intent.putExtra("gameId", gameID);
         intent.putExtra("gameType", gameType);
+        intent.putExtra("playlist", playlistName);
         startActivity(intent);
         finish();
     }

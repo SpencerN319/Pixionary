@@ -10,40 +10,43 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft_17;
-import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
 import sb_3.pixionary.Adapters.GuessListAdapter;
 import sb_3.pixionary.R;
+import sb_3.pixionary.Utilities.POJO.GameClasses.Playlist;
 import sb_3.pixionary.Utilities.POJO.ShortUser;
 import sb_3.pixionary.Utilities.POJO.User;
 
 /**
- * Created by Steven Rein on 3/12/2018.
+ * Created by fastn on 3/25/2018.
  */
 
-
-public class RealTimeUpdater {
+public class OkHttpRealTime {
 
     private static final String TAG = RealTimeUpdater.class.getSimpleName();
-    private String url = "ws://proj-309-sb-3.cs.iastate.edu:8080/test"; //TODO this will need to be changed.
-    private URI uri;
-    private WebSocketClient webSocketClient;
+    private String url = "ws://proj-309-sb-3.cs.iastate.edu:8080/name"; //TODO this will need to be changed.
+    private OkHttpClient okHttpClient;
+    private WebSocket webSocket;
     private Context context;
 
     //Stuff for lobby
     private int gameID;
     private int gameType;
     private User user;
+    private String playlist;
     private ArrayList<ShortUser> players;
     private ArrayList<String> chat;
 
@@ -64,10 +67,10 @@ public class RealTimeUpdater {
     private TextView imagesRemaining;
 
 
-    public RealTimeUpdater(Context context, int gameID, int gameType,  User user) {
+    public OkHttpRealTime(Context context, String playlist, int gameID, User user) {
         this.context = context;
         this.gameID = gameID;
-        this.gameType = gameType;
+        this.playlist = playlist;
         this.user = user;
         players = new ArrayList<>();
         chat = new ArrayList<>();
@@ -82,66 +85,59 @@ public class RealTimeUpdater {
     }
 
     public void connect() {
-        try {
-            uri = new URI(url);
-            webSocketClient = new WebSocketClient(uri, new Draft_17()) {
+        okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder().url(url).build();
+        WebSocketListener webSocketListener = new WebSocketListener() {
+            @Override
+            public void onOpen(WebSocket webSocket, Response response) {
+                if (user.getUserType().equals("host")) {
+                    String message = "create," + user.getUsername() + "," + playlist;
+                    webSocket.send(message);
+                } else {
+                    String message = "join" + gameID;
+                    webSocket.send(message);
+                }
 
-                @Override
-                public void onOpen(ServerHandshake serverHandshake) {
-                    Log.i(TAG, "opened");
-                    JSONObject object = new JSONObject();
-                    try {
-                        object.put("access", gameID);
-                        object.put("username", user.getUsername());
-                        Log.i("Worked: ", object.toString());
-                        webSocketClient.send(object.toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                Log.i("Response:", response.message());
+            }
+
+            @Override
+            public void onMessage(WebSocket webSocket, String text) {
+                final String message = text;
+                ((Activity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        messageReceived(message);
                     }
-                }
+                });
+            }
 
-                @Override
-                public void onMessage(String s) {
-                    final String message = s;
-                    ((Activity)context).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            messageReceived(message);
-                        }
-                    });
-                }
+            @Override
+            public void onClosing(WebSocket webSocket, int code, String reason) {
+                webSocket.close(1000, null);
+                Log.i("Closing", reason);
+            }
 
-                @Override
-                public void onClose(int i, String s, boolean b) {
-                    Log.i(TAG, "Closed" + s);
-                    sendLeft();
-                }
+            @Override
+            public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+                Log.i("Error", t.getMessage());
+            }
+        };
+        webSocket = okHttpClient.newWebSocket(request, webSocketListener);
+    }
 
-                @Override
-                public void onError(Exception e) {
-
-                }
-            };
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        webSocketClient.connect();
+    public void sendMessage(String msg) {
+        webSocket.send(msg);
+        Log.i("Sending Message", msg);
     }
 
     public void close() {
-        webSocketClient.close();
+        webSocket.close(1000, "Method Call.");
     }
 
     public void sendStart() {
-        try {
-            JSONObject startGame = new JSONObject();
-            startGame.put("command", "start");
-            JSONArray thesePlayers = new JSONArray(players);
-            startGame.put("players", thesePlayers);
-            webSocketClient.send(startGame.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        String message = "start " + gameID;
+        webSocket.send(message);
     }
 
     public void sendLeft() {
@@ -149,48 +145,102 @@ public class RealTimeUpdater {
             JSONObject leftGame = new JSONObject();
             leftGame.put("Command", "Left");
             leftGame.put("username", user.getUsername());
-            webSocketClient.send(leftGame.toString());
+            webSocket.send(leftGame.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
+    public void sendGuess(int position) {
+        //Get the position on the listview, need to create the listview still.
+//        JSONObject object = new JSONObject();
+//        try {
+//            object.put("command", "guess");
+//            object.put("username", user.getUsername());
+//            object.put("value", listOfOptions.get(position));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        String message = "guess " + listOfOptions.get(position);
+        webSocket.send(message);
+    }
+
     private void messageReceived(String message) {
-        try {
-            JSONObject object = new JSONObject(message);
-            String objectType = object.getString("type");
-            switch (objectType) {
-                case "lobby_init":
-                    initializeDisplay(object);
+//        try {
+            Scanner scanner = new Scanner(message);
+            String type = scanner.next();
+            switch (type) {
+//                case "lobby_init":
+//                    initializeDisplay(object);
+//                    break;
+//                case "joined":
+//                    addPlayer(object);
+//                    break;
+//                case "left":
+//                    removePlayer(object);
+//                    break;
+//                case "play_init":
+//                    playInit(object);
+//                    break;
+//                case "next_image":
+//                    nextImage(object);
+//                    break;
+//                case "pixel":
+//                    receivePixel(object);
+//                    break;
+//                case "guess_result":
+//                    guessResult();
+//                    break;
+//                case "end_game":
+//                    endGame(object);
+//                    break;
+                case "START":
+                    startGame();
                     break;
-                case "joined":
-                    addPlayer(object);
+                case "WORD":
+                    addWord(message);
                     break;
-                case "left":
-                    removePlayer(object);
+                case "ROUNDBEGIN":
+                    setWords();
                     break;
-                case "play_init":
-                    playInit(object);
-                    break;
-                case "next_image":
-                    nextImage(object);
-                    break;
-                case "pixel":
-                    receivePixel(object);
-                    break;
-                case "guess_result":
-                    guessResult();
-                    break;
-                case "end_game":
-                    endGame(object);
-                    break;
+                case "HEIGHT":
+                    setHeightAndWidth(message);
+                case "ROUNDEND":
+                    wipeBitmap();
                 default:
                     Log.i("Not tracked", message);
             }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+    }
 
-        } catch(JSONException e) {
-            e.printStackTrace();
+    private void wipeBitmap() {
+        image.setImageBitmap(Bitmap.createBitmap(0, 0, Bitmap.Config.ARGB_8888));
+    }
+
+    private void addWord(String message) {
+        String[] parts = message.split(":");
+        listOfOptions.add(parts[1]);
+    }
+
+    private void setWords() {
+        GuessListAdapter guessListAdapter = new GuessListAdapter(context, listOfOptions);
+        guessList.setAdapter(guessListAdapter);
+    }
+
+    private void setHeightAndWidth(String message) {
+        Scanner scanner = new Scanner(message);
+        int height = 0;
+        int width = 0;
+        if (scanner.next().equals("HEIGHT") && scanner.hasNextInt()) {
+            height = scanner.nextInt();
         }
+        if (scanner.next().equals("WIDTH") && scanner.hasNextInt()) {
+            width = scanner.nextInt();
+        }
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        image.setImageBitmap(bitmap);
     }
 
     //Message Reactions on the Lobby View
@@ -231,7 +281,7 @@ public class RealTimeUpdater {
                     sendStart();
                 }
             } else if(players.size() == 2 && gameType == 1) {
-                    startGame();
+                startGame();
                 if (user.getUserType().equals("host")) {
                     sendStart();
                 }
@@ -357,20 +407,12 @@ public class RealTimeUpdater {
         }
     }
 
-    public void sendGuess(int position) {
-        //Get the position on the listview, need to create the listview still.
-        JSONObject object = new JSONObject();
-        try {
-            object.put("command", "guess");
-            object.put("username", user.getUsername());
-            object.put("value", listOfOptions.get(position));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        webSocketClient.send(object.toString());
-    }
+
 
     private void guessResult() {
         //TODO did you guess right? or WRONG?
     }
+
+
+
 }
