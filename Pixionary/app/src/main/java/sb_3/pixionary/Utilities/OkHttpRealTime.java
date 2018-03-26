@@ -43,7 +43,7 @@ public class OkHttpRealTime {
     private Context context;
 
     //Stuff for lobby
-    private int gameID;
+    private int gameID = -1;
     private int gameType;
     private User user;
     private String playlist;
@@ -67,9 +67,8 @@ public class OkHttpRealTime {
     private TextView imagesRemaining;
 
 
-    public OkHttpRealTime(Context context, String playlist, int gameID, User user) {
+    public OkHttpRealTime(Context context, String playlist, User user) {
         this.context = context;
-        this.gameID = gameID;
         this.playlist = playlist;
         this.user = user;
         players = new ArrayList<>();
@@ -86,7 +85,7 @@ public class OkHttpRealTime {
 
     public void connect() {
         okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder().url(url).build();
+        final Request request = new Request.Builder().url(url).build();
         WebSocketListener webSocketListener = new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
@@ -97,7 +96,9 @@ public class OkHttpRealTime {
                     String message = "join" + gameID;
                     webSocket.send(message);
                 }
-
+//                if (response.isSuccessful()) {
+//                    createGameReaction(response.message());
+//                }
                 Log.i("Response:", response.message());
             }
 
@@ -131,12 +132,13 @@ public class OkHttpRealTime {
         Log.i("Sending Message", msg);
     }
 
+
     public void close() {
         webSocket.close(1000, "Method Call.");
     }
 
     public void sendStart() {
-        String message = "start " + gameID;
+        String message = "start," + gameID;
         webSocket.send(message);
     }
 
@@ -169,6 +171,7 @@ public class OkHttpRealTime {
 //        try {
             Scanner scanner = new Scanner(message);
             String type = scanner.next();
+            Log.i("Message Received", message);
             switch (type) {
 //                case "lobby_init":
 //                    initializeDisplay(object);
@@ -194,8 +197,11 @@ public class OkHttpRealTime {
 //                case "end_game":
 //                    endGame(object);
 //                    break;
+                case "Creating":
+                    createGameReaction(message);
+                    break;
                 case "START":
-                    startGame();
+                    ((Activity)context).setContentView(R.layout.activity_play);
                     break;
                 case "WORD":
                     addWord(message);
@@ -205,14 +211,24 @@ public class OkHttpRealTime {
                     break;
                 case "HEIGHT":
                     setHeightAndWidth(message);
+                    break;
                 case "ROUNDEND":
                     wipeBitmap();
+                    break;
                 default:
                     Log.i("Not tracked", message);
             }
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    private void createGameReaction(String message) {
+        Scanner scanner = new Scanner(message);
+        if(scanner.next().equals("Creating")) {
+            gameID = scanner.nextInt();
+            Log.i("GameID", String.valueOf(gameID));
+        }
     }
 
     private void wipeBitmap() {
@@ -281,7 +297,7 @@ public class OkHttpRealTime {
                     sendStart();
                 }
             } else if(players.size() == 2 && gameType == 1) {
-                startGame();
+               // startGame();
                 if (user.getUserType().equals("host")) {
                     sendStart();
                 }
@@ -309,9 +325,7 @@ public class OkHttpRealTime {
         }
     }
 
-    private void startGame() {
-        ((Activity)context).setContentView(R.layout.activity_play);
-    }
+
 
     /**
      * This method is used to show when a person joins or leaves the lobby.

@@ -70,29 +70,27 @@ public class LobbyActivity extends AppCompatActivity {
         context = this;
         UserDataDBHandler db = new UserDataDBHandler(this);
         User user = db.getUser("0");
-        int gameID = getIntent().getIntExtra("gameId", -1);
-        int gameType = getIntent().getIntExtra("gameType", -1);
         String playlistName = getIntent().getStringExtra("playlist");
 
         Log.i(TAG, "Pre Execute");
-        okHttpRealTime = new OkHttpRealTime(context, playlistName, gameID, user);
+        okHttpRealTime = new OkHttpRealTime(context, playlistName, user);
         okHttpRealTime.connect();
-
-        if(gameType == 0) {
-            setContentView(R.layout.activity_play);
-        } else if (user.getUserType().equals("host")) {
+        guessList = (ListView) findViewById(R.id.list_of_guesses);
             setContentView(R.layout.activity_host_lobby);
             startButton = (Button) findViewById(R.id.start_button);
             startButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     okHttpRealTime.sendStart();
-                    setContentView(R.layout.activity_play);
+                    setContentView(R.layout.activity_host_lobby);
+//                    guessList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                            okHttpRealTime.sendGuess(position);
+//                        }
+//                    });
                 }
             });
-        } else {
-            setContentView(R.layout.activity_player_lobby);
-        }
 
 
         //For lobby
@@ -100,32 +98,17 @@ public class LobbyActivity extends AppCompatActivity {
         leaveButton = (Button) findViewById(R.id.leave_button);
 
         //For play
-        guessList = (ListView) findViewById(R.id.list_of_guesses);
 
-        if (gameType != 0) {
-            chatButton.setEnabled(false);
-            leaveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    okHttpRealTime.close();
-                    finish();
-                }
-            });
-        } else {
-            guessList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    okHttpRealTime.sendGuess(position);
-                }
-            });
-            sendGuess = (Button) findViewById(R.id.btnSendGuess);
-            sendGuess.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    okHttpRealTime.sendMessage("create, nameGame, cars");
-                }
-            });
-        }
+        sendGuess = (Button) findViewById(R.id.btnSendGuess);
+
+
+//        sendGuess.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                okHttpRealTime.sendStart();
+//                Log.i("Sending Start", "");
+//            }
+//        });
         //May need to create a listener to do what is doing above when we enter a 1v1.
     }
 
