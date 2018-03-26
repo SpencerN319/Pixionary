@@ -41,6 +41,7 @@ import javax.websocket.WebSocketContainer;
 
 import Client.Client;
 import SaveData.UserDataDBHandler;
+import sb_3.pixionary.Adapters.GuessListAdapter;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.OkHttpRealTime;
 import sb_3.pixionary.Utilities.POJO.ShortUser;
@@ -73,7 +74,7 @@ public class LobbyActivity extends AppCompatActivity {
         String playlistName = getIntent().getStringExtra("playlist");
 
         Log.i(TAG, "Pre Execute");
-        okHttpRealTime = new OkHttpRealTime(context, playlistName, user);
+        okHttpRealTime = new OkHttpRealTime(context, playlistName, user, guessList);
         okHttpRealTime.connect();
         guessList = (ListView) findViewById(R.id.list_of_guesses);
             setContentView(R.layout.activity_host_lobby);
@@ -82,13 +83,15 @@ public class LobbyActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     okHttpRealTime.sendStart();
-                    setContentView(R.layout.activity_host_lobby);
-//                    guessList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                        @Override
-//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                            okHttpRealTime.sendGuess(position);
-//                        }
-//                    });
+                    setContentView(R.layout.activity_play);
+                    sendGuess = (Button) findViewById(R.id.btnSendGuess);
+                    sendGuess.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getList();
+                            Log.i("Sending Start", "");
+                        }
+                    });
                 }
             });
 
@@ -99,17 +102,19 @@ public class LobbyActivity extends AppCompatActivity {
 
         //For play
 
-        sendGuess = (Button) findViewById(R.id.btnSendGuess);
-
-
-//        sendGuess.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                okHttpRealTime.sendStart();
-//                Log.i("Sending Start", "");
-//            }
-//        });
         //May need to create a listener to do what is doing above when we enter a 1v1.
+    }
+
+    private void getList() {
+        ArrayList<String> listOfOptions = okHttpRealTime.getListOfOptions();
+        GuessListAdapter guessListAdapter = new GuessListAdapter(context, listOfOptions);
+        guessList.setAdapter(guessListAdapter);
+        guessList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                okHttpRealTime.sendGuess(position);
+            }
+        });
     }
 
 }

@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -67,10 +69,11 @@ public class OkHttpRealTime {
     private TextView imagesRemaining;
 
 
-    public OkHttpRealTime(Context context, String playlist, User user) {
+    public OkHttpRealTime(Context context, String playlist, User user, ListView guessList) {
         this.context = context;
         this.playlist = playlist;
         this.user = user;
+        this.guessList = guessList;
         players = new ArrayList<>();
         chat = new ArrayList<>();
 
@@ -78,7 +81,6 @@ public class OkHttpRealTime {
         gameName = (TextView) ((Activity)context).findViewById(R.id.tv_game_name);
         playerUpdate = (TextView) ((Activity)context).findViewById(R.id.tv_player_update);
         previewImage = (ImageView) ((Activity)context).findViewById(R.id.lobby_image_preview);
-        guessList = (ListView) ((Activity)context).findViewById(R.id.list_of_guesses);
         image = (ImageView) ((Activity)context).findViewById(R.id.imgGame);
         imagesRemaining = (TextView) ((Activity)context).findViewById(R.id.images_remaining);
     }
@@ -89,6 +91,7 @@ public class OkHttpRealTime {
         WebSocketListener webSocketListener = new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
+                listOfOptions = new ArrayList<>();
                 if (user.getUserType().equals("host")) {
                     String message = "create," + user.getUsername() + "," + playlist;
                     webSocket.send(message);
@@ -167,6 +170,10 @@ public class OkHttpRealTime {
         webSocket.send(message);
     }
 
+    public ArrayList<String> getListOfOptions() {
+        return listOfOptions;
+    }
+
     private void messageReceived(String message) {
 //        try {
             Scanner scanner = new Scanner(message);
@@ -207,10 +214,13 @@ public class OkHttpRealTime {
                     addWord(message);
                     break;
                 case "ROUNDBEGIN":
-                    setWords();
-                    break;
+//                    setWords();
+//                    break;
                 case "HEIGHT":
                     setHeightAndWidth(message);
+                    break;
+                case "px":
+                    addPixel(message);
                     break;
                 case "ROUNDEND":
                     wipeBitmap();
@@ -221,6 +231,17 @@ public class OkHttpRealTime {
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    private void addPixel(String message) {
+        Scanner scanner = new Scanner(message);
+        String command = scanner.next();
+        if (command.equals("px")) {
+            int x = scanner.nextInt();
+            int y = scanner.nextInt();
+            int color = scanner.nextInt();
+            bitmap.setPixel(x, y, color);
+        }
     }
 
     private void createGameReaction(String message) {
@@ -236,16 +257,22 @@ public class OkHttpRealTime {
     }
 
     private void addWord(String message) {
-        String[] parts = message.split(":");
-        listOfOptions.add(parts[1]);
+        Scanner scanner = new Scanner(message);
+        String command = scanner.next();
+        if (command.equals("WORD") && scanner.hasNext()) {
+            String word = scanner.next();
+            Log.i("Word Read", word);
+            listOfOptions.add(word);
+        }
     }
 
     private void setWords() {
-        GuessListAdapter guessListAdapter = new GuessListAdapter(context, listOfOptions);
-        guessList.setAdapter(guessListAdapter);
+        //TODO DON'T WORRY FOR NOW!
     }
 
     private void setHeightAndWidth(String message) {
+//        GuessListAdapter guessListAdapter = new GuessListAdapter(context, listOfOptions);
+//        guessList.setAdapter(guessListAdapter);
         Scanner scanner = new Scanner(message);
         int height = 0;
         int width = 0;
