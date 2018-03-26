@@ -55,6 +55,7 @@ public class OkHttpRealTime {
     //Stuff for Play
     private Bitmap bitmap;
     private ArrayList<String> listOfOptions;
+    private boolean listChanged = false;
     private int numImages;
 
     //Stuff for lobby
@@ -65,7 +66,6 @@ public class OkHttpRealTime {
 
     //Stuff for Play
     private ListView guessList;
-    private ImageView image;
     private TextView imagesRemaining;
 
 
@@ -76,12 +76,11 @@ public class OkHttpRealTime {
         this.guessList = guessList;
         players = new ArrayList<>();
         chat = new ArrayList<>();
-
+        listOfOptions = new ArrayList<>();
         lobbyName = (TextView) ((Activity)context).findViewById(R.id.tv_lobby_label);
         gameName = (TextView) ((Activity)context).findViewById(R.id.tv_game_name);
         playerUpdate = (TextView) ((Activity)context).findViewById(R.id.tv_player_update);
         previewImage = (ImageView) ((Activity)context).findViewById(R.id.lobby_image_preview);
-        image = (ImageView) ((Activity)context).findViewById(R.id.imgGame);
         imagesRemaining = (TextView) ((Activity)context).findViewById(R.id.images_remaining);
     }
 
@@ -91,7 +90,7 @@ public class OkHttpRealTime {
         WebSocketListener webSocketListener = new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
-                listOfOptions = new ArrayList<>();
+
                 if (user.getUserType().equals("host")) {
                     String message = "create," + user.getUsername() + "," + playlist;
                     webSocket.send(message);
@@ -140,11 +139,8 @@ public class OkHttpRealTime {
         webSocket.close(1000, "Method Call.");
     }
 
-    public void sendStart() {
-        String message = "start," + gameID;
-        webSocket.send(message);
-    }
 
+//FIXME Need to check if there are any other methods to include.
     public void sendLeft() {
         try {
             JSONObject leftGame = new JSONObject();
@@ -215,7 +211,7 @@ public class OkHttpRealTime {
                     break;
                 case "ROUNDBEGIN":
 //                    setWords();
-//                    break;
+                    break;
                 case "HEIGHT":
                     setHeightAndWidth(message);
                     break;
@@ -223,7 +219,7 @@ public class OkHttpRealTime {
                     addPixel(message);
                     break;
                 case "ROUNDEND":
-                    wipeBitmap();
+                    //wipeBitmap();
                     break;
                 default:
                     Log.i("Not tracked", message);
@@ -252,10 +248,6 @@ public class OkHttpRealTime {
         }
     }
 
-    private void wipeBitmap() {
-        image.setImageBitmap(Bitmap.createBitmap(0, 0, Bitmap.Config.ARGB_8888));
-    }
-
     private void addWord(String message) {
         Scanner scanner = new Scanner(message);
         String command = scanner.next();
@@ -263,11 +255,20 @@ public class OkHttpRealTime {
             String word = scanner.next();
             Log.i("Word Read", word);
             listOfOptions.add(word);
+            listChanged = true;
         }
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
     }
 
     private void setWords() {
         //TODO DON'T WORRY FOR NOW!
+    }
+
+    public boolean getListChanged() {
+        return listChanged;
     }
 
     private void setHeightAndWidth(String message) {
@@ -276,14 +277,17 @@ public class OkHttpRealTime {
         Scanner scanner = new Scanner(message);
         int height = 0;
         int width = 0;
-        if (scanner.next().equals("HEIGHT") && scanner.hasNextInt()) {
+        String command = scanner.next();
+        if (command.equals("HEIGHT") && scanner.hasNextInt()) {
             height = scanner.nextInt();
+            Log.i("Height:", String.valueOf(height));
+            command = scanner.next();
         }
-        if (scanner.next().equals("WIDTH") && scanner.hasNextInt()) {
+        if (command.equals("WIDTH") && scanner.hasNextInt()) {
             width = scanner.nextInt();
+            Log.i("Width:", String.valueOf(width));
         }
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        image.setImageBitmap(bitmap);
     }
 
     //Message Reactions on the Lobby View
@@ -401,7 +405,6 @@ public class OkHttpRealTime {
             int width = jsonObject.getInt("width");
             int height = jsonObject.getInt("height");
             bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            image.setImageBitmap(bitmap);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -414,7 +417,6 @@ public class OkHttpRealTime {
             int width = jsonObject.getInt("width");
             int height = jsonObject.getInt("height");
             bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            image.setImageBitmap(bitmap);
         } catch (JSONException e) {
             e.printStackTrace();
         }
