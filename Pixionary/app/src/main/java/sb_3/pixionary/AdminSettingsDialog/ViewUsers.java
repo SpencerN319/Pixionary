@@ -1,9 +1,8 @@
 package sb_3.pixionary.AdminSettingsDialog;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,7 +18,7 @@ import org.json.JSONObject;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.RequestViewUsers;
 
-public class ViewUsers extends AppCompatActivity {
+public class ViewUsers extends Activity {
 
     private RequestQueue requestQueue;
     private int pageNum = 0;
@@ -126,10 +125,8 @@ public class ViewUsers extends AppCompatActivity {
 
 
     private void request_user(int user_num){
-        //TODO create request user and implement similar to settings dialog
-        Log.i("user: ", String.valueOf(user_num));
-
         Intent show = new Intent(this, ViewSelectedUser.class);
+        show.putExtra("user", users[user_num].getText());
         startActivity(show);
     }
 
@@ -144,7 +141,6 @@ public class ViewUsers extends AppCompatActivity {
                     JSONArray  user_array = obj.getJSONArray("users");
                     int length = user_array.length();
                     for(int i = 0; i < length; i++) {
-                        Log.i("username: ", user_array.getJSONObject(i).toString());
                         users[i].setText(user_array.getJSONObject(i).getString("username"));
                     }
                     if(length < 10){

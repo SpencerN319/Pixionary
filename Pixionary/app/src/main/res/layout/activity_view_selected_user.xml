@@ -6,6 +6,7 @@
     android:layout_height="480dp"
     android:layout_gravity="center"
     android:background="@drawable/layout_border"
+    android:backgroundTint="@color/colorPrimary"
     tools:context="sb_3.pixionary.AdminSettingsDialog.ViewSelectedUser">
 
     <LinearLayout
@@ -21,7 +22,7 @@
             android:id="@+id/tv_username"
             android:layout_width="match_parent"
             android:layout_height="59dp"
-            android:text="TextView"
+            android:text="username"
             android:textSize="24dp"
             android:textColor="@color/colorPrimaryText"/>
 
@@ -29,7 +30,7 @@
             android:id="@+id/tv_password"
             android:layout_width="match_parent"
             android:layout_height="59dp"
-            android:text="TextView"
+            android:text="password"
             android:textSize="24dp"
             android:textColor="@color/colorPrimaryText"/>
 
@@ -37,7 +38,7 @@
             android:id="@+id/tv_id"
             android:layout_width="match_parent"
             android:layout_height="59dp"
-            android:text="TextView"
+            android:text="user ID"
             android:textSize="24dp"
             android:textColor="@color/colorPrimaryText"/>
 
@@ -45,7 +46,7 @@
             android:id="@+id/tv_userType"
             android:layout_width="match_parent"
             android:layout_height="59dp"
-            android:text="TextView"
+            android:text="user type"
             android:textSize="24dp"
             android:textColor="@color/colorPrimaryText"/>
 
@@ -53,7 +54,7 @@
             android:id="@+id/tv_gamesPlayed"
             android:layout_width="match_parent"
             android:layout_height="59dp"
-            android:text="TextView"
+            android:text="games played"
             android:textSize="24dp"
             android:textColor="@color/colorPrimaryText"/>
 
@@ -61,7 +62,7 @@
             android:id="@+id/tv_score"
             android:layout_width="match_parent"
             android:layout_height="59dp"
-            android:text="TextView"
+            android:text="score"
             android:textSize="24dp"
             android:textColor="@color/colorPrimaryText"/>
 
@@ -69,7 +70,7 @@
             android:id="@+id/tv_categoryCount"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:text="TextView"
+            android:text="category count"
             android:textSize="24dp"
             android:textColor="@color/colorPrimaryText"/>
 
@@ -77,7 +78,7 @@
             android:id="@+id/tv_imageCount"
             android:layout_width="match_parent"
             android:layout_height="59dp"
-            android:text="TextView"
+            android:text="image count"
             android:textSize="24dp"
             android:textColor="@color/colorPrimaryText"/>
     </LinearLayout>
