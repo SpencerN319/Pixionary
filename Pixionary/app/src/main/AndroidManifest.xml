@@ -40,7 +40,10 @@
             android:name=".AdminSettings"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".DeleteAccount" />
-        <activity android:name=".AdminSettingsDialog.ViewUsers"></activity>
+        <activity android:name=".AdminSettingsDialog.ViewUsers" />
+        <activity
+            android:name=".AdminSettingsDialog.ViewSelectedUser"
+            android:theme="@android:style/Theme.Dialog" ></activity>
     </application>
 
 </manifest>

@@ -46,6 +46,66 @@ public class ViewUsers extends AppCompatActivity {
 
         request_users();
 
+        for (TextView user: users) {
+            user.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switch (view.getId()) {
+                        case R.id.tv_0:
+                            if(users[0].getText() != null){
+                                request_user(0);
+                            }
+                            break;
+                        case R.id.tv_1:
+                            if(users[1].getText() != null){
+                                request_user(1);
+                            }
+                            break;
+                        case R.id.tv_2:
+                            if(users[2].getText() != null){
+                                request_user(2);
+                            }
+                            break;
+                        case R.id.tv_3:
+                            if(users[3].getText() != null){
+                                request_user(3);
+                            }
+                            break;
+                        case R.id.tv_4:
+                            if(users[4].getText() != null){
+                                request_user(4);
+                            }
+                            break;
+                        case R.id.tv_5:
+                            if(users[5].getText() != null){
+                                request_user(5);
+                            }
+                            break;
+                        case R.id.tv_6:
+                            if(users[6].getText() != null){
+                                request_user(6);
+                            }
+                            break;
+                        case R.id.tv_7:
+                            if(users[7].getText() != null){
+                                request_user(7);
+                            }
+                            break;
+                        case R.id.tv_8:
+                            if(users[8].getText() != null){
+                                request_user(8);
+                            }
+                            break;
+                        case R.id.tv_9:
+                            if(users[9].getText() != null){
+                                request_user(9);
+                            }
+                            break;
+                    }
+                }
+            });
+        }
+
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +121,12 @@ public class ViewUsers extends AppCompatActivity {
                 request_users();
             }
         });
+    }
+
+
+    private void request_user(int user_num){
+        //TODO create request user and implement similar to settings dialog
+        Log.i("user: ", String.valueOf(user_num));
     }
 
     private void request_users(){
@@ -79,7 +145,7 @@ public class ViewUsers extends AppCompatActivity {
                     }
                     if(length < 10){
                         for(int i = length; i < 10; i++){
-                            users[i].setText("");
+                            users[i].setText(null);
                         }
                     }
 
