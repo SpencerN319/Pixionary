@@ -47,7 +47,7 @@ public class PlaylistsAdapter extends BaseAdapter implements android.widget.List
 
     @Override
     public long getItemId(int position) {
-        return items.get(position).getId();
+        return -1;
     }
 
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -62,10 +62,6 @@ public class PlaylistsAdapter extends BaseAdapter implements android.widget.List
         TextView tvPlaylistName = (TextView) view.findViewById(R.id.textPlaylistName);
         tvPlaylistName.setText(items.get(position).getName());
 
-        //Set the creator of the playlist.
-        TextView tvPlaylistCreator = (TextView) view.findViewById(R.id.textPlaylistCreator);
-        tvPlaylistCreator.setText(items.get(position).getCreator());
-
         Button previewBtn = (Button) view.findViewById(R.id.preview);
         Button startBtn = (Button) view.findViewById(R.id.play);
 
@@ -79,7 +75,6 @@ public class PlaylistsAdapter extends BaseAdapter implements android.widget.List
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                returnPlaylistAndFinish(position);
                 dtInterface.setValuesAndReact(position);
             }
         });
@@ -88,21 +83,19 @@ public class PlaylistsAdapter extends BaseAdapter implements android.widget.List
     }
 
 
-    private void returnPlaylistAndFinish(int position) {
-        Intent intent = new Intent(context, HostGameActivity.class);
-        intent.putExtra("PlaylistName", items.get(position).getName());
-        intent.putExtra("PlaylistCreator", items.get(position).getCreator());
-        intent.putExtra("PlaylistID", items.get(position).getId());
-        ((Activity)context).setResult(Activity.RESULT_OK, intent);
-        ((Activity)context).finish();
-    }
-
-    private void startHostWaitScreen(int position) {
-        Intent intent = new Intent(context, LobbyActivity.class);
-        Bundle gameAccess = new Bundle();
-        gameAccess.putInt("id", items.get(position).getId());
-        intent.putExtras(gameAccess);
-        context.startActivity(intent);
-        ((Activity)context).finish();
-    }
+//    private void returnPlaylistAndFinish(int position) {
+//        Intent intent = new Intent(context, HostGameActivity.class);
+//        intent.putExtra("PlaylistName", items.get(position).getName());
+//        ((Activity)context).setResult(Activity.RESULT_OK, intent);
+//        ((Activity)context).finish();
+//    }
+//
+//    private void startHostWaitScreen(int position) {
+//        Intent intent = new Intent(context, LobbyActivity.class);
+//        Bundle gameAccess = new Bundle();
+//        gameAccess.putInt("id", items.get(position).getId());
+//        intent.putExtras(gameAccess);
+//        context.startActivity(intent);
+//        ((Activity)context).finish();
+//    }
 }

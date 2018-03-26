@@ -44,6 +44,7 @@ public class HostGameActivity extends AppCompatActivity {
     private Button play1v1;
 
     private ShortGame accessGame;
+    private String playlistName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,15 +106,12 @@ public class HostGameActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GETPLAYLISTID) {
-            int playlistID = data.getIntExtra("PlaylistID", -1);
-            String playlistName = data.getStringExtra("PlaylistName");
-            String playlistCreator = data.getStringExtra("PlaylistCreator");
+            playlistName = data.getStringExtra("PlaylistName");
             tvPlaylistSelected.setText(getString(R.string.playlist_dynamic, playlistName));
-            tvCreatorSelected.setText(getString(R.string.creator_dynamic, playlistCreator));
 
             Log.i("DEBUG:" + TAG, "PlaylistID = " + data.getIntExtra("PlaylistID", -1));
 
-            Playlist playlist = new Playlist(playlistID, playlistName, playlistCreator);
+            Playlist playlist = new Playlist(playlistName);
             accessGame.setPlaylist(playlist);
         }
     }
@@ -148,7 +146,7 @@ public class HostGameActivity extends AppCompatActivity {
 
     //FIXME Temporary for testing
     private void requestGameTest() {
-        directToGame(100, 1);
+        directToGame(100, 0);
     }
 
     /**
@@ -161,6 +159,7 @@ public class HostGameActivity extends AppCompatActivity {
         Intent intent = new Intent(context, LobbyActivity.class);
         intent.putExtra("gameId", gameID);
         intent.putExtra("gameType", gameType);
+        intent.putExtra("playlist", playlistName);
         startActivity(intent);
         finish();
     }

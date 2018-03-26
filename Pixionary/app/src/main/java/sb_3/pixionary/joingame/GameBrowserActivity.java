@@ -2,6 +2,7 @@ package sb_3.pixionary.joingame;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -79,38 +80,47 @@ public class GameBrowserActivity extends AppCompatActivity {
         UserDataDBHandler db = new UserDataDBHandler(context);
         User user = db.getUser("0");
         if(user != null) {
-            String username = user.getUsername();
-            //Request the different category names. -- Should receive a list of 10 possible choices.
-            RequestGamesAvailable categoryRequest = new RequestGamesAvailable(username, pageNum, new Response.Listener<String>() {
+            final String username = user.getUsername();
+            final Handler handler = new Handler();
+            final Runnable runnable = new Runnable() {
                 @Override
-                public void onResponse(String response) {
-                    try{
-                        Log.i(TAG, response);
-                        JSONObject jsonGameList = new JSONObject(response); //Gets the response
-                        if(jsonGameList.getBoolean("success")) {
-                            pageLogic(jsonGameList.getInt("total")); //Enables or disables buttons according to total users.
-                            JSONArray jsonGameArr = jsonGameList.getJSONArray("data"); //This might be changing.
-                            gamesList = new ArrayList<>();
-                            for (int i = 0; i < jsonGameArr.length(); i++) {
-                                ShortGame shortGame = new ShortGame();
-                                shortGame.setShortGameFromJSON(jsonGameArr.getJSONObject(i));
-                                gamesList.add(shortGame);
+                public void run() {
+                    //Request the different category names. -- Should receive a list of 10 possible choices
+                    RequestGamesAvailable categoryRequest = new RequestGamesAvailable(username, pageNum, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try{
+                                Log.i(TAG, response);
+                                JSONObject jsonGameList = new JSONObject(response); //Gets the response
+                                if(jsonGameList.getBoolean("success")) {
+                                    pageLogic(jsonGameList.getInt("total")); //Enables or disables buttons according to total users.
+                                    JSONArray jsonGameArr = jsonGameList.getJSONArray("data"); //This might be changing.
+                                    gamesList = new ArrayList<>();
+                                    for (int i = 0; i < jsonGameArr.length(); i++) {
+                                        ShortGame shortGame = new ShortGame();
+                                        shortGame.setShortGameFromJSON(jsonGameArr.getJSONObject(i));
+                                        gamesList.add(shortGame);
+                                    }
+                                    adapter = new GameListAdapter(context, gamesList);
+                                    listView.setAdapter(adapter);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            adapter = new GameListAdapter(context, gamesList);
-                            listView.setAdapter(adapter);
+
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.i(TAG, "Error: " + error.toString());
+                        }
+                    });
+                    requestQueue.add(categoryRequest);
 
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.i(TAG, "Error: " + error.toString());
-                }
-            });
-            requestQueue.add(categoryRequest);
+            };
+            handler.postDelayed(runnable, 5000);
+
         }
 //        //FIXME temporary for testing.
 //        gamesList = new ArrayList<>();
