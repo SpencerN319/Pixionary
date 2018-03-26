@@ -101,7 +101,7 @@ public class SocketHandler extends TextWebSocketHandler {
 				          Statement statement = conn1.createStatement();
 
 
-				          statement.executeUpdate("DELETE FROM Games WHERE ID ='"+g.getHostName()+"';");
+				          statement.executeUpdate("DELETE FROM Games WHERE ID ='"+g.getID()+"';");
 				          
 				      } catch (SQLException e) {
 				          System.out.println("SQLException: " + e.getMessage());
@@ -117,6 +117,17 @@ public class SocketHandler extends TextWebSocketHandler {
 			}
 		}else if (parts[0].equals("guess"))
 		{
+			for (Game g: Main.server.gamesList)
+			{
+				for (ConnectedClient c : Main.server.connectedClients)
+				{
+					if (c.getGameSession().equals(g) && c.getSocketSession().equals(session))
+					{
+						System.out.println("Sending guess to game");
+						g.i.getGuess(c);
+					}
+				}
+			}
 			System.out.println("making guess...jk");
 		}else
 		{

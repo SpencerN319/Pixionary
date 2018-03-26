@@ -214,5 +214,19 @@ public class ConnectedClient implements Runnable{
   public String getUsername(){
     return username;
   }
+  
+  public void setGameSession(Game g)
+  {
+	  gameSession = g;
+  }
+  public Game getGameSession()
+  {
+	  return gameSession;
+  }
+  
+  public WebSocketSession getSocketSession()
+  {
+	  return socket;
+  }
 
 }

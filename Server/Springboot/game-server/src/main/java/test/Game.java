@@ -22,7 +22,8 @@ public class Game{
   String category;
   ArrayList<WordLink> words = new ArrayList<WordLink>();
 String hostName;
-  
+Imgbreak i;
+
   public Game(ConnectedClient host, String gameName, String category){
     
     this.host = host;
@@ -95,6 +96,7 @@ String hostName;
   
   public void addMember(ConnectedClient joiningMember){
     gameMembers.add(joiningMember);
+    joiningMember.setGameSession(this);
   }
 
   public void removeMemberFromMembersList(ConnectedClient leavingMember){
@@ -189,7 +191,7 @@ String hostName;
 	  int width = img.getWidth();
 	  this.sendStringToAllMembers("HEIGHT:"+height+" WIDTH:" + width);
 	  
-	  Imgbreak i = new Imgbreak(img, "cat",null, this);
+	  i = new Imgbreak(img, "cat",null, this);
 	  i.breakImage();
 	  i.sendPixels();
 	  this.sendStringToAllMembers("ROUNDEND");
