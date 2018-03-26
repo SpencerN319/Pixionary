@@ -1,5 +1,6 @@
 package sb_3.pixionary.AdminSettingsDialog;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -127,6 +128,9 @@ public class ViewUsers extends AppCompatActivity {
     private void request_user(int user_num){
         //TODO create request user and implement similar to settings dialog
         Log.i("user: ", String.valueOf(user_num));
+
+        Intent show = new Intent(this, ViewSelectedUser.class);
+        startActivity(show);
     }
 
     private void request_users(){
