@@ -8,6 +8,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import sb_3.pixionary.AdminSettingsDialog.ViewUsers;
 
 
 /**
@@ -51,7 +52,7 @@ public class AdminSettings extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.bt_ViewUsers:
                 i = 1;
-                //TODO Start view users
+                selectedActivity = ViewUsers.class;
                 break;
             case R.id.bt_DeleteUser:
                 i = 2;

@@ -1,69 +1,56 @@
 package sb_3.pixionary.AdminSettingsDialog;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-import SaveData.UserDataDBHandler;
-import sb_3.pixionary.Adapters.PlaylistsAdapter;
 import sb_3.pixionary.R;
-import sb_3.pixionary.Utilities.POJO.GameClasses.Playlist;
-import sb_3.pixionary.Utilities.POJO.User;
-import sb_3.pixionary.Utilities.RequestPlaylists;
-import sb_3.pixionary.hostgame.HostGameActivity;
-import sb_3.pixionary.hostgame.PlaylistSelectActivity;
-import sb_3.pixionary.interfaces.DataTransferInterface;
+import sb_3.pixionary.Utilities.RequestViewUsers;
 
 public class ViewUsers extends AppCompatActivity {
 
-    private static final String TAG = PlaylistSelectActivity.class.getSimpleName();
-    private DataTransferInterface dataTransferInterface;
-    private Context context;
     private RequestQueue requestQueue;
-
-    private PlaylistsAdapter adapter;
-    private ListView listView;
-    private Button previous;
-    private Button next;
-
     private int pageNum = 0;
-    private ArrayList<Playlist> playlistsList;
-
+    private Button next, previous;
+    TextView users[] = new TextView[10];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_users);
-        //Initialize new RequestQueue
-        requestQueue = Volley.newRequestQueue(context);
+        next = (Button) findViewById(R.id.bt_Next);
+        previous = (Button) findViewById(R.id.bt_Previous);
+        users[0] = (TextView) findViewById(R.id.tv_0);
+        users[1] = (TextView) findViewById(R.id.tv_1);
+        users[2] = (TextView) findViewById(R.id.tv_2);
+        users[3] = (TextView) findViewById(R.id.tv_3);
+        users[4] = (TextView) findViewById(R.id.tv_4);
+        users[5] = (TextView) findViewById(R.id.tv_5);
+        users[6] = (TextView) findViewById(R.id.tv_6);
+        users[7] = (TextView) findViewById(R.id.tv_7);
+        users[8] = (TextView) findViewById(R.id.tv_8);
+        users[9] = (TextView) findViewById(R.id.tv_9);
 
-        listView = (ListView) findViewById(R.id.categories_list);
-        previous = (Button) findViewById(R.id.previous_btn);
-        next = (Button) findViewById(R.id.next_btn);
+        requestQueue = Volley.newRequestQueue(this);
 
-        requestUserPage();
+        request_users();
 
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pageNum--;
-                requestUserPage();
+                request_users();
             }
         });
 
@@ -71,49 +58,40 @@ public class ViewUsers extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pageNum++;
-                requestUserPage();
+                request_users();
             }
         });
     }
 
-    //We could clean both this and leaderboard page up by making a class specifically for the both of them?
-    private void requestUserPage() {
-        UserDataDBHandler db = new UserDataDBHandler(context);
-        User user = db.getUser("0");
-        if (user != null) {
-            String username = user.getUsername();
-            //Request the different category names. -- Should receive a list of 10 possible choices.
-            RequestPlaylists categoryRequest = new RequestPlaylists(username, pageNum, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        Log.i(TAG, response);
-                        JSONObject jsonPlaylists = new JSONObject(response); //Gets the response
-                        if (jsonPlaylists.getBoolean("success")) {
-                            pageLogic(jsonPlaylists.getInt("total")); //Enables or disables buttons according to total users.
-                            JSONArray jsonPlaylistArr = jsonPlaylists.getJSONArray("category"); //This might be changing.
-                            playlistsList = new ArrayList<>();
-                            for (int i = 0; i < jsonPlaylistArr.length(); i++) {
-                                //This single line creates a Playlist object for every item in Json array.
-                                playlistsList.add(new Playlist(jsonPlaylistArr.getJSONObject(i)));
-                            }
-                            adapter = new PlaylistsAdapter(context, playlistsList, dataTransferInterface);
-                            listView.setAdapter(adapter);
+    private void request_users(){
+
+        RequestViewUsers view = new RequestViewUsers(pageNum, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    pageLogic(obj.getInt("total"));
+                    JSONArray  user_array = obj.getJSONArray("users");
+                    int length = user_array.length();
+                    for(int i = 0; i < length; i++) {
+                        Log.i("username: ", user_array.getJSONObject(i).toString());
+                        users[i].setText(user_array.getJSONObject(i).getString("username"));
+                    }
+                    if(length < 10){
+                        for(int i = length; i < 10; i++){
+                            users[i].setText("");
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.i(TAG, "Error: " + error.toString());
-                }
-            });
-            requestQueue.add(categoryRequest);
-        }
+            }
+        });
+
+        requestQueue.add(view);
     }
+
 
     private void pageLogic(int totalUsers) {
         if (totalUsers > 10) { //Will be changing 10 to 100.
@@ -122,7 +100,7 @@ public class ViewUsers extends AppCompatActivity {
             } else {
                 enableButton(previous);
             }
-            if (totalUsers < (pageNum + 1) * 10) {
+            if (totalUsers < (pageNum+1)*10) {
                 disableButton(next);
             } else {
                 enableButton(next);
@@ -133,25 +111,7 @@ public class ViewUsers extends AppCompatActivity {
         }
     }
 
-    private void disableButton(Button button) {
-        button.setEnabled(false);
-    }
+    private void disableButton(Button button){button.setEnabled(false);}
 
-    private void enableButton(Button button) {
-        button.setEnabled(true);
-    }
-
-    @Override
-    public void setValuesAndReact(int position) {
-        sendResultingPlaylist(playlistsList.get(position));
-    }
-
-    private void sendResultingPlaylist(Playlist playlist) {
-        Intent intent = new Intent(context, HostGameActivity.class);
-        intent.putExtra("PlaylistID", playlist.getId());
-        intent.putExtra("PlaylistName", playlist.getName());
-        intent.putExtra("PlaylistCreator", playlist.getCreator());
-        setResult(Activity.RESULT_OK, intent);
-        finish();
-    }
+    private void enableButton(Button button){button.setEnabled(true);}
 }
