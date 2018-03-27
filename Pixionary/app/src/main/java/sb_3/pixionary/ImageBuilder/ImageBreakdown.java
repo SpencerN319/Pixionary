@@ -22,15 +22,12 @@ public class ImageBreakdown {
 
 
     //Used to local breakdown an image currently.
-    public void breakDownImage (Context context, String imageName) {
+    public void breakDownImage (Context context, InputStream inputStream) {
 
-
-        AssetManager manager = context.getAssets();
-        InputStream stream;
+        InputStream stream = inputStream;
         try {
-            stream = manager.open(imageName);
             image = BitmapFactory.decodeStream(stream);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

@@ -3,18 +3,24 @@ package sb_3.pixionary.gameplay;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -27,29 +33,34 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import sb_3.pixionary.Adapters.GuessListAdapter;
+import sb_3.pixionary.ImageBuilder.ImageCreator;
 import sb_3.pixionary.ImageBuilder.Pixel;
 import sb_3.pixionary.R;
+import sb_3.pixionary.Utilities.DownloadImageTask;
 import sb_3.pixionary.Utilities.POJO.ShortUser;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RealTimeUpdater;
+import sb_3.pixionary.interfaces.DataTransferInterface;
 
 import static sb_3.pixionary.MainMenuActivity.user;
 
 //TODO still need to add a view to see the players in the lobby. --- Not important RN.
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements DataTransferInterface {
 
     private static final String TAG = RealTimeUpdater.class.getSimpleName();
     private String url = "ws://proj-309-sb-3.cs.iastate.edu:8080/name";
     private Context context;
     private OkHttpClient okHttpClient;
     private WebSocket webSocket;
+    private DataTransferInterface dataTransferInterface;
 
     private int gameID = -1;
     private String playlistName;
     private User user;
     private ArrayList<String> listOfOptions;
-    private ArrayAdapter<String> adapter;
+    private GuessListAdapter adapter;
     private Bitmap bitmap;
+    private String currentGuess;
 
     private Button sendGuess;
     private ImageView image;
@@ -58,22 +69,19 @@ public class GameActivity extends AppCompatActivity {
     //Image stuff
     int width;
     int height;
-    int x = 0;
-    int y = 0;
     int[] pixels;
-    boolean[] pixelUsed;
-    Handler handler = null;
-    Runnable runnable = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
         context = this;
+        dataTransferInterface = this;
 
         guessList = (ListView) findViewById(R.id.list_of_guesses);
         sendGuess = (Button) findViewById(R.id.btnSendGuess);
         image = (ImageView) findViewById(R.id.imgGame);
+
 
         connect();
 
@@ -81,19 +89,22 @@ public class GameActivity extends AppCompatActivity {
         user = db.getUser("0");
         playlistName = getIntent().getStringExtra("playlist");
         listOfOptions = new ArrayList<>();
-        listOfOptions.add("Fake 1");
-        listOfOptions.add("Fake 2");
-//        GuessListAdapter adapter = new GuessListAdapter(context, listOfOptions);
-        adapter = new ArrayAdapter<>(context, R.layout.guess_list, R.id.guess1, listOfOptions);
+        adapter = new GuessListAdapter(context, listOfOptions, dataTransferInterface);
         guessList.setAdapter(adapter);
 
         sendGuess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Create a method to send the Guess
+                sendGuess(currentGuess);
             }
         });
+    }
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        String message = "URL https://i.imgur.com/AEWms1M.jpg";
+        receiveImage(message);
     }
 
     public void connect() {
@@ -151,6 +162,11 @@ public class GameActivity extends AppCompatActivity {
         webSocket.send(message);
     }
 
+    private void sendGuess(String guess) {
+        String message = "guess," + guess;
+        webSocket.send(message);
+    }
+
     private void messageReceived(String message) {
         Scanner scanner = new Scanner(message);
         String type = scanner.next();
@@ -164,15 +180,14 @@ public class GameActivity extends AppCompatActivity {
             case "WORD":
                 addWord(message);
                 break;
-            case "ROUNDBEGIN":
-                setWords();
-                break;
+//            case "ROUNDBEGIN":
+//                setWords();
+//                break;
             case "HEIGHT":
                 setHeightAndWidth(message);
                 break;
-            case "px":
-                //addPixel(message);
-                receiveAllPixels(message);
+            case "URL":
+                receiveImage(message);
                 break;
             case "ROUNDEND":
                 wipeBitmap();
@@ -182,12 +197,8 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void setWords() {
-        //TODO not sure what to do here.
-    }
-
     private void wipeBitmap() {
-        bitmap = Bitmap.createBitmap(0, 0, Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
     }
 
     private void addPixel(String message) {
@@ -202,53 +213,16 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void receiveAllPixels(String message) {
+    private void receiveImage(String message) {
         Scanner scanner = new Scanner(message);
         String command = scanner.next();
-        if (command.equals("px")) {
-            for (int i = 0; i < pixels.length; i++) {
-                x++;
-                if (x >= width) {
-                    y++;
-                    x = 0;
-                }
-                pixels[y*width + x] = scanner.nextInt();
-            }
+        if (command.equals("URL")) {
+            String url = scanner.next();
+            DownloadImageTask imageTask = new DownloadImageTask(image);
+            imageTask.execute(url);
         }
-        //FIXME Might need a separate method to check for when the runnable should start then we can put the method in the onCreate()
-        pixelUsed = new boolean[pixels.length];
-        Arrays.fill(pixelUsed, false);
-        handler = new Handler();
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                Pixel pix = getUnusedPixel();
-                postPixel(bitmap, pix);
-                handler.postDelayed(runnable, 3);
-            }
-        };
-        handler.postDelayed(runnable, 3);
     }
 
-    private Pixel getUnusedPixel() {
-        Random random = new Random();
-        boolean used;
-        Pixel pix;
-        do {
-            int x = random.nextInt(width);
-            int y = random.nextInt(height);
-            used = pixelUsed[x*y];
-            pix = new Pixel(x, y, pixels[x*y]);
-        } while (used);
-
-        return pix;
-    }
-
-    private void postPixel(Bitmap bitmap, Pixel pixel) {
-        int x = pixel.getXPosition();
-        int y = pixel.getYPosition();
-        bitmap.setPixel(x, y, pixels[y*width + x]);
-    }
 
     private void createGameReaction(String message) {
         Scanner scanner = new Scanner(message);
@@ -283,32 +257,14 @@ public class GameActivity extends AppCompatActivity {
             Log.i("Width:", String.valueOf(width));
         }
         pixels = new int[width*height];
+        Log.i("Pixels Length", String.valueOf(pixels.length));
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         image.setImageBitmap(bitmap);
     }
 
-    class UpdateImage extends AsyncTask<Void, Void, Void> {
-
-        String message;
-
-        public UpdateImage(String message) {
-            this.message = message;
-        }
-
-        @Override
-        protected Void doInBackground(Void...voids) {
-            Scanner scanner = new Scanner(message);
-            String command = scanner.next();
-            if (command.equals("px")) {
-                int x = scanner.nextInt();
-                int y = scanner.nextInt();
-                int color = scanner.nextInt();
-                bitmap.setPixel(x, y, color);
-                Log.i("Pixel Set", String.valueOf(color));
-            }
-            return null;
-        }
-
+    @Override
+    public void setValuesAndReact(int position) {
+        currentGuess = listOfOptions.get(position);
     }
 
 }

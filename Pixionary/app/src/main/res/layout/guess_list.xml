@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,16 +7,13 @@
 
     <TextView
         android:id="@+id/guess1"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="300sp"
+        android:layout_height="45sp"
         android:text="Guess1"
         android:gravity="center"
+        android:background="@color/colorPrimaryOrange"
         android:textAlignment="center"
-        android:textColor="@color/colorPrimaryText"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/guideline24"/>
+        android:textColor="@color/colorPrimaryText" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline24"
@@ -25,5 +22,15 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.08" />
 
+    <Button
+        android:id="@+id/important"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Select"
+        android:textColor="@color/colorPrimaryText"
+        android:background="@color/colorPrimaryRed"
+        />
 
-</android.support.constraint.ConstraintLayout>
+
+</LinearLayout>
