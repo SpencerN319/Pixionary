@@ -14,7 +14,7 @@ public class Imgloader {
     public void runScript()
     {
 	try {
-	ProcessBuilder pb = new ProcessBuilder("imgloader.sh", w);
+	ProcessBuilder pb = new ProcessBuilder("/home/kwswesey/imgloader.sh", w);
 	pb.start();
 	} catch (IOException e)
 	    {

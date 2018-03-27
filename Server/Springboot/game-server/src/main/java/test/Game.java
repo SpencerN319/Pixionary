@@ -68,16 +68,19 @@ Imgbreak i;
           
           Statement statement = conn1.createStatement();
           ResultSet rs;
-          rs = statement.executeQuery("select Word, Link from Images where Category'="+category+"';");
+          rs = statement.executeQuery("select word, location from Images where category='"+category+"';");
         
           //get them words and links
           while (rs.next()) {
-              
-        	  	String word = rs.getString("Word");
-        	  	String link = rs.getString("Link");
+           // for (int x = 0; x < 20; x++) {  
+        	  	String word = rs.getString("word");
+        	  	String link = rs.getString("location");
+        	  	System.out.println("WORD LOADED");
         	  	WordLink wl = new WordLink(word, link);
         	  	words.add(wl);
-        	  	this.sendStringToAllMembers("WORD:"+word+":");
+        	  	
+        	  	this.sendStringToAllMembers("WORD "+word);
+        	  	System.out.println("WORD SENT");
           }
           
       } catch (SQLException e) {
@@ -87,7 +90,10 @@ Imgbreak i;
       }
       //hard coded 3 games
       for (int count = 0; count < 3; count++)
+      {
+    	  System.out.println("Begin round");
 	  this.playRound();
+      }
       this.sendStringToAllMembers("GG");
       this.delete();
       
@@ -169,32 +175,63 @@ Imgbreak i;
 	  this.sendStringToAllMembers("ROUNDBEGIN");
 
 	  //reset correct guess status and points
+	  System.out.println("Preparing to reset");
 	  for(int i = 0; i < gameMembers.size(); i++){
 	      gameMembers.get(i).setGuessed(false);
 	      gameMembers.get(i).resetRoundScore();
 	      }
+	  
+	  System.out.println("Round starting");
+	  Random r = new Random(words.size());
+	 System.out.println(words.size());
+	  int choice = r.nextInt()-1;
+	  
+	  	System.out.println(choice);
+	  //WordLink solution =words.get(choice);
+	  System.out.println("3");
+
+	  //String linkURL = solution.getLink();
+	  System.out.println("4");
+
+	  //String correctWord = solution.getWord();
+	  System.out.println("5");
+
 	  //hard coded now just to make sure this part works
 	  String URL = "https://i.imgur.com/AEWms1M.jpg";
 	  Imgloader il = new Imgloader(URL);
 	  il.runScript();
-	  BufferedImage img = null;
+	  //BufferedImage img = null;
 	  
 	  try {
-	      img = ImageIO.read(new File("image.jpg"));
+		  try {
+	   		  System.out.println("SLEEPY TIME");
+	   	Thread.sleep(500);
+	   	System.out.println("WOKE");
+		}catch (InterruptedException e)
+		{
+			
+		}
+	     BufferedImage img = ImageIO.read(new File("/home/kwswesey/image.jpg"));
+	      System.out.println("Image has been loaded");
+		  System.out.println("Getting and sending dimensions");
+		  int height = 642;
+		  //System.out.println(img.getHeight());
+		  int width = 500;
+		  //System.out.println(img.getWidth());
+		  this.sendStringToAllMembers("HEIGHT "+height+" WIDTH " + width);
+		  
+		  i = new Imgbreak(img, "cat",null, this);
+		  System.out.println("breaking image");
+		  i.breakImage();
+		  System.out.println("SEnding pixels");
+		  i.sendPixels();
+		  this.sendStringToAllMembers("ROUNDEND");
 	  } catch (IOException e) {
 
 	      System.out.println("Failed to load image: ");
 		  e.printStackTrace();
 	  }
-	  
-	  int height = img.getHeight();
-	  int width = img.getWidth();
-	  this.sendStringToAllMembers("HEIGHT:"+height+" WIDTH:" + width);
-	  
-	  i = new Imgbreak(img, "cat",null, this);
-	  i.breakImage();
-	  i.sendPixels();
-	  this.sendStringToAllMembers("ROUNDEND");
+
 	  
 	  //update mysql with points from the round
 	  for(int j = 0; j < gameMembers.size(); j++){
