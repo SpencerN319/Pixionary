@@ -68,7 +68,7 @@ public class AdminSettings extends Activity implements View.OnClickListener {
                 //TODO start remove category
                 break;
         }
-        if (i != 5 && i != 0) {
+        if (i != 0) {
             nextActivity(selectedActivity);
         }
         finish();
