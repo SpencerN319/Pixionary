@@ -13,11 +13,11 @@ import java.util.Map;
  */
 
 public class RequestPlaylists extends StringRequest {
-    private static final String CATEGORIES_URL = "http://proj-309-sb-3.cs.iastate.edu:80/register.php"; //TODO URL needs to be changed.
+    private static final String CATEGORIES_URL = "http://proj-309-sb-3.cs.iastate.edu:80/playlist.php";
     private Map<String, String> parameters;
 
     public RequestPlaylists(String username, int pageRequested, Response.Listener<String> listener, Response.ErrorListener errorListener) {
-        super(Request.Method.POST, CATEGORIES_URL, listener, errorListener);
+        super(Method.POST, CATEGORIES_URL, listener, errorListener);
         String page = String.valueOf(pageRequested);
         parameters = new HashMap<>();
         parameters.put("username", username);

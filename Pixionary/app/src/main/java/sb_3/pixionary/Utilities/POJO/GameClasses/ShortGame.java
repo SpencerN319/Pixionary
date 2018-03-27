@@ -94,9 +94,7 @@ public class ShortGame {
         }
         try{
             Playlist playlist = new Playlist();
-            playlist.setId(object.getInt("PlaylistID"));
             playlist.setName(object.getString("PlaylistName"));
-            playlist.setCreator(object.getString("PlaylistCreator"));
             setPlaylist(playlist);
         } catch(JSONException e) {
             setPlaylist(null);
@@ -110,7 +108,7 @@ public class ShortGame {
             obj.put("host", getHost());
             obj.put("name", getGameName());
             obj.put("type", getGameType());
-            obj.put("playlistID", getPlaylist().getId());
+            obj.put("playlistName", getPlaylist().getName());
         } catch(JSONException e) {
             e.printStackTrace();
         }

@@ -8,30 +8,16 @@
         android:id="@+id/textPlaylistName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textPlaylistCreator"
+        android:layout_alignBottom="@+id/preview"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/textPlaylistCreator"
-        android:layout_toStartOf="@+id/textPlaylistCreator"
-        android:background="@color/colorPrimaryRed"
-        android:text="PlaylistName"
-        android:gravity="center"
-        android:textAlignment="textStart"
-        android:textColor="@color/colorPrimaryText" />
-
-    <TextView
-        android:id="@+id/textPlaylistCreator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/preview"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/preview"
         android:layout_toStartOf="@+id/preview"
         android:background="@color/colorPrimaryRed"
+        android:text="PlaylistName"
         android:gravity="center"
-        android:text="PlaylistCreator"
-        android:textAlignment="textStart"
+        android:textAlignment="center"
         android:textColor="@color/colorPrimaryText" />
 
     <Button
