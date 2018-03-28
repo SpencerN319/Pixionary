@@ -20,6 +20,8 @@ public class Game{
   int gameID;
   boolean playing = false;
   String category;
+  String currentWord;
+  int possiblePoints;
   ArrayList<WordLink> words = new ArrayList<WordLink>();
 String hostName;
 Imgbreak i;
@@ -89,7 +91,7 @@ Imgbreak i;
           System.out.println("VendorError: " + e.getErrorCode());
       }
       //hard coded 3 games
-      for (int count = 0; count < 3; count++)
+      for (int count = 0; count < 1; count++)
       {
     	  System.out.println("Begin round");
 	  this.playRound();
@@ -171,7 +173,7 @@ Imgbreak i;
   
   public void playRound()
   {
-	  
+	 
 	  this.sendStringToAllMembers("ROUNDBEGIN");
 
 	  //reset correct guess status and points
@@ -182,26 +184,26 @@ Imgbreak i;
 	      }
 	  
 	  System.out.println("Round starting");
-	  Random r = new Random(words.size());
+	  Random r = new Random();
 	 System.out.println(words.size());
-	  int choice = r.nextInt()-1;
+	  int choice = r.nextInt(words.size() - 1);
 	  
 	  	System.out.println(choice);
-	  //WordLink solution =words.get(choice);
+	  WordLink solution =words.get(choice);
 	  System.out.println("3");
 
-	  //String linkURL = solution.getLink();
+	String linkURL ="http://proj-309-sb-3.cs.iastate.edu/" + solution.getLink();
 	  System.out.println("4");
 
-	  //String correctWord = solution.getWord();
+	//  currentWord = solution.getWord();
 	  System.out.println("5");
 
 	  //hard coded now just to make sure this part works
-	  String URL = "https://i.imgur.com/AEWms1M.jpg";
-	  Imgloader il = new Imgloader(URL);
-	  il.runScript();
+	  String URL = linkURL;
+	//  Imgloader il = new Imgloader(URL);
+	 // il.runScript();
 	  //BufferedImage img = null;
-	  
+	  /*
 	  try {
 		  try {
 	   		  System.out.println("SLEEPY TIME");
@@ -220,17 +222,29 @@ Imgbreak i;
 		  //System.out.println(img.getWidth());
 		  this.sendStringToAllMembers("HEIGHT "+height+" WIDTH " + width);
 		  
-		  i = new Imgbreak(img, "cat",null, this);
+		  i = new Imgbreak(img, "volvo",null, this);
+		  /*
 		  System.out.println("breaking image");
 		  i.breakImage();
 		  System.out.println("SEnding pixels");
 		  i.sendPixels();
+		  */
+		  this.sendStringToAllMembers("URL "+ URL);
+		   possiblePoints = 100;
+		  try {
+		  for (int seconds = 120; seconds > 0; seconds--)
+		  {
+		  Thread.sleep(1000);
+		  possiblePoints--;
+		  }
+		  }catch (InterruptedException e) {}
+		  
 		  this.sendStringToAllMembers("ROUNDEND");
-	  } catch (IOException e) {
-
-	      System.out.println("Failed to load image: ");
-		  e.printStackTrace();
-	  }
+//	  } catch (IOException e) {
+//
+//	      System.out.println("Failed to load image: ");
+//		  e.printStackTrace();
+//	  }
 
 	  
 	  //update mysql with points from the round
@@ -247,10 +261,10 @@ Imgbreak i;
 	          
 	          Statement statement = conn1.createStatement();
 	          ResultSet rs;
-	          rs = statement.executeQuery("select Score from Players where Name='"+gameMembers.get(j).getUsername()+"';");
+	          rs = statement.executeQuery("select score from User where username='"+gameMembers.get(j).getUsername()+"';");
 	          int totalScore = rs.getInt("Score");
 	          totalScore+=roundscore;
-	          statement.executeUpdate("UPDATE Customers SET Score ="+totalScore+" WHERE Name ='"+gameMembers.get(j).getUsername()+"';");
+	          statement.executeUpdate("UPDATE User SET score ="+totalScore+" WHERE username ='"+gameMembers.get(j).getUsername()+"';");
 	          
 	      } catch (SQLException e) {
 	          System.out.println("SQLException: " + e.getMessage());
@@ -262,6 +276,45 @@ Imgbreak i;
 	  //TODO: update client with every player's score
   }
 
+  
+ 	public void getGuess(ConnectedClient c, String guess)
+	{
+  		//ignore guesses from people who already guessed.
+  	if (!c.getGuessed())
+  	{
+	   
+		//TODO: GET GUESS SOMEHOW
+		//String guess = c.readInputLine();
+  		
+		if (guess != null)
+		{
+			guess = guess.toLowerCase();
+		if (guess.equals(currentWord))
+				{
+				    //send string to one player
+					c.sendStringToClient("CORRECT!");
+					//give points or something here
+					int score = possiblePoints;
+					c.incrementScore(score); 
+		
+				}
+		/* commented out since this feature is no longer in scope
+			else 
+			{
+				for( String s : synonyms)
+				{
+				
+					if( s.equals(guess))
+							c.sendStringToClient("CLOSE!");	
+				}
+				
+			
+			}
+			*/
+		}
+	
+  	}
+	}
   public void delete(){
     for(int i = 0; i < gameMembers.size(); i++){
       if(gameMembers.get(i) != host){
