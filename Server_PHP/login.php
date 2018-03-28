@@ -3,43 +3,30 @@
 
     $username = $_POST["username"];
     $password = $_POST["password"];
-    $username = mysqli_real_escape_string($con,$username);
-    $password = mysqli_real_escape_string($con,$password);
-	
 
-	$salt=mysqli_query($con, "SELECT salt FROM User WHERE username = '$uername'");
+    $response = array();
+    $response["success"] = false;
+    $response["status"] = "invalid";
 
-    if ($salt) {
-        #USER DETAILS MATCH
-	$prehash = $password.$salt;
-	$thehash=hash('sha256',$prehash);
-	$check2 = mysqli_query($con, "SELECT username, hash FROM User WHERE username= '$username' AND hash='$thehash'");
-	$affected2 = mysqli_num_rows($check2);
-	if ($check2 > 0)
-{
-        echo "success";
-        /*
+    $sql0 = mysqli_query($con, "SELECT * FROM User WHERE username = '$username' AND password = '$password'");
+    $affected = mysqli_num_rows($sql0);
+    if($affected > 0){
         $response["success"] = true;
-        while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-            $response["name"] = $row['name'];
+        $response["status"] = "valid";
+        while($row = mysqli_fetch_array($sql0, MYSQLI_ASSOC)){
+            $response["username"] = $row['username'];
             $response["password"] = $row['password'];
             $response["user_id"] = $row['user_id'];
-	}       
- } else {
-	echo "invalid username or password";
-	}
-        */
-    }
-    else {
-        echo "invalid username or password";
-        /*
-        $userCheck = mysqli_query($con,"SELECT * FROM User WHERE username = '$username'");
-        $usersAffected = mysqli_num_rows($userCheck);
-        if($usersAffected > 0){
-            echo "invalid password";
-        }*/
+            $response["user_type"] = $row['user_type'];
+            $response["score"] = $row['score'];
+            //$response["categories_created"] = $row['categories_created']; TODO Implement later.
+            $response["category_count"] = $row['category_count'];
+            $response["image_count"] = $row['image_count'];
+            $response["games_played"] = $row['games_played'];
+        }
     }
 
+    echo json_encode($response);
+    include "dbClose.php";
 
-    include 'dbClose.php';
-?>
+ ?>
