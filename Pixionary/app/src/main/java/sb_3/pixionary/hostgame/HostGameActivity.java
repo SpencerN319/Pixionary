@@ -20,12 +20,10 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import sb_3.pixionary.MainMenuActivity;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.GameClasses.Playlist;
 import sb_3.pixionary.Utilities.POJO.GameClasses.ShortGame;
-import sb_3.pixionary.gameplay.LobbyActivity;
-import sb_3.pixionary.gameplay.PlayActivity;
+import sb_3.pixionary.gameplay.GameActivity;
 
 public class HostGameActivity extends AppCompatActivity {
 
@@ -156,7 +154,7 @@ public class HostGameActivity extends AppCompatActivity {
      * @param gameType used to determine what activity is next.
      */
     private void directToGame(int gameID, int gameType) {
-        Intent intent = new Intent(context, LobbyActivity.class);
+        Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra("gameId", gameID);
         intent.putExtra("gameType", gameType);
         intent.putExtra("playlist", playlistName);

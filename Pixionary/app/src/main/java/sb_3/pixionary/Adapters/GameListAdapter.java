@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.GameClasses.ShortGame;
-import sb_3.pixionary.gameplay.LobbyActivity;
+import sb_3.pixionary.gameplay.GameActivity;
 
 /**
  * Created by fastn on 2/5/2018.
@@ -75,7 +75,7 @@ public class GameListAdapter extends BaseAdapter implements android.widget.ListA
     }
 
     private void startWaitScreen(int position) {
-        Intent intent = new Intent(context, LobbyActivity.class);
+        Intent intent = new Intent(context, GameActivity.class);
         Bundle gameAccess = new Bundle();
         gameAccess.putInt("id", items.get(position).getGameId());
         intent.putExtras(gameAccess);

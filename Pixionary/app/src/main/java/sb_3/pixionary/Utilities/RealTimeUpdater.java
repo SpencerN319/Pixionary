@@ -303,8 +303,8 @@ public class RealTimeUpdater {
             for (int i = 0; i < jsonGuesses.length(); i++) {
                 listOfOptions.add(jsonGuesses.getString(i));
             }
-            GuessListAdapter guessListAdapter = new GuessListAdapter(context, listOfOptions);
-            guessList.setAdapter(guessListAdapter);
+            //GuessListAdapter guessListAdapter = new GuessListAdapter(context, listOfOptions);
+           // guessList.setAdapter(guessListAdapter);
             numImages = jsonObject.getInt("numberOfImages");
             imagesRemaining.setText(context.getString(R.string.remain_dynamic, numImages));
             int width = jsonObject.getInt("width");
