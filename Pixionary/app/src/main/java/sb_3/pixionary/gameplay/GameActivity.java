@@ -82,7 +82,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         sendGuess = (Button) findViewById(R.id.btnSendGuess);
         image = (ImageView) findViewById(R.id.imgGame);
 
-
         connect();
 
         UserDataDBHandler db = new UserDataDBHandler(this);
@@ -100,12 +99,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         });
     }
 
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        String message = "URL https://i.imgur.com/AEWms1M.jpg";
-        receiveImage(message);
-    }
 
     public void connect() {
         okHttpClient = new OkHttpClient();
@@ -180,9 +173,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             case "WORD":
                 addWord(message);
                 break;
-//            case "ROUNDBEGIN":
-//                setWords();
-//                break;
             case "HEIGHT":
                 setHeightAndWidth(message);
                 break;
@@ -265,6 +255,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     @Override
     public void setValuesAndReact(int position) {
         currentGuess = listOfOptions.get(position);
+        Log.i("Current Guess", currentGuess);
     }
 
 }
