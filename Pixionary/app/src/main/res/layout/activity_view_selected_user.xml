@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="320dp"
+    android:layout_height="480dp"
+    android:layout_gravity="center"
+    android:background="@drawable/layout_border"
+    android:backgroundTint="@color/colorPrimary"
+    tools:context="sb_3.pixionary.AdminSettingsDialog.ViewSelectedUser">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="472dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:text="username"
+            android:textSize="24dp"
+            android:textColor="@color/colorPrimaryText"/>
+
+        <TextView
+            android:id="@+id/tv_password"
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:text="password"
+            android:textSize="24dp"
+            android:textColor="@color/colorPrimaryText"/>
+
+        <TextView
+            android:id="@+id/tv_id"
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:text="user ID"
+            android:textSize="24dp"
+            android:textColor="@color/colorPrimaryText"/>
+
+        <TextView
+            android:id="@+id/tv_userType"
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:text="user type"
+            android:textSize="24dp"
+            android:textColor="@color/colorPrimaryText"/>
+
+        <TextView
+            android:id="@+id/tv_gamesPlayed"
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:text="games played"
+            android:textSize="24dp"
+            android:textColor="@color/colorPrimaryText"/>
+
+        <TextView
+            android:id="@+id/tv_score"
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:text="score"
+            android:textSize="24dp"
+            android:textColor="@color/colorPrimaryText"/>
+
+        <TextView
+            android:id="@+id/tv_categoryCount"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="category count"
+            android:textSize="24dp"
+            android:textColor="@color/colorPrimaryText"/>
+
+        <TextView
+            android:id="@+id/tv_imageCount"
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:text="image count"
+            android:textSize="24dp"
+            android:textColor="@color/colorPrimaryText"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

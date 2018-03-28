@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,7 +60,6 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             try {
-                                Log.i("JSONObject: ", response);
                                 JSONObject jsonObject = new JSONObject(response);
                                 progressDialog.dismiss();
                                 if(jsonObject.getBoolean("success")){
@@ -170,15 +168,16 @@ public class LoginActivity extends AppCompatActivity {
         int category_count = jsonObject.getInt("category_count");
         int image_count = jsonObject.getInt("image_count");
         User user = new User(username, password, user_id, user_type, games_played, score, category_count, image_count);
+        MainMenuActivity.set_user(user);
         db.addUser(user);
     }
 
-    public void moveToCreateAccount() {
+    private void moveToCreateAccount() {
         Intent move = new Intent(LoginActivity.this,CreateAccountActivity.class);
         startActivityForResult(move, MainMenuActivity.CREATEACCOUNT_REQUEST_ID);
     }
 
-    public void create_guest(String user_name){
+    private void create_guest(String user_name){
         User user = new User(user_name, null, null, "guest", 0, 0, 0, 0);
         MainMenuActivity.set_user(user);
         Intent retInt = new Intent(LoginActivity.this, MainMenuActivity.class);
@@ -202,4 +201,5 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
         }
     }
+
 }

@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,8 +48,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                 password = et_password.getText().toString();
                 conf_password = et_conf_password.getText().toString();
 
-                //Validate username and passwords
-                if ( validateUsername(username) && validatePassword(password,conf_password)) {
+                if(validateUsername(username) && validatePassword(password,conf_password)) {
 
                     final ProgressDialog progressDialog = new ProgressDialog(CreateAccountActivity.this);
                     progressDialog.setTitle("Please Wait");
@@ -61,7 +59,6 @@ public class CreateAccountActivity extends AppCompatActivity {
                     RequestRegister requestRegister = new RequestRegister(username, password, user_type, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.i("Create Account Response", response);
                             progressDialog.dismiss();
                             if(!response.equals("failure")){
                                 returnUsernameAndFinish(response);
@@ -102,11 +99,11 @@ public class CreateAccountActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validateUsername(String name) {
-        if(name == ""){
+        if(name == null){
             et_username.setError("Enter Username");
             return false;
         } else if(name.length() > 24){
-            et_username.setError("Max 20 Characters");
+            et_username.setError("Max 12 Characters");
             return false;
         } else if(name.length() < 6){
             et_username.setError("Minimum 6 Characters");
@@ -122,7 +119,7 @@ public class CreateAccountActivity extends AppCompatActivity {
      * @return
      */
     protected boolean validatePassword(String pass1, String pass2){
-        if(pass1.equals("")){
+        if(pass1 == null){
             et_password.setError("Enter Password");
             return false;
         } else if(pass1.length() < 6){

@@ -73,7 +73,7 @@ public class imgbreak{
 
 		Thread.sleep(1);
 		// pixel strings start px, end with xp, and have all values separated by a comma, if this is how we want to do it ya know?
-	      game.sendStringToAllPlayers("px," + pixx + "," + pixy + "," + pixels[pixx][pixy] + ",xp");
+	      game.sendStringToAllPlayers("px," + pixx + "," + pixy + "," + pixels[pixy][pixx] + ",xp");
 		
 		sent++;
 	    }
