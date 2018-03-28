@@ -5,64 +5,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryPurple"
-    tools:context="sb_3.pixionary.DeleteAccount">
+    tools:context="sb_3.pixionary.UserSettings.UpdateAccount">
 
     <EditText
         android:id="@+id/et_Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textPersonName"
         android:text=""
         android:textColor="@color/colorPrimaryText"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/et_Password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_DeleteAccount"
-        app:layout_constraintVertical_bias="0.167" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/tv_DeleteAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Delete Account"
         android:textColor="@color/colorPrimaryText"
         android:textSize="32sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.113" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/et_Password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="80dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         android:text=""
         android:textColor="@color/colorPrimaryText"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/cb_ConfirmDelete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_Username"
-        app:layout_constraintVertical_bias="0.01" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/et_ConfirmPassword"
@@ -77,54 +68,104 @@
         android:inputType="textPassword"
         android:text=""
         android:textColor="@color/colorPrimaryText"
-        app:layout_constraintBottom_toTopOf="@+id/bx_ConfirmDelete"
+        app:layout_constraintBottom_toTopOf="@+id/cb_ConfirmDelete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_Password"
-        app:layout_constraintVertical_bias="0.217" />
+        app:layout_constraintVertical_bias="0.294" />
 
 
     <Button
-        android:id="@+id/bt_DeleteAccount"
+        android:id="@+id/bt_confirm"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@color/colorPrimaryOrange"
-        android:text="Delete"
+        android:text="confirm"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="20dp"
+        android:textSize="38dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <CheckBox
-        android:id="@+id/bx_ConfirmDelete"
+        android:id="@+id/cb_ConfirmDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Are you sure?"
-        app:layout_constraintBottom_toTopOf="@+id/bt_DeleteAccount"
+        android:layout_marginTop="416dp"
+        android:text="Confirm Delete"
+        android:textColor="@color/colorPrimaryText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_warning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/bx_ConfirmDelete"
-        app:layout_constraintBottom_toTopOf="@+id/bt_DeleteAccount"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="18dp"
-        android:textColor="@color/colorPrimaryText"
         android:gravity="center"
-        android:visibility="invisible"
         android:text="By deleting your account you are removing all\nsaved data (Score, Games, Etc)."
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="18dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/bt_confirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cb_ConfirmDelete"
+        app:layout_constraintVertical_bias="0.907" />
+
+    <CheckBox
+        android:id="@+id/cb_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
+        android:text="Change Username"
+        android:textColor="@color/colorPrimaryText"
+        app:layout_constraintBottom_toTopOf="@+id/cb_delete"
+        app:layout_constraintEnd_toStartOf="@+id/cb_password"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_DeleteAccount"
+        app:layout_constraintVertical_bias="0.283"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp" />
+
+    <CheckBox
+        android:id="@+id/cb_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Change password"
+        android:textColor="@color/colorPrimaryText"
+        app:layout_constraintBottom_toTopOf="@+id/cb_delete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_DeleteAccount"
+        android:layout_marginRight="16dp" />
+
+    <CheckBox
+        android:id="@+id/cb_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="128dp"
+        android:layout_marginTop="120dp"
+        android:text="Delete Account"
+        android:textColor="@color/colorPrimaryText"
+        app:layout_constraintBottom_toTopOf="@+id/et_Username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_DeleteAccount"
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginRight="128dp" />
 
 </android.support.constraint.ConstraintLayout>
 

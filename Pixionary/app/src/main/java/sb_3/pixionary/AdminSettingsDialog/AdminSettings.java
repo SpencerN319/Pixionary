@@ -1,4 +1,4 @@
-package sb_3.pixionary;
+package sb_3.pixionary.AdminSettingsDialog;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,7 +8,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-import sb_3.pixionary.AdminSettingsDialog.ViewUsers;
+import sb_3.pixionary.R;
 
 
 /**

@@ -1,4 +1,4 @@
-package sb_3.pixionary;
+package sb_3.pixionary.UserSettings;
 
 
 import android.app.Activity;
@@ -10,13 +10,16 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import SaveData.UserDataDBHandler;
+import sb_3.pixionary.MainMenuActivity;
+import sb_3.pixionary.R;
 
 /**
  * Created by fastn on 2/16/2018.
  */
 
 public class SettingsDialog extends Activity implements View.OnClickListener {
-
+    private static final int UPDATE_REQUEST_ID = 2;
+    private static final int DELETE_REQUEST_ID = 3;
     private TextView title;
     private Button[] buttons  = new Button[5];
 
@@ -27,20 +30,18 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.settings_dialog);
         title = (TextView) findViewById(R.id.settings_title);
         buttons[0] = (Button) findViewById(R.id.button_profile);
         buttons[1] = (Button) findViewById(R.id.button_leaderboard);
-        buttons[2] = (Button) findViewById(R.id.button_blank);
-        buttons[3] = (Button) findViewById(R.id.bt_DeleteAccount);
+        buttons[2] = (Button) findViewById(R.id.bt_blank);
+        buttons[3] = (Button) findViewById(R.id.bt_update);
         buttons[4] = (Button) findViewById(R.id.button_logout);
         for (Button button: buttons) {
             button.setOnClickListener(this);
         }
-        //Disables unused buttons for now.
-        //buttons[2].setEnabled(false);
-        //buttons[3].setEnabled(false);
     }
 
     @Override
@@ -58,14 +59,13 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
                 i = 2;
                 selectedActivity = LeaderboardActivity.class;
                 break;
-            case R.id.button_blank:
+            case R.id.bt_blank:
                 i = 3;
                 //Start something here.
                 break;
-            case R.id.bt_DeleteAccount:
+            case R.id.bt_update:
                 i = 4;
-                selectedActivity = DeleteAccount.class;
-                //Start something here.
+                selectedActivity = UpdateAccount.class;
                 break;
             case R.id.button_logout:
                 i = 5;
@@ -92,4 +92,25 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
         startActivity(intent);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == 0){
+            return;
+        } else{
+            switch (requestCode){
+                case UPDATE_REQUEST_ID:
+                    Intent update = new Intent(this, MainMenuActivity.class);
+                    setResult(MainMenuActivity.LOGIN_REQUEST_ID, update);
+                    finish();
+                    break;
+                case DELETE_REQUEST_ID:
+                    Intent delete = new Intent(this, MainMenuActivity.class);
+                    delete.putExtra("logout", true);
+                    setResult(MainMenuActivity.SETTINGS_REQUEST_ID, delete);
+                    finish();
+                    break;
+            }
+        }
+    }
 }

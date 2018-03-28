@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryRed"
-    tools:context="sb_3.pixionary.LeaderboardActivity">
+    tools:context="sb_3.pixionary.UserSettings.LeaderboardActivity">
 
     <TextView
         android:id="@+id/leaderboard"

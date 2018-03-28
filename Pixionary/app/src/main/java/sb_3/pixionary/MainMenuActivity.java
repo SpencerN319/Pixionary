@@ -23,6 +23,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONObject;
 
 import SaveData.UserDataDBHandler;
+import sb_3.pixionary.AdminSettingsDialog.AdminSettings;
+import sb_3.pixionary.UserSettings.SettingsDialog;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestLogin;
 import sb_3.pixionary.hostgame.HostGameActivity;
@@ -35,7 +37,6 @@ public class MainMenuActivity extends AppCompatActivity {
     public static final int SETTINGS_REQUEST_ID = 5;
     public static final int GUEST_REQUEST_ID = 6;
     public static final int CREATEACCOUNT_REQUEST_ID = 7;
-    private String username;
     public static  User user;
     TextView usernameDisplay;
     private Switch switch_admin;
@@ -67,12 +68,15 @@ public class MainMenuActivity extends AppCompatActivity {
         usernameDisplay = (TextView) findViewById(R.id.textView_usernameDisplay);
         usernameDisplay.setText("Currently not logged in");
 
-        automaticLogin();
+        if(user == null){
+            automaticLogin();
+        }
+
 
         button_joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(username == null){
+                if(user == null){
                     startLoginActivity();
                 }else {
                     updateDBUserType("player");
@@ -85,12 +89,12 @@ public class MainMenuActivity extends AppCompatActivity {
         button_hostGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(username == null){
+                if(user == null){
                     startLoginActivity();
                 }else {
                     updateDBUserType("host");
                     Intent intent = new Intent(MainMenuActivity.this, HostGameActivity.class);
-                    intent.putExtra("username", username);
+                    intent.putExtra("username", user.getUsername());
                     startActivity(intent);
                 }
             }
@@ -99,7 +103,7 @@ public class MainMenuActivity extends AppCompatActivity {
         button_buildGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(username == null){
+                if(user == null){
                     startLoginActivity();
                 }else {
                     Snackbar.make(view, "Open build game activity", Snackbar.LENGTH_LONG)
@@ -111,7 +115,7 @@ public class MainMenuActivity extends AppCompatActivity {
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (username == null)
+                if (user == null)
                     startLoginActivity();
             }
         });
@@ -119,7 +123,9 @@ public class MainMenuActivity extends AppCompatActivity {
         button_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startSettingsActivity();
+                if(user != null){
+                    startSettingsActivity();
+                }
             }
         });
 
@@ -135,13 +141,11 @@ public class MainMenuActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if(!(switch_admin.isChecked())){
-                    Log.i("switch off", "flip to off");
                     button_settings.setVisibility(View.VISIBLE);
                     button_settings.setClickable(true);
                     button_AdminSettings.setVisibility(View.INVISIBLE);
                     button_AdminSettings.setClickable(false);
                 } else {
-                    Log.i("switch on", "flip to on");
                     button_settings.setVisibility(View.INVISIBLE);
                     button_settings.setClickable(false);
                     button_AdminSettings.setVisibility(View.VISIBLE);
@@ -176,29 +180,28 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent returnedData){
-        if(returnedData == null){
+        if(resultCode == 0){
             return;
         }
         super.onActivityResult(requestCode, resultCode, returnedData);
         switch (requestCode){
             case LOGIN_REQUEST_ID:
-                username = returnedData.getStringExtra("username");
-                usernameDisplay.setText("Logged in as: " + username);
+                Log.i("LOGIN CALLED", "TRUE");
+                Log.i("WITH USERNAME " , user.getUsername());
+                usernameDisplay.setText("Logged in as: " + user.getUsername());
                 is_admin();
                 break;
             case SETTINGS_REQUEST_ID:
                 boolean logout = returnedData.getBooleanExtra("logout", false);
                 if (logout) {
                     Log.i("user logout: ", "true");
-                    username = null;
                     usernameDisplay.setText("Currently not logged in");
                     user = null;
                     is_admin();
                 }
                 break;
             case GUEST_REQUEST_ID:
-                username = returnedData.getStringExtra("username");
-                usernameDisplay.setText("Logged in as: " + username);
+                usernameDisplay.setText("Logged in as: " + user.getUsername());
                 break;
         }
     }
@@ -226,7 +229,7 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void automaticLogin() {
-        if (username == null) {
+        if (user == null) {
             startProgressDialog();
             //Creates the db helper.
             requestQueue = Volley.newRequestQueue(MainMenuActivity.this);
@@ -239,13 +242,13 @@ public class MainMenuActivity extends AppCompatActivity {
                         try {
                             JSONObject success = new JSONObject(response);
                             if (success.getBoolean("success")) {
-                                username = user.getUsername();
-                                usernameDisplay.setText("Logged in as " + username);
+                                usernameDisplay.setText("Logged in as " + user.getUsername());
                                 progressDialog.dismiss();
                                 is_admin();
                             } else {
-                                progressDialog.setTitle("Failed");
-                                progressDialog.setMessage("No user data found, please login!");
+                                progressDialog.setTitle("Please Login");
+                                progressDialog.setMessage("No user data found");
+                                startLoginActivity();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -261,9 +264,10 @@ public class MainMenuActivity extends AppCompatActivity {
                 });
                 requestQueue.add(request);
             } else {
-                progressDialog.setTitle("Failed");
-                progressDialog.setMessage("No user data found, please login!");
-                progressDialog.setCancelable(true);
+                progressDialog.setTitle("Please Login");
+                progressDialog.setMessage("No user data found");
+                startLoginActivity();
+                progressDialog.dismiss();
             }
         }
     }
@@ -282,7 +286,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void is_admin(){
         if(user != null){
-            if(user.getUserType().equals("admin") || user == null){
+            if(user.getUserType().equals("admin")){
                 switch_admin.setClickable(true);
                 switch_admin.setVisibility(View.VISIBLE);
             }

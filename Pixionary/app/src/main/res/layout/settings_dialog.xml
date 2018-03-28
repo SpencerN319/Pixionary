@@ -98,11 +98,11 @@
         app:layout_constraintTop_toTopOf="@id/guideline8" />
 
     <Button
-        android:id="@+id/button_blank"
+        android:id="@+id/bt_blank"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryPurple"
-        android:text="*Later*"
+        android:text="*later*"
         android:textSize="24dp"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline15"
@@ -111,11 +111,11 @@
         app:layout_constraintTop_toTopOf="@id/guideline11" />
 
     <Button
-        android:id="@+id/bt_DeleteAccount"
+        android:id="@+id/bt_update"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryYellow"
-        android:text="delete account"
+        android:text="update account"
         android:textSize="24dp"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline13"
