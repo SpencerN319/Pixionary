@@ -1,66 +1,37 @@
 package test;
-
+//TODO: gameover
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 import java.sql.*;
 import javax.imageio.ImageIO;
-import org.springframework.boot.json.*;
-//TODO: modified URL
 
 public class Game{
 
   ConnectedClient host;
-  
+  GamesList gamesList;
   ArrayList<ConnectedClient> gameMembers = new ArrayList<ConnectedClient>();
   //we need some sort of unique game identifier, maybe make gameName have to be unique. for now lets trust end users to do dat
   final String gameName;
-  int gameID;
   boolean playing = false;
   String category;
-  String currentWord;
-  int possiblePoints;
   ArrayList<WordLink> words = new ArrayList<WordLink>();
-String hostName;
-Imgbreak i;
 
-  public Game(ConnectedClient host, String gameName, String category){
-    
+  public Game(GamesList gamesList, ConnectedClient host, String gameName, String category){
+    this.gamesList = gamesList;
     this.host = host;
-    hostName = host.getUsername();
     this.gameName = gameName;
     this.category = category;
     gameMembers.add(host);
-    this.gameID = host.userID;
-    /*
-    boolean found = false;
-
-    while (found == false)
-    {
-    	found=true;
-    Random r = new Random(50000);
-    for (Game g : Main.server.gamesList)
-    {
-    	possibleID=r.nextInt();
-    	if (g.gameID == possibleID)
-    		found=false;
-    }
-    this.gameID = possibleID;
-    
-    }
-    */
-    
-  
   }
 
   public void startGame()
   {
 	  playing = true;
-	  this.sendStringToAllMembers("START");
+	 
       try {
-       
+         
           Connection conn1;
           String dbUrl = "jdbc:mysql://mysql.cs.iastate.edu:3306/db309sb3";
           String user = "dbu309sb3";
@@ -70,19 +41,15 @@ Imgbreak i;
           
           Statement statement = conn1.createStatement();
           ResultSet rs;
-          rs = statement.executeQuery("select word, location from Images where category='"+category+"';");
+          rs = statement.executeQuery("select Word, Link from Images where Category'="+category+"';");
         
           //get them words and links
           while (rs.next()) {
-           // for (int x = 0; x < 20; x++) {  
-        	  	String word = rs.getString("word");
-        	  	String link = rs.getString("location");
-        	  	System.out.println("WORD LOADED");
+              
+        	  	String word = rs.getString("Word");
+        	  	String link = rs.getString("Link");
         	  	WordLink wl = new WordLink(word, link);
         	  	words.add(wl);
-        	  	
-        	  	this.sendStringToAllMembers("WORD "+word);
-        	  	System.out.println("WORD SENT");
           }
           
       } catch (SQLException e) {
@@ -91,11 +58,8 @@ Imgbreak i;
           System.out.println("VendorError: " + e.getErrorCode());
       }
       //hard coded 3 games
-      for (int count = 0; count < 1; count++)
-      {
-    	  System.out.println("Begin round");
+      for (int count = 0; count < 3; count++)
 	  this.playRound();
-      }
       this.sendStringToAllMembers("GG");
       this.delete();
       
@@ -104,7 +68,6 @@ Imgbreak i;
   
   public void addMember(ConnectedClient joiningMember){
     gameMembers.add(joiningMember);
-    joiningMember.setGameSession(this);
   }
 
   public void removeMemberFromMembersList(ConnectedClient leavingMember){
@@ -150,22 +113,6 @@ Imgbreak i;
     return gameName;
   }
   
-  public String getHostName()
-	  {
-		  return hostName;
-	  }
-  
-  public String getCategory(){
-	  return category;
-  }
-	  
-
-  
-  public int getID()
-  {
-	  return gameID; 
-  }
-  
   public boolean getGameStatus()
   {
 	  return playing;
@@ -173,79 +120,28 @@ Imgbreak i;
   
   public void playRound()
   {
-	 
-	  this.sendStringToAllMembers("ROUNDBEGIN");
-
 	  //reset correct guess status and points
-	  System.out.println("Preparing to reset");
 	  for(int i = 0; i < gameMembers.size(); i++){
 	      gameMembers.get(i).setGuessed(false);
 	      gameMembers.get(i).resetRoundScore();
 	      }
-	  
-	  System.out.println("Round starting");
-	  Random r = new Random();
-	 System.out.println(words.size());
-	  int choice = r.nextInt(words.size() - 1);
-	  
-	  	System.out.println(choice);
-	  WordLink solution =words.get(choice);
-	  System.out.println("3");
-
-	String linkURL ="http://proj-309-sb-3.cs.iastate.edu/" + solution.getLink();
-	  System.out.println("4");
-
-	//  currentWord = solution.getWord();
-	  System.out.println("5");
-
 	  //hard coded now just to make sure this part works
-	  String URL = linkURL;
-	//  Imgloader il = new Imgloader(URL);
-	 // il.runScript();
-	  //BufferedImage img = null;
-	  /*
+	  String URL = "https://i.imgur.com/AEWms1M.jpg";
+	  Imgloader il = new Imgloader(URL);
+	  il.runScript();
+	  BufferedImage img = null;
+	  
 	  try {
-		  try {
-	   		  System.out.println("SLEEPY TIME");
-	   	Thread.sleep(500);
-	   	System.out.println("WOKE");
-		}catch (InterruptedException e)
-		{
-			
-		}
-	     BufferedImage img = ImageIO.read(new File("/home/kwswesey/image.jpg"));
-	      System.out.println("Image has been loaded");
-		  System.out.println("Getting and sending dimensions");
-		  int height = 642;
-		  //System.out.println(img.getHeight());
-		  int width = 500;
-		  //System.out.println(img.getWidth());
-		  this.sendStringToAllMembers("HEIGHT "+height+" WIDTH " + width);
-		  
-		  i = new Imgbreak(img, "volvo",null, this);
-		  /*
-		  System.out.println("breaking image");
-		  i.breakImage();
-		  System.out.println("SEnding pixels");
-		  i.sendPixels();
-		  */
-		  this.sendStringToAllMembers("URL "+ URL);
-		   possiblePoints = 100;
-		  try {
-		  for (int seconds = 120; seconds > 0; seconds--)
-		  {
-		  Thread.sleep(1000);
-		  possiblePoints--;
-		  }
-		  }catch (InterruptedException e) {}
-		  
-		  this.sendStringToAllMembers("ROUNDEND");
-//	  } catch (IOException e) {
-//
-//	      System.out.println("Failed to load image: ");
-//		  e.printStackTrace();
-//	  }
+	      img = ImageIO.read(new File("image.jpg"));
+	  } catch (IOException e) {
 
+	      System.out.println("Failed to load image: ");
+		  e.printStackTrace();
+	  }
+	  
+	  Imgbreak i = new Imgbreak(img, "cat",null, this);
+	  i.breakImage();
+	  i.sendPixels();
 	  
 	  //update mysql with points from the round
 	  for(int j = 0; j < gameMembers.size(); j++){
@@ -261,10 +157,10 @@ Imgbreak i;
 	          
 	          Statement statement = conn1.createStatement();
 	          ResultSet rs;
-	          rs = statement.executeQuery("select score from User where username='"+gameMembers.get(j).getUsername()+"';");
+	          rs = statement.executeQuery("select Score from Players where Name='"+gameMembers.get(j).getUsername()+"';");
 	          int totalScore = rs.getInt("Score");
 	          totalScore+=roundscore;
-	          statement.executeUpdate("UPDATE User SET score ="+totalScore+" WHERE username ='"+gameMembers.get(j).getUsername()+"';");
+	          statement.executeUpdate("UPDATE Customers SET Score ="+totalScore+" WHERE Name ='"+gameMembers.get(j).getUsername()+"';");
 	          
 	      } catch (SQLException e) {
 	          System.out.println("SQLException: " + e.getMessage());
@@ -273,48 +169,8 @@ Imgbreak i;
 	      }
 	      //JDBC query. I forget why I put this comment here, hopefully i just misplaced it.
 	      }
-	  //TODO: update client with every player's score
   }
 
-  
- 	public void getGuess(ConnectedClient c, String guess)
-	{
-  		//ignore guesses from people who already guessed.
-  	if (!c.getGuessed())
-  	{
-	   
-		//TODO: GET GUESS SOMEHOW
-		//String guess = c.readInputLine();
-  		
-		if (guess != null)
-		{
-			guess = guess.toLowerCase();
-		if (guess.equals(currentWord))
-				{
-				    //send string to one player
-					c.sendStringToClient("CORRECT!");
-					//give points or something here
-					int score = possiblePoints;
-					c.incrementScore(score); 
-		
-				}
-		/* commented out since this feature is no longer in scope
-			else 
-			{
-				for( String s : synonyms)
-				{
-				
-					if( s.equals(guess))
-							c.sendStringToClient("CLOSE!");	
-				}
-				
-			
-			}
-			*/
-		}
-	
-  	}
-	}
   public void delete(){
     for(int i = 0; i < gameMembers.size(); i++){
       if(gameMembers.get(i) != host){
@@ -322,7 +178,7 @@ Imgbreak i;
       }
     }
     //All except host is gone, and host is currently leaving.
-    Main.server.gamesList.remove(this);
+    gamesList.removeGameFromActiveGames(gameName);
     return;
   }
 

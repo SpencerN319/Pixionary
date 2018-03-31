@@ -79,7 +79,6 @@ public class ImageCreator {
         
         handler.postDelayed(runnable, 3);
 
-
     }
 
     //Currently adding randomly without checking if its been used.
