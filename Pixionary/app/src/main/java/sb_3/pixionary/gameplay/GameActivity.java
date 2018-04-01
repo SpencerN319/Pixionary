@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -65,7 +66,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private Button sendGuess;
     private ImageView image;
     private ListView guessList;
-
+    
     //Image stuff
     int width;
     int height;
@@ -75,6 +76,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
+        //TODO Might need to put this elsewhere
         context = this;
         dataTransferInterface = this;
 

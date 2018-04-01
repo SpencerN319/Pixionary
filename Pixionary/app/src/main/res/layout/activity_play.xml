@@ -36,6 +36,16 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@android:drawable/menuitem_background" />
 
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/guideline23"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/images_remaining"
+        app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:id="@+id/images_remaining"
         android:layout_width="wrap_content"
