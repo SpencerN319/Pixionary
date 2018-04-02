@@ -187,8 +187,8 @@ public class MainMenuActivity extends AppCompatActivity {
         switch (requestCode){
             case LOGIN_REQUEST_ID:
                 Log.i("LOGIN CALLED", "TRUE");
-                Log.i("WITH USERNAME " , user.getUsername());
-                usernameDisplay.setText("Logged in as: " + user.getUsername());
+                Log.i("WITH USERNAME " , this.user.getUsername());
+                usernameDisplay.setText("Logged in as: " + this.user.getUsername());
                 is_admin();
                 break;
             case SETTINGS_REQUEST_ID:
