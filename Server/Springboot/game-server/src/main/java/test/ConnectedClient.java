@@ -1,5 +1,5 @@
 package test;
-
+//makes our websocket clients more object oriented
 import java.net.Socket;
 
 import org.springframework.web.socket.TextMessage;
@@ -30,7 +30,7 @@ public class ConnectedClient implements Runnable{
 
   }
 
-  
+  //shold never be called but is required to exist
   public void run(){
     try{
     	
@@ -41,96 +41,12 @@ public class ConnectedClient implements Runnable{
       return;
     }
     while(connected){
-    	//wtf is this
+    	
     	//  doAction(readInputLine());
     }
   }
 
-  //This method is what connects input strings to their proper actions. It returns a string regarding the success of the action
-  /* probably just ignore this whole thing to make it springboot style
-   * 
-  private String doAction(String input){
-    if(input == null){
-      return null;
-    }
-    
-      if (input.equals("startGame"))
-    		  {
-        String gameName = readInputLine();
-        if(gameName != null){
-          boolean gameStarted = startGame(gameName);
-          if(gameStarted){
-            return "SUCCESS!";
-          }
-          return "Game already exists";
-        }
-        delete();
-        break;
-    		  }
-      else  if (input.equals("leaveGame"))
-      {
-        System.out.println("Leaving Game");
-        leaveGame();
-        return "SUCCESS!";
-      }
-      else
-        return "Input did not match any expected input.";
-    
-
-  }
-  
-	*//*
-  public String readInputLine(){
-    if(!connected){
-      return null;
-    }
-    try{
-      String input = in.readLine();
-      if(input == null){
-        delete();
-        return null;
-      }
-      return input;
-    }
-    catch(Exception e){
-      //Client can be considered disconnected
-      delete();
-      return null;
-    }
-    
-  }
-  */
-/* probably not needed
-  private boolean startGame(String gameName){
-    if(gameSession != null){
-      leaveGame();
-    }
-    if(!gamesList.gameExists(gameName)){
-      //Made new game
-      gameSession = gamesList.startGame(this, gameName);
-      return true;
-    }
-    else{
-      //Game already exists
-      return false;
-    }
-  }
-
-  public boolean joinGame(String gameName){
-    if(gameSession != null){
-      leaveGame();
-    }
-    Game joinGame = gamesList.getGame(gameName);
-    if(joinGame != null){
-      //Joined game
-      joinGame.addMember(this);
-      this.gameSession = joinGame;
-      return true;
-    }
-    //Game didn't exist
-    return false;
-  }
-	*/
+ 
   public void leaveGame(){
     if(gameSession != null){
        gameSession.removeMemberFromMembersList(this);
@@ -148,31 +64,8 @@ public class ConnectedClient implements Runnable{
     leaveGame();
     currentServer.removeClient(this);
   }
-/*
-  private void openComs() throws IOException{
-    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-    out = new PrintWriter(socket.getOutputStream(), true);
-  }
 
-  private void closeComs(){
- //   boolean comsOpen = false;
-    try{
-      if(in != null){
-        in.close();
-      }
-      if(out != null){
-        out.close();
-      }
-      if(socket != null && !socket.isClosed()){
-        socket.close();
-      }
-    }
-    catch(Exception e){
-      System.out.println("Failed to close comms.");
-    }
-  }
-  */
-  //what do dis do
+  //sends string to a specific client (this one)
   public void sendStringToClient(String output){
     if(!connected){
       return;
@@ -185,7 +78,7 @@ public class ConnectedClient implements Runnable{
       System.out.println("Failed to send '" + output + "' to client.");
     }
   }
-
+//various game logic methods
   public void incrementScore(int a)
   {
 	  localScore+=a;

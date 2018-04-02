@@ -33,11 +33,13 @@ public class Pixel {
         ypos = y;
     }
 
+    public void setArgb(int argb) {
+        this.argb = argb;
+    }
+
     public int getColor() {
         return argb;
     }
-
-
 
 
 }

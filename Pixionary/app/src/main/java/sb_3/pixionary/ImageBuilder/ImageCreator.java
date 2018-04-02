@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 
 import android.os.Handler;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -29,11 +30,11 @@ public class ImageCreator {
     private Runnable runnable;
 
     //Local Image creator
-    public ImageCreator(Context context, String[] imageNames, int index) {
+    public ImageCreator(Context context, InputStream inputStream) {
 
         //Creates a instance of class ImageBreakdown to get pixel array, move to server-side.
         breaker = new ImageBreakdown();
-        breaker.breakDownImage(context, imageNames[index]);
+        breaker.breakDownImage(context, inputStream);
 
         //Set width and height.
         imgWidth = breaker.getWidth();
@@ -61,7 +62,7 @@ public class ImageCreator {
 
 
     //This is for local demo.
-    public void updateImageLocal() {
+    public void updateImage() {
         pixels = breaker.getPixels();
         pixelUsed = new boolean[pixels.length];
         Arrays.fill(pixelUsed, false);
@@ -77,7 +78,6 @@ public class ImageCreator {
         };
         
         handler.postDelayed(runnable, 3);
-
 
     }
 

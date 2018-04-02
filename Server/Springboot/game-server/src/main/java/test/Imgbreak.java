@@ -4,6 +4,7 @@ import java.util.Random;
 
 
 //breaks the image into pixels, transfers them, handles guesses, and more.
+//currently not needed since this is being done on the client right now. might be done on the server in the future
 public class Imgbreak{
     
     BufferedImage img;
@@ -29,14 +30,14 @@ public class Imgbreak{
     {
 	img = i;
 	word = correctword.toLowerCase();
-	synonyms = thesynonyms;
+	//synonyms = thesynonyms;
 	game = g;
     }
 
     public void breakImage()
     {   //get some dimensions
-	 height = img.getHeight();
-	 width = img.getWidth();
+	 height = 642;
+	 width = 500;
 	 
 	
 	pixels = new int[height][width];
@@ -48,7 +49,7 @@ public class Imgbreak{
 	    {
 		for (int x = 0; x < width; x++)
 		    {
-		        pixels[y][x] = img.getRGB(x,y);
+	        pixels[y][x] = img.getRGB(x,y);
 							   
 		    }
 	    }
@@ -83,7 +84,7 @@ public class Imgbreak{
 			
 		}
 		// pixel strings start px, end with xp, and have all values separated by a comma, if this is how we want to do it ya know?
-	      game.sendStringToAllMembers("px," + pixx + "," + pixy + "," + pixels[pixy][pixx] + ",xp");
+	      game.sendStringToAllMembers("px " + pixx + " " + pixy + " " + pixels[pixy][pixx]);
 		
 		sent++;
 	    }

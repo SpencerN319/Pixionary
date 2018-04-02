@@ -5,25 +5,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import sb_3.pixionary.R;
+import sb_3.pixionary.interfaces.DataTransferInterface;
 
 /**
  * Created by fastn on 3/22/2018.
  */
 
-public class GuessListAdapter extends BaseAdapter implements ListAdapter{
+public class GuessListAdapter extends BaseAdapter implements android.widget.ListAdapter{
 
-    Context context;
-    ArrayList<String> possibleWords;
+    private Context context;
+    private ArrayList<String> possibleWords;
 
-    public GuessListAdapter(Context context, ArrayList<String> items) {
+    DataTransferInterface dtInterface;
+
+    public GuessListAdapter(Context context, ArrayList<String> items, DataTransferInterface dataTransferInterface) {
         this.possibleWords = items;
         this.context = context;
+        this.dtInterface = dataTransferInterface;
     }
 
     @Override
@@ -39,7 +44,7 @@ public class GuessListAdapter extends BaseAdapter implements ListAdapter{
     @Override
     public long getItemId(int position) {
         //Don't need this.
-        return -1;
+        return position;
     }
 
     public View getView(final int position, View convert, ViewGroup parent) {
@@ -51,8 +56,16 @@ public class GuessListAdapter extends BaseAdapter implements ListAdapter{
         }
 
         TextView guess1 = (TextView) view.findViewById(R.id.guess1);
-        guess1.setText(possibleWords.get(position));
+        guess1.setText(possibleWords.get(position).toString());
 
+        Button select = (Button) view.findViewById(R.id.important);
+
+        select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dtInterface.setValuesAndReact(position);
+            }
+        });
         return view;
     }
 

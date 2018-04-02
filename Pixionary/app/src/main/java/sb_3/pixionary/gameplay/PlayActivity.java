@@ -149,11 +149,11 @@ public class PlayActivity extends AppCompatActivity {
         imagesRemaining.setText("Images Remaining: " + (images.length - imagenum));
 
         //Initialize editImage and starts the image at the View.
-        editImage = new ImageCreator(getApplicationContext(), images, imagenum);
+       // editImage = new ImageCreator(getApplicationContext(), images[imagenum]);
         bitmap = editImage.getImage();
         picGuess.setImageBitmap(bitmap);
 
-        editImage.updateImageLocal();
+        editImage.updateImage();
 
     }
 

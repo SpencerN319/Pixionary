@@ -35,6 +35,7 @@
         <activity android:name=".UserSettings.LeaderboardActivity" />
         <activity android:name=".hostgame.HostGameActivity" />
         <activity android:name=".hostgame.PlaylistSelectActivity" />
+        <activity android:name=".gameplay.GameActivity" />
         <activity android:name=".gameplay.LobbyActivity" />
         <activity
             android:name=".AdminSettingsDialog.AdminSettings"
@@ -43,7 +44,8 @@
         <activity android:name=".AdminSettingsDialog.ViewUsers" />
         <activity
             android:name=".AdminSettingsDialog.ViewSelectedUser"
-            android:theme="@android:style/Theme.Dialog" ></activity>
+            android:theme="@android:style/Theme.Dialog" />
+
     </application>
 
 </manifest>

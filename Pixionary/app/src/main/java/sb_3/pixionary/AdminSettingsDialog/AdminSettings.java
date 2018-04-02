@@ -38,9 +38,6 @@ public class AdminSettings extends Activity implements View.OnClickListener {
         for (Button button: buttons) {
             button.setOnClickListener(this);
         }
-        //Disables unused buttons for now.
-        //buttons[2].setEnabled(false);
-        //buttons[3].setEnabled(false);
     }
 
     @Override
@@ -71,7 +68,7 @@ public class AdminSettings extends Activity implements View.OnClickListener {
                 //TODO start remove category
                 break;
         }
-        if (i != 5 && i != 0) {
+        if (i != 0) {
             nextActivity(selectedActivity);
         }
         finish();
