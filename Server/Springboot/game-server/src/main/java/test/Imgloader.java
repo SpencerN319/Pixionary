@@ -2,7 +2,7 @@ package test;
 
 import java.lang.ProcessBuilder;
 import java.io.IOException;
-
+//runs a bash script to download an image from URL
 public class Imgloader {
     String w;
     

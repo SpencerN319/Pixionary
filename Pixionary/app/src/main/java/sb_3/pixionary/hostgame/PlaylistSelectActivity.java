@@ -89,7 +89,7 @@ public class PlaylistSelectActivity extends AppCompatActivity implements DataTra
                         JSONObject jsonPlaylists = new JSONObject(response); //Gets the response
                         if(jsonPlaylists.getBoolean("success")) {
                             pageLogic(jsonPlaylists.getInt("total")); //Enables or disables buttons according to total users.
-                            JSONArray jsonPlaylistArr = jsonPlaylists.getJSONArray("category"); //This might be changing.
+                            JSONArray jsonPlaylistArr = jsonPlaylists.getJSONArray("data"); //This might be changing.
                             playlistsList = new ArrayList<>();
                             for (int i = 0; i < jsonPlaylistArr.length(); i++) {
                                 //This single line creates a Playlist object for every item in Json array.

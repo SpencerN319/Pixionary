@@ -1,5 +1,6 @@
 package test;
 //we might not ever need to run this sever side but idk
+//runs a bash script to find an image url from a given word
 import java.lang.ProcessBuilder;
 import java.io.IOException;
 public class Imgtaker

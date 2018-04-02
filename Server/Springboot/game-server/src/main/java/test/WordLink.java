@@ -1,5 +1,5 @@
 package test;
-
+//simple object for pairing words with their urls
 public class WordLink {
 	
 	public String word;

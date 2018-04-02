@@ -30,7 +30,7 @@ public class PixionaryServer {
       System.exit(1);
     }
   }
-
+//deprecated but still needs to exist as a method I think
   public void start(){
     //Accept clients, and start their threads
 	  //maybe do this here also a possibility

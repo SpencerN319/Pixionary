@@ -1,5 +1,5 @@
 package test;
-
+//calls appropriate methods for client requests
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,11 +25,12 @@ public class SocketHandler extends TextWebSocketHandler {
 			throws InterruptedException, IOException 
 	{
 
-
+        
 		System.out.println("Socket attempting to connect");
 		for(WebSocketSession webSocketSession : sessions) {
 		String value =	message.getPayload();
 		String[] parts = value.split(",");
+		//if the user wants to create a game
 		if (parts[0].equals("create"))
 		{
 			Game g;
@@ -42,7 +43,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			Main.server.gamesList.add(g);
 			
 			 try {
-			       
+			       //add new game to active games
 		          Connection conn1;
 		          String dbUrl = "jdbc:mysql://mysql.cs.iastate.edu:3306/db309sb3";
 		          String user = "dbu309sb3";
@@ -66,7 +67,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			
 		}else if (parts[0].equals("join"))
 		{
-			
+			//if the user wants to join a game
 			 ConnectedClient newClient = new ConnectedClient(Main.server, session);
 		        Main.server.connectedClients.add(newClient);
 		        System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
@@ -84,13 +85,14 @@ public class SocketHandler extends TextWebSocketHandler {
 			
 		}else if (parts[0].equals("start"))
 		{
+		    //if the user wants to start their game
 			for (Game g : Main.server.gamesList)
 			{
 				if (g.getID() == Integer.parseInt(parts[1]))
 				{
 					g.startGame();
 					 try {
-					        
+					        //removes game from joinable games list
 				          Connection conn1;
 				          String dbUrl = "jdbc:mysql://mysql.cs.iastate.edu:3306/db309sb3";
 				          String user = "dbu309sb3";
@@ -117,6 +119,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			}
 		}else if (parts[0].equals("guess"))
 		{
+		    //if the user is in a game and wishes to make a guess at the word
 			for (Game g: Main.server.gamesList)
 			{
 				for (ConnectedClient c : Main.server.connectedClients)
@@ -128,7 +131,7 @@ public class SocketHandler extends TextWebSocketHandler {
 					}
 				}
 			}
-			System.out.println("making guess...jk");
+			System.out.println("making guess...");
 		}else
 		{
 			webSocketSession.sendMessage(new TextMessage("Message not recognized (or blank for testing)"));
