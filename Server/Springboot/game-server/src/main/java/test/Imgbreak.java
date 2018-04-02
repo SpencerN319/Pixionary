@@ -4,6 +4,7 @@ import java.util.Random;
 
 
 //breaks the image into pixels, transfers them, handles guesses, and more.
+//currently not needed since this is being done on the client right now. might be done on the server in the future
 public class Imgbreak{
     
     BufferedImage img;
