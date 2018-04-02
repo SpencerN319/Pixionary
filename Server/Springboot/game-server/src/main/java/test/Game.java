@@ -24,6 +24,24 @@ public class Game{
     this.gameName = gameName;
     this.category = category;
     gameMembers.add(host);
+    this.gameID = host.userID;
+    /* if we need to generate a random game ID
+    boolean found = false;
+
+    while (found == false)
+    {
+    	found=true;
+    Random r = new Random(50000);
+    for (Game g : Main.server.gamesList)
+    {
+    	possibleID=r.nextInt();
+    	if (g.gameID == possibleID)
+    		found=false;
+    }
+    this.gameID = possibleID;
+    
+    }
+    */
   }
 
   public void startGame()
@@ -31,7 +49,7 @@ public class Game{
 	  playing = true;
 	 
       try {
-         
+          //gets all images and words for the selected playlist
           Connection conn1;
           String dbUrl = "jdbc:mysql://mysql.cs.iastate.edu:3306/db309sb3";
           String user = "dbu309sb3";
@@ -50,6 +68,10 @@ public class Game{
         	  	String link = rs.getString("Link");
         	  	WordLink wl = new WordLink(word, link);
         	  	words.add(wl);
+
+        	  	//sends all words in the playlist to all members
+        	  	this.sendStringToAllMembers("WORD "+word);
+        	  	System.out.println("WORD SENT");
           }
           
       } catch (SQLException e) {
@@ -57,13 +79,20 @@ public class Game{
           System.out.println("SQLState: " + e.getSQLState());
           System.out.println("VendorError: " + e.getErrorCode());
       }
-      //hard coded 3 games
-      for (int count = 0; count < 3; count++)
+
+      //hard coded 2 rounds for now
+      for (int count = 0; count < 2; count++)
+      {
+    	  System.out.println("Begin round");
 	  this.playRound();
+      }
+      
+      //endgame
+
       this.sendStringToAllMembers("GG");
       this.delete();
       
-      //something to indicate that the game has ended
+      
   }
   
   public void addMember(ConnectedClient joiningMember){
@@ -95,19 +124,7 @@ public class Game{
   }
 
   
-  /* we aren't treating the host any different
-  private void sendStringToHost(String output){
-    host.sendStringToClient(output);
-  }
 
-  private void sendStringToNonHostMembers(String output){
-    for(int i = 0; i < gameMembers.size(); i++){
-      if(gameMembers.get(i) != host){
-        gameMembers.get(i).sendStringToClient(output);
-      }
-    }
-  }
-  */
 
   public String getName(){
     return gameName;
@@ -125,15 +142,70 @@ public class Game{
 	      gameMembers.get(i).setGuessed(false);
 	      gameMembers.get(i).resetRoundScore();
 	      }
-	  //hard coded now just to make sure this part works
-	  String URL = "https://i.imgur.com/AEWms1M.jpg";
-	  Imgloader il = new Imgloader(URL);
-	  il.runScript();
-	  BufferedImage img = null;
 	  
+	  System.out.println("Round starting");
+	  Random r = new Random();
+	 System.out.println(words.size());
+	  int choice = r.nextInt(words.size() - 1);
+	  
+	  	System.out.println(choice);
+	  WordLink solution =words.get(choice);
+	 
+
+	String linkURL ="http://proj-309-sb-3.cs.iastate.edu/" + solution.getLink();
+	 
+
+	//  currentWord = solution.getWord();
+	  System.out.println("5");
+
+	  //in case we want to break the image serverside again
+	  String URL = linkURL;
+	//  Imgloader il = new Imgloader(URL);
+	 // il.runScript();
+	  //BufferedImage img = null;
+	  /*
 	  try {
-	      img = ImageIO.read(new File("image.jpg"));
-	  } catch (IOException e) {
+		  try {
+	   		  System.out.println("SLEEPY TIME");
+	   	Thread.sleep(500);
+	   	System.out.println("WOKE");
+		}catch (InterruptedException e)
+		{
+			
+		}
+	     BufferedImage img = ImageIO.read(new File("/home/kwswesey/image.jpg"));
+	      System.out.println("Image has been loaded");
+		  System.out.println("Getting and sending dimensions");
+		  int height = 642;
+		  //System.out.println(img.getHeight());
+		  int width = 500;
+		  //System.out.println(img.getWidth());
+		  this.sendStringToAllMembers("HEIGHT "+height+" WIDTH " + width);
+		  
+		  i = new Imgbreak(img, "volvo",null, this);
+		  /*
+		  System.out.println("breaking image");
+		  i.breakImage();
+		  System.out.println("SEnding pixels");
+		  i.sendPixels();
+		  */
+		  //send the image
+		  this.sendStringToAllMembers("URL "+ URL);
+		   possiblePoints = 100;
+		  try {
+		  for (int seconds = 120; seconds > 0; seconds--)
+		  {
+		  Thread.sleep(1000);
+		  possiblePoints--;
+		  }
+		  }catch (InterruptedException e) {}
+		  
+		  this.sendStringToAllMembers("ROUNDEND");
+//	  } catch (IOException e) {
+//
+//	      System.out.println("Failed to load image: ");
+//		  e.printStackTrace();
+//	  }
 
 	      System.out.println("Failed to load image: ");
 		  e.printStackTrace();
