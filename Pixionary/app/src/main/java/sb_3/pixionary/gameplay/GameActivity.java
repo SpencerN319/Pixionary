@@ -125,6 +125,12 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         sendImageUpdate();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sendImageUpdate();
+    }
+
     private void setImages(String url) {
         handler = new Handler();
         bitmapImage = null;
