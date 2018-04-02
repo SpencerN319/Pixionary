@@ -1,28 +1,19 @@
 package sb_3.pixionary.gameplay;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -33,38 +24,39 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import sb_3.pixionary.Adapters.GuessListAdapter;
-import sb_3.pixionary.ImageBuilder.ImageCreator;
 import sb_3.pixionary.ImageBuilder.Pixel;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.DownloadImageTask;
-import sb_3.pixionary.Utilities.POJO.ShortUser;
 import sb_3.pixionary.Utilities.POJO.User;
-import sb_3.pixionary.Utilities.RealTimeUpdater;
 import sb_3.pixionary.interfaces.DataTransferInterface;
-
-import static sb_3.pixionary.MainMenuActivity.user;
 
 //TODO still need to add a view to see the players in the lobby. --- Not important RN.
 public class GameActivity extends AppCompatActivity implements DataTransferInterface {
 
-    private static final String TAG = RealTimeUpdater.class.getSimpleName();
+    private static final String TAG = GameActivity.class.getSimpleName();
     private String url = "ws://proj-309-sb-3.cs.iastate.edu:8080/name";
     private Context context;
     private OkHttpClient okHttpClient;
     private WebSocket webSocket;
     private DataTransferInterface dataTransferInterface;
+    private DownloadImageTask downloadImageTask;
 
     private int gameID = -1;
     private String playlistName;
     private User user;
     private ArrayList<String> listOfOptions;
     private GuessListAdapter adapter;
-    private Bitmap bitmap;
+    private Bitmap bitmapImage;
+    private Bitmap bitmapCover;
     private String currentGuess;
+    private Handler handler;
 
     private Button sendGuess;
+    private Button fake;
     private ImageView image;
+    private ImageView cover;
     private ListView guessList;
+    private boolean firstPress = true;
 
     //Image stuff
     int width;
@@ -80,9 +72,14 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
         guessList = (ListView) findViewById(R.id.list_of_guesses);
         sendGuess = (Button) findViewById(R.id.btnSendGuess);
+        fake = (Button) findViewById(R.id.fakeButton);
         image = (ImageView) findViewById(R.id.imgGame);
+        cover = (ImageView) findViewById(R.id.imgCover);
 
-        connect();
+
+//        connect();
+        String url = "https://i.imgur.com/AEWms1M.jpg";
+        setImages(url);
 
         UserDataDBHandler db = new UserDataDBHandler(this);
         user = db.getUser("0");
@@ -97,8 +94,97 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 sendGuess(currentGuess);
             }
         });
+
+        fake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!firstPress) {
+                    updateImage();
+                    Log.i("Runnable", "Called Again");
+                } else {
+                    bitmapImage = downloadImageTask.getBitmap();
+                    width = bitmapImage.getWidth();
+                    height = bitmapImage.getHeight();
+                    bitmapCover = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bitmapCover.setPixel(x, y, 0xFFFFFFFF);
+                        }
+                    }
+                    cover.setImageBitmap(bitmapCover);
+                    image.setImageBitmap(bitmapImage);
+                    firstPress = false;
+                }
+            }
+        });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        sendImageUpdate();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sendImageUpdate();
+    }
+
+    private void setImages(String url) {
+        handler = new Handler();
+        bitmapImage = null;
+        downloadImageTask = new DownloadImageTask(bitmapImage);
+        downloadImageTask.execute(url);
+
+    }
+
+    private void sendImageUpdate() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!firstPress) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateImage();
+                        }
+                    });
+
+                } else {
+                    bitmapImage = downloadImageTask.getBitmap();
+                    width = bitmapImage.getWidth();
+                    height = bitmapImage.getHeight();
+                    bitmapCover = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bitmapCover.setPixel(x, y, 0xFFFFFFFF);
+                        }
+                    }
+                    cover.setImageBitmap(bitmapCover);
+                    image.setImageBitmap(bitmapImage);
+                    firstPress = false;
+                }
+                handler.postDelayed(this, 1000);
+            }
+        }, 1000);
+    }
+
+    private void updateImage() {
+        for (int i = 0; i < 100; i++) {
+            Pixel pixel = getPixel();
+            bitmapCover.setPixel(pixel.getXPosition(), pixel.getYPosition(), pixel.getColor());
+        }
+    }
+
+    private Pixel getPixel(int width, int height) {
+        Random random = new Random();
+        Pixel pix;
+        int x = random.nextInt(width);
+        int y = random.nextInt(height);
+        pix = new Pixel(x, y, 0);
+        return pix;
+    }
 
     public void connect() {
         okHttpClient = new OkHttpClient();
@@ -188,19 +274,16 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     }
 
     private void wipeBitmap() {
-        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+       // bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
     }
 
-    private void addPixel(String message) {
-        Scanner scanner = new Scanner(message);
-        String command = scanner.next();
-        if (command.equals("px")) {
-            int x = scanner.nextInt();
-            int y = scanner.nextInt();
-            int color = scanner.nextInt();
-            bitmap.setPixel(x, y, color);
-            Log.i("Pixel Set", String.valueOf(color));
-        }
+    private Pixel getPixel() {
+        Random random = new Random();
+        Pixel pix;
+        int x = random.nextInt(500);
+        int y = random.nextInt(600);
+        pix = new Pixel(x, y, 0);
+        return pix;
     }
 
     private void receiveImage(String message) {
@@ -208,8 +291,8 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         String command = scanner.next();
         if (command.equals("URL")) {
             String url = scanner.next();
-            DownloadImageTask imageTask = new DownloadImageTask(image);
-            imageTask.execute(url);
+            //DownloadImageTask imageTask = new DownloadImageTask(image, cover, this);
+            //imageTask.execute(url);
         }
     }
 
@@ -248,8 +331,8 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         }
         pixels = new int[width*height];
         Log.i("Pixels Length", String.valueOf(pixels.length));
-        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        image.setImageBitmap(bitmap);
+        //bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        //image.setImageBitmap(bitmap);
     }
 
     @Override
