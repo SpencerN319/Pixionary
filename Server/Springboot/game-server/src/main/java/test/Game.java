@@ -34,7 +34,7 @@ Imgbreak i;
     this.category = category;
     gameMembers.add(host);
     this.gameID = host.userID;
-    /*
+    /* if we need to generate a random game ID
     boolean found = false;
 
     while (found == false)
@@ -60,7 +60,7 @@ Imgbreak i;
 	  playing = true;
 	  this.sendStringToAllMembers("START");
       try {
-       
+          //gets all images and words for the selected playlist
           Connection conn1;
           String dbUrl = "jdbc:mysql://mysql.cs.iastate.edu:3306/db309sb3";
           String user = "dbu309sb3";
@@ -80,7 +80,7 @@ Imgbreak i;
         	  	System.out.println("WORD LOADED");
         	  	WordLink wl = new WordLink(word, link);
         	  	words.add(wl);
-        	  	
+        	  	//sends all words in the playlist to all members
         	  	this.sendStringToAllMembers("WORD "+word);
         	  	System.out.println("WORD SENT");
           }
@@ -90,16 +90,18 @@ Imgbreak i;
           System.out.println("SQLState: " + e.getSQLState());
           System.out.println("VendorError: " + e.getErrorCode());
       }
-      //hard coded 3 games
-      for (int count = 0; count < 1; count++)
+      //hard coded 2 rounds for now
+      for (int count = 0; count < 2; count++)
       {
     	  System.out.println("Begin round");
 	  this.playRound();
       }
+      
+      //endgame
       this.sendStringToAllMembers("GG");
       this.delete();
       
-      //something to indicate that the game has ended
+      
   }
   
   public void addMember(ConnectedClient joiningMember){
@@ -132,19 +134,7 @@ Imgbreak i;
   }
 
   
-  /* we aren't treating the host any different
-  private void sendStringToHost(String output){
-    host.sendStringToClient(output);
-  }
 
-  private void sendStringToNonHostMembers(String output){
-    for(int i = 0; i < gameMembers.size(); i++){
-      if(gameMembers.get(i) != host){
-        gameMembers.get(i).sendStringToClient(output);
-      }
-    }
-  }
-  */
 
   public String getName(){
     return gameName;
@@ -190,15 +180,15 @@ Imgbreak i;
 	  
 	  	System.out.println(choice);
 	  WordLink solution =words.get(choice);
-	  System.out.println("3");
+	 
 
 	String linkURL ="http://proj-309-sb-3.cs.iastate.edu/" + solution.getLink();
-	  System.out.println("4");
+	 
 
 	//  currentWord = solution.getWord();
 	  System.out.println("5");
 
-	  //hard coded now just to make sure this part works
+	  //in case we want to break the image serverside again
 	  String URL = linkURL;
 	//  Imgloader il = new Imgloader(URL);
 	 // il.runScript();
@@ -229,6 +219,7 @@ Imgbreak i;
 		  System.out.println("SEnding pixels");
 		  i.sendPixels();
 		  */
+		  //send the image
 		  this.sendStringToAllMembers("URL "+ URL);
 		   possiblePoints = 100;
 		  try {
