@@ -9,8 +9,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Random;
 
-import Client.BuildImageThread;
-import Client.ReceivePixelThread;
 
 
 /**

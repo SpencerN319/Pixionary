@@ -23,9 +23,6 @@
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".gameplay.PlayActivity"
-            android:windowSoftInputMode="stateAlwaysVisible" />
         <activity android:name=".CreateAccountActivity" />
         <activity android:name=".joingame.GameBrowserActivity" />
         <activity

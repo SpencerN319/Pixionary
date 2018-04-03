@@ -57,6 +57,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private ImageView image;
     private ImageView cover;
     private ListView guessList;
+    private View view;
 
     private boolean firstPress = true;
     //Image stuff
@@ -74,11 +75,9 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
         guessList = (ListView) findViewById(R.id.list_of_guesses);
         sendGuess = (Button) findViewById(R.id.btnSendGuess);
-        fake = (Button) findViewById(R.id.fakeButton);
         image = (ImageView) findViewById(R.id.imgGame);
         cover = (ImageView) findViewById(R.id.imgCover);
-
-
+//        view = (View) findViewById(R.id.)
 //        connect();
         String url = "https://i.imgur.com/AEWms1M.jpg";
         setImages(url);
@@ -97,28 +96,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             }
         });
 
-        fake.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!firstPress) {
-                    updateImage();
-                    Log.i("Runnable", "Called Again");
-                } else {
-                    bitmapImage = downloadImageTask.getBitmap();
-                    width = bitmapImage.getWidth();
-                    height = bitmapImage.getHeight();
-                    bitmapCover = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                    for (int x = 0; x < width; x++) {
-                        for (int y = 0; y < height; y++) {
-                            bitmapCover.setPixel(x, y, 0xFFFFFFFF);
-                        }
-                    }
-                    cover.setImageBitmap(bitmapCover);
-                    image.setImageBitmap(bitmapImage);
-                    firstPress = false;
-                }
-            }
-        });
     }
 
     @Override
@@ -127,11 +104,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         sendImageUpdate();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        sendImageUpdate();
-    }
 
     private void setImages(String url) {
         handler = new Handler();
@@ -145,15 +117,17 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                cover.invalidate();
                 if (!firstPress) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateImage();
-                        }
-                    });
-
+                    updateImage();
+                    Log.i("Runnable", "Called Again");
                 } else {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     bitmapImage = downloadImageTask.getBitmap();
                     width = bitmapImage.getWidth();
                     height = bitmapImage.getHeight();
@@ -167,14 +141,14 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                     image.setImageBitmap(bitmapImage);
                     firstPress = false;
                 }
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, 10);
             }
-        }, 1000);
+        }, 10);
     }
 
     private void updateImage() {
         for (int i = 0; i < 100; i++) {
-            Pixel pixel = getPixel();
+            Pixel pixel = getPixel(width, height);
             bitmapCover.setPixel(pixel.getXPosition(), pixel.getYPosition(), pixel.getColor());
         }
     }
