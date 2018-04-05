@@ -13,9 +13,9 @@ import org.springframework.boot.json.*;
 public class Game{
 
   ConnectedClient host;
-  
+  //TODO: score stays with username not client
   ArrayList<ConnectedClient> gameMembers = new ArrayList<ConnectedClient>();
-  //we need some sort of unique game identifier, maybe make gameName have to be unique. for now lets trust end users to do dat
+  ArrayList<ConnectedClient> rescuedOrphans = new ArrayList<ConnectedClient>();
   final String gameName;
   int gameID;
   boolean playing = false;
@@ -23,6 +23,7 @@ public class Game{
   String currentWord;
   int possiblePoints;
   ArrayList<WordLink> words = new ArrayList<WordLink>();
+  ArrayList<ConnectedClient> orphans = new ArrayList<ConnectedClient>();
 String hostName;
 Imgbreak i;
 
@@ -109,12 +110,32 @@ Imgbreak i;
     joiningMember.setGameSession(this);
   }
 
+  public void addRescuedOrphan(ConnectedClient joiningMember){
+	  
+	  for (ConnectedClient c: this.orphans)
+	  {
+		  if (joiningMember.getUsername().equals(c.getUsername()))
+				  {
+			  		System.out.println("Orphan score updated");
+				  joiningMember.setLocalScore(c.getLocalScore());
+				  }
+	  }
+	    rescuedOrphans.add(joiningMember);
+	    System.out.println("Orphan has rejoined");
+	    joiningMember.setGameSession(this);
+	  }
   public void removeMemberFromMembersList(ConnectedClient leavingMember){
-    if(leavingMember == host){
+ /*   if(leavingMember == host){
       delete();
       return;
-    }
+    }*/
+	  //deletes game if nobody left in it
     gameMembers.remove(leavingMember);
+    if (gameMembers.size() == 0)
+    	System.out.println("Game empty, deleting game");
+    	this.delete();
+
+    orphans.add(leavingMember);
   }
 
   public void kickMember(ConnectedClient kicked){
@@ -161,8 +182,26 @@ Imgbreak i;
 	  return playing;
   }
   
+  public boolean findOrphan(String username)
+  {
+	  for (ConnectedClient c :orphans)
+	  {
+		  if (c.getUsername().equals(username))
+		  {
+			orphans.remove(c);
+			return true;
+		  }
+	  }
+	  return false;
+  }
   public void playRound()
   {
+	  //get rejoining players back in the action
+	  for (ConnectedClient c: rescuedOrphans)
+	  {
+		  gameMembers.add(c);
+		  rescuedOrphans.remove(c);
+	  }
 	 
 	  this.sendStringToAllMembers("ROUNDBEGIN");
 
@@ -186,7 +225,7 @@ Imgbreak i;
 	 
 
 	//  currentWord = solution.getWord();
-	  System.out.println("5");
+	//  System.out.println("5");
 
 	  //in case we want to break the image serverside again
 	  String URL = linkURL;
@@ -264,7 +303,7 @@ Imgbreak i;
 	      }
 	      //JDBC query. I forget why I put this comment here, hopefully i just misplaced it.
 	      }
-	  //TODO: update client with every player's score
+	  //TODO: update client with every player's score or something
   }
 
   
@@ -274,8 +313,8 @@ Imgbreak i;
   	if (!c.getGuessed())
   	{
 	   
-		//TODO: GET GUESS SOMEHOW
-		//String guess = c.readInputLine();
+		
+		
   		
 		if (guess != null)
 		{

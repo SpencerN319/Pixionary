@@ -12,7 +12,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-
+//TODO: tell steven we changing the format
 
 
 @Component
@@ -34,7 +34,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		if (parts[0].equals("create"))
 		{
 			Game g;
-			ConnectedClient newClient = new ConnectedClient(Main.server,  session);
+			ConnectedClient newClient = new ConnectedClient(Main.server,  session,parts[3]);
 	        Main.server.connectedClients.add(newClient);
 	        System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
 			System.out.println("creating game");
@@ -68,7 +68,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		}else if (parts[0].equals("join"))
 		{
 			//if the user wants to join a game
-			 ConnectedClient newClient = new ConnectedClient(Main.server, session);
+			 ConnectedClient newClient = new ConnectedClient(Main.server, session,parts[2]);
 		        Main.server.connectedClients.add(newClient);
 		        System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
 			System.out.println("joining game");
@@ -132,6 +132,19 @@ public class SocketHandler extends TextWebSocketHandler {
 				}
 			}
 			System.out.println("making guess...");
+		}else if (parts[0].equals("reconnect"))
+		{
+			for (Game g: Main.server.gamesList)
+			{
+				//TODO: rewrite entirely
+				if (g.findOrphan(parts[1]))
+				{
+					ConnectedClient newClient = new ConnectedClient(Main.server, session,parts[1]);
+					g.addRescuedOrphan(newClient);
+
+					break;
+				}
+			}
 		}else
 		{
 			webSocketSession.sendMessage(new TextMessage("Message not recognized (or blank for testing)"));
