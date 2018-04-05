@@ -1,26 +1,35 @@
 package test;
-//TODO: gameover
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.sql.*;
 import javax.imageio.ImageIO;
+import org.springframework.boot.json.*;
+//TODO: modified URL
 
 public class Game{
 
   ConnectedClient host;
-  GamesList gamesList;
+  
   ArrayList<ConnectedClient> gameMembers = new ArrayList<ConnectedClient>();
   //we need some sort of unique game identifier, maybe make gameName have to be unique. for now lets trust end users to do dat
   final String gameName;
+  int gameID;
   boolean playing = false;
   String category;
+  String currentWord;
+  int possiblePoints;
   ArrayList<WordLink> words = new ArrayList<WordLink>();
+String hostName;
+Imgbreak i;
 
-  public Game(GamesList gamesList, ConnectedClient host, String gameName, String category){
-    this.gamesList = gamesList;
+  public Game(ConnectedClient host, String gameName, String category){
+    
     this.host = host;
+    hostName = host.getUsername();
     this.gameName = gameName;
     this.category = category;
     gameMembers.add(host);
@@ -42,12 +51,14 @@ public class Game{
     
     }
     */
+    
+  
   }
 
   public void startGame()
   {
 	  playing = true;
-	 
+	  this.sendStringToAllMembers("START");
       try {
           //gets all images and words for the selected playlist
           Connection conn1;
@@ -59,16 +70,16 @@ public class Game{
           
           Statement statement = conn1.createStatement();
           ResultSet rs;
-          rs = statement.executeQuery("select Word, Link from Images where Category'="+category+"';");
+          rs = statement.executeQuery("select word, location from Images where category='"+category+"';");
         
           //get them words and links
           while (rs.next()) {
-              
-        	  	String word = rs.getString("Word");
-        	  	String link = rs.getString("Link");
+           // for (int x = 0; x < 20; x++) {  
+        	  	String word = rs.getString("word");
+        	  	String link = rs.getString("location");
+        	  	System.out.println("WORD LOADED");
         	  	WordLink wl = new WordLink(word, link);
         	  	words.add(wl);
-
         	  	//sends all words in the playlist to all members
         	  	this.sendStringToAllMembers("WORD "+word);
         	  	System.out.println("WORD SENT");
@@ -79,7 +90,6 @@ public class Game{
           System.out.println("SQLState: " + e.getSQLState());
           System.out.println("VendorError: " + e.getErrorCode());
       }
-
       //hard coded 2 rounds for now
       for (int count = 0; count < 2; count++)
       {
@@ -88,7 +98,6 @@ public class Game{
       }
       
       //endgame
-
       this.sendStringToAllMembers("GG");
       this.delete();
       
@@ -97,6 +106,7 @@ public class Game{
   
   public void addMember(ConnectedClient joiningMember){
     gameMembers.add(joiningMember);
+    joiningMember.setGameSession(this);
   }
 
   public void removeMemberFromMembersList(ConnectedClient leavingMember){
@@ -130,6 +140,22 @@ public class Game{
     return gameName;
   }
   
+  public String getHostName()
+	  {
+		  return hostName;
+	  }
+  
+  public String getCategory(){
+	  return category;
+  }
+	  
+
+  
+  public int getID()
+  {
+	  return gameID; 
+  }
+  
   public boolean getGameStatus()
   {
 	  return playing;
@@ -137,7 +163,11 @@ public class Game{
   
   public void playRound()
   {
+	 
+	  this.sendStringToAllMembers("ROUNDBEGIN");
+
 	  //reset correct guess status and points
+	  System.out.println("Preparing to reset");
 	  for(int i = 0; i < gameMembers.size(); i++){
 	      gameMembers.get(i).setGuessed(false);
 	      gameMembers.get(i).resetRoundScore();
@@ -207,13 +237,6 @@ public class Game{
 //		  e.printStackTrace();
 //	  }
 
-	      System.out.println("Failed to load image: ");
-		  e.printStackTrace();
-	  }
-	  
-	  Imgbreak i = new Imgbreak(img, "cat",null, this);
-	  i.breakImage();
-	  i.sendPixels();
 	  
 	  //update mysql with points from the round
 	  for(int j = 0; j < gameMembers.size(); j++){
@@ -229,10 +252,10 @@ public class Game{
 	          
 	          Statement statement = conn1.createStatement();
 	          ResultSet rs;
-	          rs = statement.executeQuery("select Score from Players where Name='"+gameMembers.get(j).getUsername()+"';");
+	          rs = statement.executeQuery("select score from User where username='"+gameMembers.get(j).getUsername()+"';");
 	          int totalScore = rs.getInt("Score");
 	          totalScore+=roundscore;
-	          statement.executeUpdate("UPDATE Customers SET Score ="+totalScore+" WHERE Name ='"+gameMembers.get(j).getUsername()+"';");
+	          statement.executeUpdate("UPDATE User SET score ="+totalScore+" WHERE username ='"+gameMembers.get(j).getUsername()+"';");
 	          
 	      } catch (SQLException e) {
 	          System.out.println("SQLException: " + e.getMessage());
@@ -241,8 +264,48 @@ public class Game{
 	      }
 	      //JDBC query. I forget why I put this comment here, hopefully i just misplaced it.
 	      }
+	  //TODO: update client with every player's score
   }
 
+  
+ 	public void getGuess(ConnectedClient c, String guess)
+	{
+  		//ignore guesses from people who already guessed.
+  	if (!c.getGuessed())
+  	{
+	   
+		//TODO: GET GUESS SOMEHOW
+		//String guess = c.readInputLine();
+  		
+		if (guess != null)
+		{
+			guess = guess.toLowerCase();
+		if (guess.equals(currentWord))
+				{
+				    //send string to one player
+					c.sendStringToClient("CORRECT!");
+					//give points or something here
+					int score = possiblePoints;
+					c.incrementScore(score); 
+		
+				}
+		/* commented out since this feature is no longer in scope
+			else 
+			{
+				for( String s : synonyms)
+				{
+				
+					if( s.equals(guess))
+							c.sendStringToClient("CLOSE!");	
+				}
+				
+			
+			}
+			*/
+		}
+	
+  	}
+	}
   public void delete(){
     for(int i = 0; i < gameMembers.size(); i++){
       if(gameMembers.get(i) != host){
@@ -250,7 +313,7 @@ public class Game{
       }
     }
     //All except host is gone, and host is currently leaving.
-    gamesList.removeGameFromActiveGames(gameName);
+    Main.server.gamesList.remove(this);
     return;
   }
 
