@@ -16,6 +16,7 @@ public class Game{
   //TODO: score stays with username not client
   ArrayList<ConnectedClient> gameMembers = new ArrayList<ConnectedClient>();
   ArrayList<ConnectedClient> rescuedOrphans = new ArrayList<ConnectedClient>();
+  ArrayList<ConnectedClient> playAgains = new ArrayList<ConnectedClient>();
   final String gameName;
   int gameID;
   boolean playing = false;
@@ -75,7 +76,7 @@ Imgbreak i;
         
           //get them words and links
           while (rs.next()) {
-           // for (int x = 0; x < 20; x++) {  
+        
         	  	String word = rs.getString("word");
         	  	String link = rs.getString("location");
         	  	System.out.println("WORD LOADED");
@@ -100,6 +101,35 @@ Imgbreak i;
       
       //endgame
       this.sendStringToAllMembers("GG");
+      int bestscore = 0;
+	  String bestplayer = "nobody";
+      for (ConnectedClient c: gameMembers)
+      {
+    	if (c.getLocalScore() > bestscore)
+    	{
+    		bestscore = c.getLocalScore();
+    		bestplayer = c.getUsername();
+    	}
+    	
+      }
+      this.sendStringToAllMembers("Winner: "+bestplayer);
+    //20 seconds to play again
+      try {
+   		  
+   	Thread.sleep(20000);
+   	System.out.println("WOKE");
+	}catch (InterruptedException e)
+	{
+		
+	}
+     //TODO: set host properly, allow host to change playlist somehow
+      Game newgame = new Game(playAgains.get(0), this.gameName, this.category);
+      playAgains.remove(0);
+      for (ConnectedClient c : playAgains)
+      {
+    	 newgame.addMember(c);
+      }
+      newgame.startGame();
       this.delete();
       
       
@@ -193,6 +223,11 @@ Imgbreak i;
 		  }
 	  }
 	  return false;
+  }
+  
+  public void addPlayAgain(ConnectedClient c)
+  {
+	  this.playAgains.add(c);
   }
   public void playRound()
   {

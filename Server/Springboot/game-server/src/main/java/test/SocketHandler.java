@@ -145,6 +145,20 @@ public class SocketHandler extends TextWebSocketHandler {
 					break;
 				}
 			}
+			
+		}else if (parts[0].equals("playagain"))
+		{
+		    //if the user is in a game and wishes to make a guess at the word
+			for (Game g: Main.server.gamesList)
+			{
+				for (ConnectedClient c : Main.server.connectedClients)
+				{
+					if (c.getGameSession().equals(g) && c.getSocketSession().equals(session))
+					{
+						g.addPlayAgain(c);					
+					}
+				}
+			}
 		}else
 		{
 			webSocketSession.sendMessage(new TextMessage("Message not recognized (or blank for testing)"));
