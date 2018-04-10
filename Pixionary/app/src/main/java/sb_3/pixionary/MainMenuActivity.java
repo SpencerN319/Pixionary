@@ -37,7 +37,7 @@ public class MainMenuActivity extends AppCompatActivity {
     public static final int SETTINGS_REQUEST_ID = 5;
     public static final int GUEST_REQUEST_ID = 6;
     public static final int CREATEACCOUNT_REQUEST_ID = 7;
-    public static  User user;
+    public  static User user;
     TextView usernameDisplay;
     private Switch switch_admin;
     private ImageButton button_AdminSettings, button_settings;

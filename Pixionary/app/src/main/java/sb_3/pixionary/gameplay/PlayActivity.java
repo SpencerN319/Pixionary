@@ -17,9 +17,6 @@ import sb_3.pixionary.ImageBuilder.ImageCreator;
 import java.io.IOException;
 import java.net.Socket;
 
-import Client.BuildImageThread;
-import Client.GuessThread;
-import Client.ReceivePixelThread;
 import sb_3.pixionary.R;
 
 public class PlayActivity extends AppCompatActivity {
