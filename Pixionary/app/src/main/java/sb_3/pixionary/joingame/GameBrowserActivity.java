@@ -23,11 +23,9 @@ import java.util.ArrayList;
 import SaveData.UserDataDBHandler;
 import sb_3.pixionary.Adapters.GameListAdapter;
 import sb_3.pixionary.R;
-import sb_3.pixionary.Utilities.POJO.GameClasses.Playlist;
 import sb_3.pixionary.Utilities.POJO.GameClasses.ShortGame;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestGamesAvailable;
-import sb_3.pixionary.gameplay.PlayActivity;
 
 
 public class GameBrowserActivity extends AppCompatActivity {
@@ -132,13 +130,7 @@ public class GameBrowserActivity extends AppCompatActivity {
 //        listView.setAdapter(adapter);
     }
 
-    public void clickMe(View view) {
 
-        //Some threading to communicate to the server that a player has joined the game.
-        Intent i  = new Intent(GameBrowserActivity.this, PlayActivity.class);
-        startActivity(i);
-        finish();
-    }
 
     private void pageLogic(int totalUsers) {
         if (totalUsers > 10) { //Will be changing 10 to 100.
