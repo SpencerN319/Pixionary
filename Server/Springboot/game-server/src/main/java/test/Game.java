@@ -363,19 +363,10 @@ Imgbreak i;
 					c.incrementScore(score); 
 		
 				}
-		/* commented out since this feature is no longer in scope
-			else 
-			{
-				for( String s : synonyms)
-				{
-				
-					if( s.equals(guess))
-							c.sendStringToClient("CLOSE!");	
-				}
-				
-			
-			}
-			*/
+		else
+		{
+			c.sendStringToClient("INCORRECT!");
+		}
 		}
 	
   	}
