@@ -127,7 +127,7 @@ public class SocketHandler extends TextWebSocketHandler {
 					if (c.getGameSession().equals(g) && c.getSocketSession().equals(session))
 					{
 						System.out.println("Sending guess to game");
-						g.i.getGuess(c);
+						g.getGuess(c, parts[1]);
 					}
 				}
 			}
