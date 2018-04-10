@@ -34,9 +34,9 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private Context context;
     public static final int LOGIN_REQUEST_ID = 4;
-    public static final int SETTINGS_REQUEST_ID = 5;
     public static final int GUEST_REQUEST_ID = 6;
     public static final int CREATEACCOUNT_REQUEST_ID = 7;
+    public static final int SETTINGS_ID = 8;
     public  static User user;
     TextView usernameDisplay;
     private Switch switch_admin;
@@ -180,28 +180,34 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent returnedData){
+        Log.i("requestCode", String.valueOf(requestCode));
         if(resultCode == 0){
             return;
         }
         super.onActivityResult(requestCode, resultCode, returnedData);
         switch (requestCode){
+
             case LOGIN_REQUEST_ID:
-                Log.i("LOGIN CALLED", "TRUE");
-                Log.i("WITH USERNAME " , this.user.getUsername());
                 usernameDisplay.setText("Logged in as: " + this.user.getUsername());
                 is_admin();
                 break;
-            case SETTINGS_REQUEST_ID:
-                boolean logout = returnedData.getBooleanExtra("logout", false);
-                if (logout) {
-                    Log.i("user logout: ", "true");
+            case GUEST_REQUEST_ID:
+                usernameDisplay.setText("Logged in as: " + user.getUsername());
+                break;
+            case SETTINGS_ID:
+                String action = returnedData.getStringExtra("action");
+                if(action.equals("delete")){
+                    user =null;
+                    is_admin();
+                    usernameDisplay.setText("Currently not logged in");
+                } else if(action.equals("logout")) {
                     usernameDisplay.setText("Currently not logged in");
                     user = null;
                     is_admin();
+                } else if(action.equals("update")){
+                    usernameDisplay.setText("Logged in as: " + this.user.getUsername());
+                    is_admin();
                 }
-                break;
-            case GUEST_REQUEST_ID:
-                usernameDisplay.setText("Logged in as: " + user.getUsername());
                 break;
         }
     }
@@ -220,7 +226,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void startSettingsActivity() {
         Intent settingsIntent = new Intent(this, SettingsDialog.class);
-        startActivityForResult(settingsIntent, SETTINGS_REQUEST_ID);
+        startActivityForResult(settingsIntent, SETTINGS_ID);
     }
 
     private void startAdminSettingsActivity() {

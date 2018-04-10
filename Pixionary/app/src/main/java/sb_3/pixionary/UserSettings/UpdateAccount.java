@@ -145,7 +145,6 @@ public class UpdateAccount extends AppCompatActivity {
                 username = user.getText().toString();
                 password = pass1.getText().toString();
                 conf_password = pass2.getText().toString();
-                Log.i("INFORMATION", old_username+" : "+old_password+" : "+username+" : "+password);
                 if (validateUsername(username) && validatePassword(password, conf_password)) {
                     display_dialog(action);
                     RequestUpdateAccount updateRequest = new RequestUpdateAccount(username, password, old_username, old_password, action, new Response.Listener<String>() {
@@ -191,7 +190,8 @@ public class UpdateAccount extends AppCompatActivity {
             MainMenuActivity.user.setPassword(new_pass);
         }
         db.addUser(MainMenuActivity.user);
-        Intent complete = new Intent(this, MainMenuActivity.class);
+        Intent complete = new Intent(this, SettingsDialog.class);
+        complete.putExtra("action", action);
         setResult(2, complete);
         finish();
     }
@@ -214,8 +214,9 @@ public class UpdateAccount extends AppCompatActivity {
         MainMenuActivity.set_user(null);
         UserDataDBHandler db = new UserDataDBHandler(this);
         db.deleteOne(0);
-        Intent complete = new Intent(this, MainMenuActivity.class);
-        setResult(3, complete);
+        Intent complete = new Intent(this, SettingsDialog.class);
+        complete.putExtra("action", "delete");
+        setResult(2, complete);
         finish();
     }
 
