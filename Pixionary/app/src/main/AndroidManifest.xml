@@ -42,7 +42,9 @@
         <activity
             android:name=".AdminSettingsDialog.ViewSelectedUser"
             android:theme="@android:style/Theme.Dialog" />
-
+        <activity android:name=".AdminSettingsDialog.Images" />
+        <activity android:name=".AdminSettingsDialog.ImagesViewCategory" />
+        <activity android:name=".AdminSettingsDialog.AddCategory"></activity>
     </application>
 
 </manifest>

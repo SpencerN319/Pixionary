@@ -85,11 +85,11 @@
         app:layout_constraintTop_toTopOf="@id/guideline7" />
 
     <Button
-        android:id="@+id/bt_DeleteUser"
+        android:id="@+id/bt_Images"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryYellow"
-        android:text="delete user"
+        android:text="Images"
         android:textSize="24dp"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline11"
@@ -98,11 +98,11 @@
         app:layout_constraintTop_toTopOf="@id/guideline8" />
 
     <Button
-        android:id="@+id/bt_AddImage"
+        android:id="@+id/bt_later1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryPurple"
-        android:text="add image"
+        android:text="*later*"
         android:textSize="24dp"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline15"
@@ -111,11 +111,11 @@
         app:layout_constraintTop_toTopOf="@id/guideline11" />
 
     <Button
-        android:id="@+id/bt_RemoveImage"
+        android:id="@+id/bt_later2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryYellow"
-        android:text="remove image"
+        android:text="*later*"
         android:textSize="24dp"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline13"
@@ -124,11 +124,11 @@
         app:layout_constraintTop_toTopOf="@id/guideline15" />
 
     <Button
-        android:id="@+id/bt_RemoveCategory"
+        android:id="@+id/bt_later3"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryRed"
-        android:text="remove category"
+        android:text="later*"
         android:textSize="24dp"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline14"
