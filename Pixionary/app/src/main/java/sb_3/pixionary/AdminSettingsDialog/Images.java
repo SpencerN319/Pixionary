@@ -112,7 +112,8 @@ public class Images extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(this, AddCategory.class);
+                startActivity(intent);
             }
         });
 

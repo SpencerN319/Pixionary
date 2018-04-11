@@ -44,7 +44,9 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".AdminSettingsDialog.Images" />
         <activity android:name=".AdminSettingsDialog.ImagesViewCategory" />
-        <activity android:name=".AdminSettingsDialog.AddCategory"></activity>
+        <activity
+            android:name=".AdminSettingsDialog.AddCategory"
+            android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>
