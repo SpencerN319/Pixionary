@@ -17,4 +17,5 @@ do
 	wget -i onelink.txt  -O $value.jpg;
 done
 rm url.txt;
-
+rm link.txt;
+rm onelink.txt;

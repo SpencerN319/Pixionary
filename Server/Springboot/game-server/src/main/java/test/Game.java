@@ -256,7 +256,7 @@ Imgbreak i;
 	  WordLink solution =words.get(choice);
 	 
 
-	String linkURL ="http://proj-309-sb-3.cs.iastate.edu/" + solution.getLink();
+	String linkURL ="http://proj-309-sb-3.cs.iastate.edu/images/" + solution.getLink();
 	 
 
 	//  currentWord = solution.getWord();
@@ -315,6 +315,11 @@ Imgbreak i;
 	  //update mysql with points from the round
 	  for(int j = 0; j < gameMembers.size(); j++){
 	      int roundscore = gameMembers.get(j).getRoundScore();
+	      if (gameMembers.get(j).getUsername().length() == 5 &&gameMembers.get(j).getUsername().substring(0, 5).equals("guest"))
+	      {
+	    	  System.out.println("Scoreboard not updated for guest");
+	      }else
+	      {
 	      try {
 	        
 	          Connection conn1;
@@ -338,6 +343,8 @@ Imgbreak i;
 	      }
 	      //JDBC query. I forget why I put this comment here, hopefully i just misplaced it.
 	      }
+	  }
+	  
 
 	for (ConnectedClient c :gameMembers)
 	{
