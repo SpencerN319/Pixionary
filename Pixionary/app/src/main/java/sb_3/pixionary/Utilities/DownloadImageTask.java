@@ -41,6 +41,8 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         return bitmapImage;
     }
 
+
+
     public Bitmap getBitmap() {
         return bitmapImage;
     }

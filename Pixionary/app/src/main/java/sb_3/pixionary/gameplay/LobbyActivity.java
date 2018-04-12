@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import SaveData.UserDataDBHandler;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.ShortUser;
 import sb_3.pixionary.Utilities.POJO.User;
@@ -31,6 +32,14 @@ public class LobbyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_host_lobby);
+        UserDataDBHandler db = new UserDataDBHandler(this);
+        user = db.getUser("0");
+        if (user.getUserType().equals("host")) {
+            setContentView(R.layout.activity_host_lobby);
+
+        } else {
+            setContentView(R.layout.activity_player_lobby);
+        }
+
     }
 }
