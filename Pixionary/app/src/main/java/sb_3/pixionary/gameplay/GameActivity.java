@@ -2,31 +2,24 @@ package sb_3.pixionary.gameplay;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
-import SaveData.UserDataDBHandler;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import sb_3.pixionary.Adapters.GuessListAdapter;
-import sb_3.pixionary.ImageBuilder.Pixel;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.DownloadImageTask;
 import sb_3.pixionary.Utilities.POJO.User;
@@ -50,17 +43,13 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private User user;
     private ArrayList<String> listOfOptions;
     private GuessListAdapter adapter;
-    private Bitmap bitmapImage;
-    private Bitmap bitmapCover;
     private String currentGuess;
-    private Handler handler;
 
     private Button sendGuess;
     private ImageView image;
     private ImageView cover;
     private ListView guessList;
 
-    private boolean firstPress = true;
     //Image stuff
     int width;
     int height;
@@ -79,8 +68,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         cover = (ImageView) findViewById(R.id.imgCover);
         connect();
 
-
-
         listOfOptions = new ArrayList<>();
         adapter = new GuessListAdapter(context, listOfOptions, dataTransferInterface);
         guessList.setAdapter(adapter);
@@ -95,82 +82,44 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         gameID = getIntent().getIntExtra("gameId", -1);
         gameType = getIntent().getIntExtra("gameType", -1);
         playlistName = getIntent().getStringExtra("playlist");
-//        if (gameType > 0) {
-//            directToLobby(gameType);
-//        }
+        if (gameType > 0) {
+            directToLobby(gameType);
+        }
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        //FIXME This is a test.
-        String url = "https://i.imgur.com/AEWms1M.jpg";
-        setImages(url);
-        sendImageUpdate();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(data == null) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (data.getIntExtra("command", -1)) {
+            case LobbyActivity.START_GAME:
+                sendStart();
+//                //FIXME TEMPORARY FOR TESTING
+//                String url = "https://i.imgur.com/AEWms1M.jpg";
+//                downloadImageTask = new DownloadImageTask(image, cover);
+//                downloadImageTask.execute(url);
+                break;
+            case LobbyActivity.LEAVE_GAME:
+                webSocket.close(0, "Left Lobby");
+                finish();
+                break;
+            case -1:
+                Log.i(TAG, "Error from the Lobby");
+        }
+    }
+
+    @Override
+    public void setValuesAndReact(int position) {
+        currentGuess = listOfOptions.get(position);
+        Log.i("Current Guess", currentGuess);
     }
 
     private void directToLobby(int gameType) {
         Intent i = new Intent(this, LobbyActivity.class);
         i.putExtra("gameType", gameType);
         startActivityForResult(i, START_GAME_REQUEST);
-    }
-
-
-    private void setImages(String url) {
-        handler = new Handler();
-        bitmapImage = null;
-        downloadImageTask = new DownloadImageTask(bitmapImage);
-        downloadImageTask.execute(url);
-
-    }
-
-    private void sendImageUpdate() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                cover.invalidate();
-                if (!firstPress) {
-                    updateImage();
-                    Log.i("Runnable", "Called Again");
-                } else {
-                    try {
-                        Thread.sleep(2000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    bitmapImage = downloadImageTask.getBitmap();
-                    width = bitmapImage.getWidth();
-                    height = bitmapImage.getHeight();
-                    bitmapCover = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                    for (int x = 0; x < width; x++) {
-                        for (int y = 0; y < height; y++) {
-                            bitmapCover.setPixel(x, y, 0xFFFFFFFF);
-                        }
-                    }
-                    cover.setImageBitmap(bitmapCover);
-                    image.setImageBitmap(bitmapImage);
-                    firstPress = false;
-                }
-                handler.postDelayed(this, 10);
-            }
-        }, 10);
-    }
-
-    private void updateImage() {
-        for (int i = 0; i < 100; i++) {
-            Pixel pixel = getPixel(width, height);
-            bitmapCover.setPixel(pixel.getXPosition(), pixel.getYPosition(), pixel.getColor());
-        }
-    }
-
-    private Pixel getPixel(int width, int height) {
-        Random random = new Random();
-        Pixel pix;
-        int x = random.nextInt(width);
-        int y = random.nextInt(height);
-        pix = new Pixel(x, y, 0);
-        return pix;
     }
 
     public void connect() {
@@ -239,64 +188,50 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         Log.i("Message Received", message);
         switch (type) {
             case "Creating":
-                createGameReaction(message);
+//                createGameReaction(message);
+                //TODO Not sure what to here other than a check to make sure that the game is created.
+                Log.i(TAG, message);
                 break;
             case "START":
+                //TODO Need to get something here to close the lobby.
+                Log.i(TAG, message);
                 break;
             case "WORD":
                 addWord(message);
+                Log.i(TAG, message);
                 break;
             case "HEIGHT":
                 setHeightAndWidth(message);
+                Log.i(TAG, message);
                 break;
             case "URL":
                 receiveImage(message);
+                Log.i(TAG, message);
+                break;
+            case "CORRECT!":
+                startGuessResponse("Correct!");
+                Log.i(TAG, message);
+                break;
+            case "INCORRECT!":
+                startGuessResponse("Incorrect!");
+                Log.i(TAG, message);
                 break;
             case "ROUNDEND":
-                whiteBitmap();
+                wipeBitmap();
+                Log.i(TAG, message);
                 break;
             default:
-                Log.i("Not tracked", message);
+                Log.i(TAG, "NOT TRACKED: " +  message);
         }
     }
-
-    private void whiteBitmap() {
-        bitmapCover = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                bitmapCover.setPixel(x, y, 0xFFFFFFFF);
-            }
-        }
-    }
-
-    private Pixel getPixel() {
-        Random random = new Random();
-        Pixel pix;
-        int x = random.nextInt(500);
-        int y = random.nextInt(600);
-        pix = new Pixel(x, y, 0);
-        return pix;
-    }
-
-    private void receiveImage(String message) {
-        Scanner scanner = new Scanner(message);
-        String command = scanner.next();
-        if (command.equals("URL")) {
-            String url = scanner.next();
-            //DownloadImageTask imageTask = new DownloadImageTask(image, cover, this);
-            //imageTask.execute(url);
-        }
-    }
-
-
-    private void createGameReaction(String message) {
-        Scanner scanner = new Scanner(message);
-        if(scanner.next().equals("Creating")) {
-            gameID = scanner.nextInt();
-            Log.i("GameID", String.valueOf(gameID));
-            sendStart();
-        }
-    }
+//    private void createGameReaction(String message) {
+//        Scanner scanner = new Scanner(message);
+//        if(scanner.next().equals("Creating")) {
+//            gameID = scanner.nextInt();
+//            Log.i("GameID", String.valueOf(gameID));
+//            sendStart();
+//        }
+//    }
 
     private void addWord(String message) {
         Scanner scanner = new Scanner(message);
@@ -325,10 +260,26 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         Log.i("Pixels Length", String.valueOf(pixels.length));
     }
 
-    @Override
-    public void setValuesAndReact(int position) {
-        currentGuess = listOfOptions.get(position);
-        Log.i("Current Guess", currentGuess);
+    private void receiveImage(String message) {
+        Scanner scanner = new Scanner(message);
+        String command = scanner.next();
+        if (command.equals("URL")) {
+            String url = scanner.next();
+            DownloadImageTask imageTask = new DownloadImageTask(image, cover);
+            imageTask.execute(url);
+        }
     }
+
+    private void startGuessResponse(String response) {
+        Intent intent = new Intent(this, GuessResponseActivity.class);
+        intent.putExtra("response", response);
+        startActivity(intent);
+    }
+
+    private void wipeBitmap() {
+        downloadImageTask.cancel(true);
+    }
+
+
 
 }

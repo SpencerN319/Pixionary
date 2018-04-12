@@ -3,9 +3,11 @@ package sb_3.pixionary.Utilities;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.io.InputStream;
@@ -14,6 +16,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 import sb_3.pixionary.ImageBuilder.Pixel;
+import sb_3.pixionary.gameplay.GameActivity;
 
 /**
  * Created by fastn on 3/27/2018.
@@ -21,10 +24,18 @@ import sb_3.pixionary.ImageBuilder.Pixel;
 //TODO Move back to GameActivity and Create an AsyncTask for adding pixels to the Bitmap.
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
+    private ImageView image;
+    private ImageView cover;
+    private Bitmap bitmapCover;
     private Bitmap bitmapImage;
+    private boolean firstPress = true;
+    private int width;
+    private int height;
+    private boolean killMe = false;
 
-    public DownloadImageTask(Bitmap bitmapImage) {
-        this.bitmapImage = bitmapImage;
+    public DownloadImageTask(ImageView image, ImageView cover) {
+        this.image = image;
+        this.cover = cover;
     }
 
     protected Bitmap doInBackground(String... urls) {
@@ -33,17 +44,68 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         try {
             InputStream in = new java.net.URL(urldisplay).openStream();
             bitmapImage = BitmapFactory.decodeStream(in);
-
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
             e.printStackTrace();
         }
+        width = bitmapImage.getWidth();
+        height = bitmapImage.getHeight();
+        bitmapCover = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                bitmapCover.setPixel(x, y, 0xFFFFFFFF);
+            }
+        }
+        publishProgress();
+        while(true) {
+            if (killMe) {
+                break;
+            }
+            updateImage();
+        }
+
         return bitmapImage;
     }
 
+    @Override
+    protected void onProgressUpdate(Void... values) {
+        if (!firstPress) {
+            cover.invalidate();
+        } else {
+            cover.setImageBitmap(bitmapCover);
+            image.setImageBitmap(bitmapImage);
+        }
+    }
 
+    @Override
+    protected void onCancelled() {
+        image.setImageResource(android.R.color.transparent);
+        cover.setImageResource(android.R.color.transparent);
+        killMe = true;
+        Log.i("TASK", "CANCELLED");
+    }
 
-    public Bitmap getBitmap() {
-        return bitmapImage;
+    private void updateImage() {
+        for (int i = 0; i < 100; i++) {
+            Pixel pixel = getPixel(width, height);
+            bitmapCover.setPixel(pixel.getXPosition(), pixel.getYPosition(), pixel.getColor());
+        }
+        publishProgress();
+        Log.i("TASK", "RUNNING");
+        try {
+            Thread.sleep(10);
+        } catch (Exception e) {
+            e.printStackTrace();
+            onCancelled();
+        }
+    }
+
+    private Pixel getPixel(int width, int height) {
+        Random random = new Random();
+        Pixel pix;
+        int x = random.nextInt(width);
+        int y = random.nextInt(height);
+        pix = new Pixel(x, y, 0);
+        return pix;
     }
 }
