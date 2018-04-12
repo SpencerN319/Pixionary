@@ -1,5 +1,6 @@
 package sb_3.pixionary.AdminSettingsDialog;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +22,7 @@ import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.RequestPlaylists;
 
 public class Images extends AppCompatActivity {
-
+    private static final int ADD_RESULT_ID = 1;
     private RequestQueue requestQueue;
     private int pageNum = 0;
     private Button next, previous, add;
@@ -112,8 +113,8 @@ public class Images extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(this, AddCategory.class);
-                startActivity(intent);
+                Intent intent = new Intent(Images.this, AddCategory.class);
+                startActivityForResult(intent,ADD_RESULT_ID);
             }
         });
 
@@ -198,6 +199,24 @@ public class Images extends AppCompatActivity {
     private void disableButton(Button button){button.setEnabled(false);}
 
     private void enableButton(Button button){button.setEnabled(true);}
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        final ProgressDialog pd = new ProgressDialog(this);
+        if(resultCode == 0){
+            return;
+        } else{
+            switch (requestCode){
+                case ADD_RESULT_ID:
+                    pd.setTitle("Success");
+                    pd.setMessage("Category created!");
+                    pd.setCancelable(true);
+                    pd.show();
+                    break;
+            }
+        }
+    }
 
 }
 
