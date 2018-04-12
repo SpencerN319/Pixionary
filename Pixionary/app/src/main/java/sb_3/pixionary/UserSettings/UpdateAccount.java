@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,7 +17,7 @@ import com.android.volley.toolbox.Volley;
 import SaveData.UserDataDBHandler;
 import sb_3.pixionary.MainMenuActivity;
 import sb_3.pixionary.R;
-import sb_3.pixionary.Utilities.RequestUpdateAccount;
+import sb_3.pixionary.Utilities.Settings.RequestUpdateAccount;
 
 public class UpdateAccount extends AppCompatActivity {
     private ProgressDialog progressDialog;

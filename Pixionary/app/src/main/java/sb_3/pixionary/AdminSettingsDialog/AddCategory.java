@@ -16,7 +16,7 @@ import com.android.volley.toolbox.Volley;
 import sb_3.pixionary.MainMenuActivity;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.User;
-import sb_3.pixionary.Utilities.RequestAddCategory;
+import sb_3.pixionary.Utilities.AdminSettings.RequestAddCategory;
 
 public class AddCategory extends Activity{
 

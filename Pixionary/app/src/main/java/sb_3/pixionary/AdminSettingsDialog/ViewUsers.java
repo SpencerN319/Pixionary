@@ -16,7 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import sb_3.pixionary.R;
-import sb_3.pixionary.Utilities.RequestViewUsers;
+import sb_3.pixionary.Utilities.AdminSettings.RequestViewUsers;
 
 public class ViewUsers extends Activity {
 

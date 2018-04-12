@@ -26,7 +26,7 @@ public class Images extends AppCompatActivity {
     private RequestQueue requestQueue;
     private int pageNum = 0;
     private Button next, previous, add;
-    TextView users[] = new TextView[10];
+    TextView categories[] = new TextView[10];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,73 +35,74 @@ public class Images extends AppCompatActivity {
         add = (Button) findViewById(R.id.bt_Add);
         next = (Button) findViewById(R.id.bt_Next);
         previous = (Button) findViewById(R.id.bt_Previous);
-        users[0] = (TextView) findViewById(R.id.tv_0);
-        users[1] = (TextView) findViewById(R.id.tv_1);
-        users[2] = (TextView) findViewById(R.id.tv_2);
-        users[3] = (TextView) findViewById(R.id.tv_3);
-        users[4] = (TextView) findViewById(R.id.tv_4);
-        users[5] = (TextView) findViewById(R.id.tv_5);
-        users[6] = (TextView) findViewById(R.id.tv_6);
-        users[7] = (TextView) findViewById(R.id.tv_7);
-        users[8] = (TextView) findViewById(R.id.tv_8);
-        users[9] = (TextView) findViewById(R.id.tv_9);
+        categories[0] = (TextView) findViewById(R.id.tv_0);
+        categories[1] = (TextView) findViewById(R.id.tv_1);
+        categories[2] = (TextView) findViewById(R.id.tv_2);
+        categories[3] = (TextView) findViewById(R.id.tv_3);
+        categories[4] = (TextView) findViewById(R.id.tv_4);
+        categories[5] = (TextView) findViewById(R.id.tv_5);
+        categories[6] = (TextView) findViewById(R.id.tv_6);
+        categories[7] = (TextView) findViewById(R.id.tv_7);
+        categories[8] = (TextView) findViewById(R.id.tv_8);
+        categories[9] = (TextView) findViewById(R.id.tv_9);
 
         requestQueue = Volley.newRequestQueue(this);
 
         request_categories();
 
-        for (TextView user: users) {
+        for (TextView user: categories) {
             user.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     switch (view.getId()) {
                         case R.id.tv_0:
-                            if(users[0].getText() != null){
+                            if(categories[0].getText() != null){
+
                                 request_category(0);
                             }
                             break;
                         case R.id.tv_1:
-                            if(users[1].getText() != null){
+                            if(categories[1].getText() != null){
                                 request_category(1);
                             }
                             break;
                         case R.id.tv_2:
-                            if(users[2].getText() != null){
+                            if(categories[2].getText() != null){
                                 request_category(2);
                             }
                             break;
                         case R.id.tv_3:
-                            if(users[3].getText() != null){
+                            if(categories[3].getText() != null){
                                 request_category(3);
                             }
                             break;
                         case R.id.tv_4:
-                            if(users[4].getText() != null){
+                            if(categories[4].getText() != null){
                                 request_category(4);
                             }
                             break;
                         case R.id.tv_5:
-                            if(users[5].getText() != null){
+                            if(categories[5].getText() != null){
                                 request_category(5);
                             }
                             break;
                         case R.id.tv_6:
-                            if(users[6].getText() != null){
+                            if(categories[6].getText() != null){
                                 request_category(6);
                             }
                             break;
                         case R.id.tv_7:
-                            if(users[7].getText() != null){
+                            if(categories[7].getText() != null){
                                 request_category(7);
                             }
                             break;
                         case R.id.tv_8:
-                            if(users[8].getText() != null){
+                            if(categories[8].getText() != null){
                                 request_category(8);
                             }
                             break;
                         case R.id.tv_9:
-                            if(users[9].getText() != null){
+                            if(categories[9].getText() != null){
                                 request_category(9);
                             }
                             break;
@@ -136,9 +137,9 @@ public class Images extends AppCompatActivity {
     }
 
 
-    private void request_category(int user_num){
-        Intent show = new Intent(this, ViewSelectedUser.class);
-        show.putExtra("user", users[user_num].getText());
+    private void request_category(int category_num){
+        Intent show = new Intent(this, ImagesViewCategory.class);
+        show.putExtra("category", categories[category_num].getText());
         startActivity(show);
     }
 
@@ -154,10 +155,12 @@ public class Images extends AppCompatActivity {
                         for (int i = 0; i < jsonPlaylistArr.length(); i++) {
                             //This single line creates a Playlist object for every item in Json array.
                             JSONObject jsonObject = jsonPlaylistArr.getJSONObject(i);
-                            users[i].setText(jsonObject.getString("category"));
+                            categories[i].setText(jsonObject.getString("category"));
+                            categories[i].setClickable(true);
                             if(jsonPlaylistArr.length() < 10){
                                 for(int j = jsonPlaylistArr.length(); j < 10; j++){
-                                    users[j].setText("");
+                                    categories[j].setText("");
+                                    categories[i].setClickable(false);
                                 }
 
                             }

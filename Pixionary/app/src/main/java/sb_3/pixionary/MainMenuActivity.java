@@ -26,7 +26,7 @@ import SaveData.UserDataDBHandler;
 import sb_3.pixionary.AdminSettingsDialog.AdminSettings;
 import sb_3.pixionary.UserSettings.SettingsDialog;
 import sb_3.pixionary.Utilities.POJO.User;
-import sb_3.pixionary.Utilities.RequestLogin;
+import sb_3.pixionary.Utilities.MainMenu.RequestLogin;
 import sb_3.pixionary.hostgame.HostGameActivity;
 import sb_3.pixionary.joingame.GameBrowserActivity;
 

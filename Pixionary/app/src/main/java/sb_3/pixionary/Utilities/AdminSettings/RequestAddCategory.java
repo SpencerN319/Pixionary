@@ -1,4 +1,4 @@
-package sb_3.pixionary.Utilities;
+package sb_3.pixionary.Utilities.AdminSettings;
 
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
