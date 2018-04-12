@@ -62,16 +62,18 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         context = this;
         dataTransferInterface = this;
 
+        gameID = getIntent().getIntExtra("gameId", -1);
+        gameType = getIntent().getIntExtra("gameType", -1);
+        playlistName = getIntent().getStringExtra("playlist");
+
         guessList = (ListView) findViewById(R.id.list_of_guesses);
-        sendGuess = (Button) findViewById(R.id.btnSendGuess);
         image = (ImageView) findViewById(R.id.imgGame);
         cover = (ImageView) findViewById(R.id.imgCover);
-        connect();
-
         listOfOptions = new ArrayList<>();
         adapter = new GuessListAdapter(context, listOfOptions, dataTransferInterface);
         guessList.setAdapter(adapter);
 
+        sendGuess = (Button) findViewById(R.id.btnSendGuess);
         sendGuess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,12 +81,12 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             }
         });
 
-        gameID = getIntent().getIntExtra("gameId", -1);
-        gameType = getIntent().getIntExtra("gameType", -1);
-        playlistName = getIntent().getStringExtra("playlist");
-        if (gameType > 0) {
-            directToLobby(gameType);
-        }
+        connect();
+        directToLobby(0);
+        //FIXME
+//        if (gameType >= 0) {
+//            directToLobby(gameType);
+//        }
     }
 
     @Override
@@ -96,10 +98,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         switch (data.getIntExtra("command", -1)) {
             case LobbyActivity.START_GAME:
                 sendStart();
-//                //FIXME TEMPORARY FOR TESTING
-//                String url = "https://i.imgur.com/AEWms1M.jpg";
-//                downloadImageTask = new DownloadImageTask(image, cover);
-//                downloadImageTask.execute(url);
                 break;
             case LobbyActivity.LEAVE_GAME:
                 webSocket.close(0, "Left Lobby");
@@ -128,12 +126,13 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         WebSocketListener webSocketListener = new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
-
-                if (user.getUserType().equals("host")) {
-                    createGame();
-                } else {
-                    joinGame();
-                }
+                createGame();
+                //FIXME Change this here.
+//                if (user.getUserType().equals("host")) {
+//                    createGame();
+//                } else {
+//                    joinGame();
+//                }
                 Log.i("Response:", response.message());
             }
 
@@ -163,7 +162,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     }
 
     private void createGame() {
-        String message = "create," + user.getUsername() + "," + playlistName;
+        String message = "create," + user.getUsername() + "," + playlistName + "," + user.getUsername();
         webSocket.send(message);
     }
 
@@ -224,14 +223,14 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 Log.i(TAG, "NOT TRACKED: " +  message);
         }
     }
-//    private void createGameReaction(String message) {
-//        Scanner scanner = new Scanner(message);
-//        if(scanner.next().equals("Creating")) {
-//            gameID = scanner.nextInt();
-//            Log.i("GameID", String.valueOf(gameID));
-//            sendStart();
-//        }
-//    }
+    private void createGameReaction(String message) {
+        Scanner scanner = new Scanner(message);
+        if(scanner.next().equals("Creating")) {
+            gameID = scanner.nextInt();
+            Log.i("GameID", String.valueOf(gameID));
+            sendStart();
+        }
+    }
 
     private void addWord(String message) {
         Scanner scanner = new Scanner(message);

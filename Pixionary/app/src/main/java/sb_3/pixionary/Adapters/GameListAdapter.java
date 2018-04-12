@@ -76,9 +76,8 @@ public class GameListAdapter extends BaseAdapter implements android.widget.ListA
 
     private void startWaitScreen(int position) {
         Intent intent = new Intent(context, GameActivity.class);
-        Bundle gameAccess = new Bundle();
-        gameAccess.putInt("id", items.get(position).getGameId());
-        intent.putExtras(gameAccess);
+        intent.putExtra("id", items.get(position).getGameId());
+        intent.putExtra("gameType", items.get(position).getGameType());
         context.startActivity(intent);
         ((Activity)context).finish();
     }

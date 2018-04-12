@@ -119,7 +119,7 @@ public class HostGameActivity extends AppCompatActivity {
     }
 
     /**
-     * This method is to make the Volley Request to the server to start the game then direct to the
+     * This method is to make the Volley Request to the server to create the game then direct to the
      * next screen.
      */
     private void requestGame() {
