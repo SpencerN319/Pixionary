@@ -338,7 +338,16 @@ Imgbreak i;
 	      }
 	      //JDBC query. I forget why I put this comment here, hopefully i just misplaced it.
 	      }
-	  //TODO: update client with every player's score or something
+
+	for (ConnectedClient c :gameMembers)
+	{
+		this.sendStringToAllMembers("CURENTSCORES");
+		this.sendStringToAllMembers("USERSCORE " + c.getUsername()+ " " + c.getLocalScore());
+		this.sendStringToAllMembers("ENDSCORES");
+	}
+	  try {
+		  Thread.sleep(3000);
+		  }catch (InterruptedException e) {}
   }
 
   
