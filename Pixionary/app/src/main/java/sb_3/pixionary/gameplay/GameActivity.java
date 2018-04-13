@@ -11,9 +11,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import SaveData.UserDataDBHandler;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -62,6 +64,9 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         context = this;
         dataTransferInterface = this;
 
+        UserDataDBHandler userDataDBHandler = new UserDataDBHandler(context);
+        user = userDataDBHandler.getUser("0");
+
         gameID = getIntent().getIntExtra("gameId", -1);
         gameType = getIntent().getIntExtra("gameType", -1);
         playlistName = getIntent().getStringExtra("playlist");
@@ -82,11 +87,11 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         });
 
         connect();
-        directToLobby(0);
+
         //FIXME
-//        if (gameType >= 0) {
-//            directToLobby(gameType);
-//        }
+        if (gameType >= 0) {
+            directToLobby(gameType);
+        }
     }
 
     @Override
@@ -126,13 +131,12 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         WebSocketListener webSocketListener = new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
-                createGame();
-                //FIXME Change this here.
-//                if (user.getUserType().equals("host")) {
-//                    createGame();
-//                } else {
-//                    joinGame();
-//                }
+                Log.i(TAG, "Opened Method");
+                if (user.getUserType().equals("host")) {
+                    createGame();
+                } else {
+                    joinGame();
+                }
                 Log.i("Response:", response.message());
             }
 
@@ -162,17 +166,18 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     }
 
     private void createGame() {
-        String message = "create," + user.getUsername() + "," + playlistName + "," + user.getUsername();
+        String message = "create," + user.getUsername() + "," + playlistName;
         webSocket.send(message);
     }
 
     private void joinGame() {
-        String message = "join" + gameID;
+        //FIXME When join game is called, need to have the name of the host sent over from the GameBrowserActivity.
+        String message = "join," + "username of host" + "," + user.getUsername();
         webSocket.send(message);
     }
 
     private void sendStart() {
-        String message = "start," + gameID;
+        String message = "start," + user.getUsername();
         webSocket.send(message);
     }
 
@@ -194,6 +199,9 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             case "START":
                 //TODO Need to get something here to close the lobby.
                 Log.i(TAG, message);
+                break;
+            case "ROUNDBEGIN":
+                Log.i(TAG, "Do something with this?");
                 break;
             case "WORD":
                 addWord(message);
@@ -219,10 +227,14 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 wipeBitmap();
                 Log.i(TAG, message);
                 break;
+            case "SCOREUPDATE":
+                displayScores(message);
+                Log.i(TAG, message);
             default:
                 Log.i(TAG, "NOT TRACKED: " +  message);
         }
     }
+
     private void createGameReaction(String message) {
         Scanner scanner = new Scanner(message);
         if(scanner.next().equals("Creating")) {
@@ -277,6 +289,10 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
     private void wipeBitmap() {
         downloadImageTask.cancel(true);
+    }
+
+    private void displayScores(String message) {
+        //TODO Read the usernames and the scores.
     }
 
 

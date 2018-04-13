@@ -44,7 +44,11 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".gameplay.GuessResponseActivity"
-            android:theme="@android:style/Theme.Dialog"/>
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".gameplay.PointUpdateActivity"
+            android:theme="@android:style/Theme.Dialog" />
+
     </application>
 
 </manifest>
