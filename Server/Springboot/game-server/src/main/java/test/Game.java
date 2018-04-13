@@ -35,7 +35,7 @@ Imgbreak i;
     this.gameName = gameName;
     this.category = category;
     gameMembers.add(host);
-    this.gameID = host.userID;
+   this.gameID = host.userID;
     /* if we need to generate a random game ID
     boolean found = false;
 
@@ -100,6 +100,8 @@ Imgbreak i;
       }
       
       //endgame
+      //TODO: update table with incremented games_played value
+      //TODO: end round if every player gets it
       this.sendStringToAllMembers("GG");
       int bestscore = 0;
 	  String bestplayer = "nobody";

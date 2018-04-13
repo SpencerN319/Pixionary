@@ -25,7 +25,8 @@ public class SocketHandler extends TextWebSocketHandler {
 			throws InterruptedException, IOException 
 	{
 
-        
+        //TODO: game id is username
+		//TODO: join successful
 		System.out.println("Socket attempting to connect");
 		for(WebSocketSession webSocketSession : sessions) {
 		String value =	message.getPayload();
@@ -34,11 +35,11 @@ public class SocketHandler extends TextWebSocketHandler {
 		if (parts[0].equals("create"))
 		{
 			Game g;
-			ConnectedClient newClient = new ConnectedClient(Main.server,  session,parts[3]);
+			ConnectedClient newClient = new ConnectedClient(Main.server,  session,parts[1]);
 	        Main.server.connectedClients.add(newClient);
 	        System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
-			System.out.println("creating game");
-			webSocketSession.sendMessage(new TextMessage("Creating game "+ parts[1] +" with category "+"parts[2]"));
+			System.out.println("creating game"+ parts[1] +" with category "+ parts[2]);
+			webSocketSession.sendMessage(new TextMessage("Creating game "+ parts[1] +" with category "+ parts[2]));
 			g = new Game (newClient, parts[1], parts[2]);
 			Main.server.gamesList.add(g);
 			
@@ -54,7 +55,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		          Statement statement = conn1.createStatement();
 		          
 		          //this probably isn't right
-		          statement.executeUpdate("INSERT INTO Games (Host, Category, Name, ID) VALUES "
+		          statement.executeUpdate("INSERT INTO Active (Host, Category, Name, ID) VALUES "
 		          		+ "('" + g.getHostName() +"', '" + g.getCategory() + "', '" +g.getName() + "', '" + g.getID() + "');");
 		        
 		       
@@ -72,10 +73,10 @@ public class SocketHandler extends TextWebSocketHandler {
 		        Main.server.connectedClients.add(newClient);
 		        System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
 			System.out.println("joining game");
-			
+			//TODO: tell host
 			for (Game g : Main.server.gamesList)
 			{
-				if (g.getID() == Integer.parseInt(parts[1]))
+				if (g.getHostName().equals(parts[1]))
 				{
 					g.addMember(newClient);
 					break;
@@ -88,7 +89,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		    //if the user wants to start their game
 			for (Game g : Main.server.gamesList)
 			{
-				if (g.getID() == Integer.parseInt(parts[1]))
+				if (g.getHostName().equals(parts[1]))
 				{
 					g.startGame();
 					 try {
@@ -103,7 +104,7 @@ public class SocketHandler extends TextWebSocketHandler {
 				          Statement statement = conn1.createStatement();
 
 
-				          statement.executeUpdate("DELETE FROM Games WHERE ID ='"+g.getID()+"';");
+				          statement.executeUpdate("DELETE FROM Active WHERE ID ='"+g.getID()+"';");
 				          
 				      } catch (SQLException e) {
 				          System.out.println("SQLException: " + e.getMessage());
@@ -114,7 +115,7 @@ public class SocketHandler extends TextWebSocketHandler {
 				}
 				
 				
-			System.out.println("Joining game with id"+parts[1]);
+			System.out.println("Joining game hosted by"+parts[1]);
 			
 			}
 		}else if (parts[0].equals("guess"))
