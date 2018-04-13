@@ -8,25 +8,29 @@ import java.util.Random;
 import java.sql.*;
 import javax.imageio.ImageIO;
 import org.springframework.boot.json.*;
-//TODO: modified URL
+
 
 public class Game{
 
   ConnectedClient host;
-  //TODO: score stays with username not client
+  //TODO: score stays with username not client. I think I fixed this already but we will see...
   ArrayList<ConnectedClient> gameMembers = new ArrayList<ConnectedClient>();
   ArrayList<ConnectedClient> rescuedOrphans = new ArrayList<ConnectedClient>();
   ArrayList<ConnectedClient> playAgains = new ArrayList<ConnectedClient>();
+ 
   final String gameName;
   int gameID;
   boolean playing = false;
   String category;
   String currentWord;
   int possiblePoints;
+ 
   ArrayList<WordLink> words = new ArrayList<WordLink>();
   ArrayList<ConnectedClient> orphans = new ArrayList<ConnectedClient>();
-String hostName;
+
+  String hostName;
 Imgbreak i;
+int correctGuesses;
 
   public Game(ConnectedClient host, String gameName, String category){
     
@@ -73,7 +77,7 @@ Imgbreak i;
           Statement statement = conn1.createStatement();
           ResultSet rs;
           rs = statement.executeQuery("select word, location from Images where category='"+category+"';");
-        
+          System.out.println("select word, location from Images where category='"+category+"';");
           //get them words and links
           while (rs.next()) {
         
@@ -101,7 +105,7 @@ Imgbreak i;
       
       //endgame
       //TODO: update table with incremented games_played value
-      //TODO: end round if every player gets it
+
       this.sendStringToAllMembers("GG");
       int bestscore = 0;
 	  String bestplayer = "nobody";
@@ -115,23 +119,39 @@ Imgbreak i;
     	
       }
       this.sendStringToAllMembers("Winner: "+bestplayer);
-    //20 seconds to play again
+    //10 seconds to play again. only will play again if the host says yes
       try {
    		  
-   	Thread.sleep(20000);
+   	Thread.sleep(10000);
    	System.out.println("WOKE");
 	}catch (InterruptedException e)
 	{
 		
 	}
-     //TODO: set host properly, allow host to change playlist somehow
-      Game newgame = new Game(playAgains.get(0), this.gameName, this.category);
-      playAgains.remove(0);
+   boolean playNewGame = false;
+  
+      for (ConnectedClient c : playAgains)
+      {
+    	  if (c.equals(host))
+    	  {
+    		  playAgains.remove(c);
+    		  playNewGame = true;
+    		  break;
+    	  }
+      }
+      if (playNewGame)
+      {
+    	  this.sendStringToAllMembers("NEWGAME");
+      Game newgame = new Game(this.host, this.gameName, this.category);
+
       for (ConnectedClient c : playAgains)
       {
     	 newgame.addMember(c);
       }
       newgame.startGame();
+      }
+      //just see how this ends up working
+      this.sendStringToAllMembers("NONEWGAME");
       this.delete();
       
       
@@ -185,6 +205,8 @@ Imgbreak i;
       gameMembers.get(i).sendStringToClient(output);
     }
   }
+  
+  
 
   
 
@@ -248,6 +270,7 @@ Imgbreak i;
 	      gameMembers.get(i).setGuessed(false);
 	      gameMembers.get(i).resetRoundScore();
 	      }
+	  correctGuesses = 0;
 	  
 	  System.out.println("Round starting");
 	  Random r = new Random();
@@ -301,6 +324,8 @@ Imgbreak i;
 		  try {
 		  for (int seconds = 120; seconds > 0; seconds--)
 		  {
+			  if (correctGuesses ==gameMembers.size())
+				  break;
 		  Thread.sleep(1000);
 		  possiblePoints--;
 		  }
@@ -376,7 +401,7 @@ Imgbreak i;
 				{
 				    //send string to one player
 					c.sendStringToClient("CORRECT!");
-					//give points or something here
+					correctGuesses++;
 					int score = possiblePoints;
 					c.incrementScore(score); 
 		
