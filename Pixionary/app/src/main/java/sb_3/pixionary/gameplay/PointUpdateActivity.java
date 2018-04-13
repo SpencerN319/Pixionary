@@ -1,27 +1,34 @@
 package sb_3.pixionary.gameplay;
 
+import android.app.Activity;
 import android.os.CountDownTimer;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import sb_3.pixionary.Adapters.ScoreUpdateAdapter;
 import sb_3.pixionary.R;
+import sb_3.pixionary.Utilities.POJO.GameClasses.Player;
 
-public class PointUpdateActivity extends AppCompatActivity {
+public class PointUpdateActivity extends Activity {
 
-    private ArrayList<String> userAndScore;
+    private Activity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_point_update);
+        activity = this;
 
-        //TODO Add something to declare the ArrayList.
+        ArrayList<String> userAndScore = getIntent().getStringArrayListExtra("USERSANDSCORES");
+        ArrayList<Player> scoreUpdate = new ArrayList<>();
+        for (int i = 0; i < userAndScore.size()/2; i++) {
+            scoreUpdate.add(new Player(userAndScore.get(i*2), Integer.parseInt(userAndScore.get(i*2+1))));
+        }
 
         ListView scoresListView = (ListView) findViewById(R.id.list_user_score);
-        ScoreUpdateAdapter scoreUpdateAdapter = new ScoreUpdateAdapter(this, R.layout.profile_layout, userAndScore);
+        ScoreUpdateAdapter scoreUpdateAdapter = new ScoreUpdateAdapter(this, R.layout.profile_layout, scoreUpdate);
         scoresListView.setAdapter(scoreUpdateAdapter);
 
         waitDisplay();
@@ -29,16 +36,12 @@ public class PointUpdateActivity extends AppCompatActivity {
     }
 
     private void waitDisplay() {
-        new CountDownTimer(3000, 1) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                //DO NOTHING
-            }
+        Handler handler = new Handler();
 
-            @Override
-            public void onFinish() {
+        handler.postDelayed(new Runnable() {
+            public void run() {
                 finish();
             }
-        };
+        }, 3000);
     }
 }

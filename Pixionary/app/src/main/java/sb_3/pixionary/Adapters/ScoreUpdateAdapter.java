@@ -7,44 +7,66 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import sb_3.pixionary.R;
+import sb_3.pixionary.Utilities.POJO.GameClasses.Player;
 
 /**
  * Created by fastn on 2/19/2018.
  */
 
-public class ScoreUpdateAdapter extends ArrayAdapter<String> {
+public class ScoreUpdateAdapter extends BaseAdapter implements android.widget.ListAdapter {
 
     private Context context;
     private int resource;
-    private ArrayList<String> userAndScore;
+    private ArrayList<Player> userAndScore;
 
-    public ScoreUpdateAdapter(Context context, int resource, ArrayList<String> userAndScore) {
-        super(context, resource, userAndScore);
+    public ScoreUpdateAdapter(Context context, int resource, ArrayList<Player> userAndScore) {
         this.context = context;
         this.resource = resource;
         this.userAndScore = userAndScore;
     }
 
+    @Override
+    public int getCount() {
+        return userAndScore.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return userAndScore.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        String label = userAndScore.get(position*2);
-        String value = userAndScore.get(position*2+1);
+    public View getView(int position, View convert, ViewGroup parent) {
+        View view;
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        convertView = inflater.inflate(resource, parent, false);
+        if (convert != null) {
+           view = new View(context);
+        }else {
+            view = (View) convert;
+        }
 
-        TextView tvLabel = (TextView) convertView.findViewById(R.id.category_profile);
-        TextView tvValue = (TextView) convertView.findViewById(R.id.value_profile);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view = inflater.inflate(R.layout.profile_layout, null);
 
-        tvLabel.setText(label);
-        tvValue.setText(value);
+        TextView tvLabel = (TextView) view.findViewById(R.id.category_profile);
+        TextView tvValue = (TextView) view.findViewById(R.id.value_profile);
 
-        return convertView;
+        tvLabel.setText(userAndScore.get(position).getName());
+        tvValue.setText(String.valueOf(userAndScore.get(position).getNumCorrect()));
+
+        return view;
     }
 }

@@ -44,6 +44,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private String playlistName;
     private User user;
     private ArrayList<String> listOfOptions;
+    private ArrayList<String> currentScores;
     private GuessListAdapter adapter;
     private String currentGuess;
 
@@ -227,9 +228,16 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 wipeBitmap();
                 Log.i(TAG, message);
                 break;
-            case "SCOREUPDATE":
-                displayScores(message);
+            case "CURENTSCORES":
+                wipeScores();
                 Log.i(TAG, message);
+                break;
+            case "USERSCORE":
+                addScores(message);
+                Log.i(TAG, message);
+                break;
+            case "ENDSCORES":
+                displayScores();
             default:
                 Log.i(TAG, "NOT TRACKED: " +  message);
         }
@@ -290,9 +298,24 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private void wipeBitmap() {
         downloadImageTask.cancel(true);
     }
+    private void wipeScores() {
+        currentScores = new ArrayList<>();
+    }
 
-    private void displayScores(String message) {
-        //TODO Read the usernames and the scores.
+    private void addScores(String message) {
+        Scanner scanner = new Scanner(message);
+        String command = scanner.next();
+        if (command.equals("USERSCORE")) {
+            currentScores.add(scanner.next());
+            currentScores.add(String.valueOf(scanner.nextInt()));
+        }
+    }
+    private void displayScores() {
+        Intent intent = new Intent(this, PointUpdateActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("USERSANDSCORES", currentScores);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
 
