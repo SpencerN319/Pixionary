@@ -10,7 +10,9 @@ import javax.imageio.ImageIO;
 import org.springframework.boot.json.*;
 
 
-public class Game{
+//websocket has been closed and no method
+public class Game implements Runnable{
+//TODO : if gameSize = 1, play AI
 
   ConnectedClient host;
   //TODO: score stays with username not client. I think I fixed this already but we will see...
@@ -24,6 +26,8 @@ public class Game{
   String category;
   String currentWord;
   int possiblePoints;
+  int gameSize;
+  int numPlayers;
  
   ArrayList<WordLink> words = new ArrayList<WordLink>();
   ArrayList<ConnectedClient> orphans = new ArrayList<ConnectedClient>();
@@ -32,14 +36,16 @@ public class Game{
 Imgbreak i;
 int correctGuesses;
 
-  public Game(ConnectedClient host, String gameName, String category){
+  public Game(ConnectedClient host, String gameName, String category, int size){
     
     this.host = host;
     hostName = host.getUsername();
     this.gameName = gameName;
     this.category = category;
+    this.gameSize = size;
     gameMembers.add(host);
    this.gameID = host.userID;
+   gameSize = 1;
     /* if we need to generate a random game ID
     boolean found = false;
 
@@ -61,6 +67,10 @@ int correctGuesses;
   
   }
 
+  public void run()
+  {
+	  this.startGame();
+  }
   public void startGame()
   {
 	  playing = true;
@@ -105,7 +115,7 @@ int correctGuesses;
       
       //endgame
       //TODO: update table with incremented games_played value
-
+      //TODO: fix reconnecting
       this.sendStringToAllMembers("GG");
       int bestscore = 0;
 	  String bestplayer = "nobody";
@@ -142,7 +152,7 @@ int correctGuesses;
       if (playNewGame)
       {
     	  this.sendStringToAllMembers("NEWGAME");
-      Game newgame = new Game(this.host, this.gameName, this.category);
+      Game newgame = new Game(this.host, this.gameName, this.category, this.gameSize);
 
       for (ConnectedClient c : playAgains)
       {
@@ -158,6 +168,7 @@ int correctGuesses;
   }
   
   public void addMember(ConnectedClient joiningMember){
+	  numPlayers+=2;
     gameMembers.add(joiningMember);
     joiningMember.setGameSession(this);
   }
@@ -274,15 +285,15 @@ int correctGuesses;
 	  
 	  System.out.println("Round starting");
 	  Random r = new Random();
-	 System.out.println(words.size());
+
 	  int choice = r.nextInt(words.size() - 1);
 	  
-	  	System.out.println(choice);
+
 	  WordLink solution =words.get(choice);
 	 
 
-	String linkURL ="http://proj-309-sb-3.cs.iastate.edu/images/" + solution.getLink();
-	 
+	String linkURL ="http://proj-309-sb-3.cs.iastate.edu/" + solution.getLink();
+			currentWord = solution.getWord();
 
 	//  currentWord = solution.getWord();
 	//  System.out.println("5");
@@ -321,17 +332,25 @@ int correctGuesses;
 		  //send the image
 		  this.sendStringToAllMembers("URL "+ URL);
 		   possiblePoints = 100;
-		  try {
-		  for (int seconds = 120; seconds > 0; seconds--)
-		  {
-			  if (correctGuesses ==gameMembers.size())
-				  break;
-		  Thread.sleep(1000);
-		  possiblePoints--;
-		  }
-		  }catch (InterruptedException e) {}
+
+		   
+		   try {
+				  for (int seconds = 120; seconds > 0; seconds--)
+				  {
+					  if (correctGuesses >=numPlayers)
+						  break;
+				 
+				  Thread.sleep(1000);
+				  this.sendStringToAllMembers("PING");
+				  System.out.println("a second has passed");
+				  System.out.println(correctGuesses);
+				  System.out.println(numPlayers);
+				  possiblePoints--;
+				  }
+				  }catch (InterruptedException e) {}
 		  
 		  this.sendStringToAllMembers("ROUNDEND");
+		  System.out.println("Round has ended");
 //	  } catch (IOException e) {
 //
 //	      System.out.println("Failed to load image: ");
@@ -359,8 +378,10 @@ int correctGuesses;
 	          Statement statement = conn1.createStatement();
 	          ResultSet rs;
 	          rs = statement.executeQuery("select score from User where username='"+gameMembers.get(j).getUsername()+"';");
+	         rs.next();
 	          int totalScore = rs.getInt("Score");
 	          totalScore+=roundscore;
+	          
 	          statement.executeUpdate("UPDATE User SET score ="+totalScore+" WHERE username ='"+gameMembers.get(j).getUsername()+"';");
 	          
 	      } catch (SQLException e) {
@@ -375,7 +396,7 @@ int correctGuesses;
 
 	for (ConnectedClient c :gameMembers)
 	{
-		this.sendStringToAllMembers("CURENTSCORES");
+		this.sendStringToAllMembers("CURRENTSCORES");
 		this.sendStringToAllMembers("USERSCORE " + c.getUsername()+ " " + c.getLocalScore());
 		this.sendStringToAllMembers("ENDSCORES");
 	}
@@ -396,9 +417,10 @@ int correctGuesses;
   		
 		if (guess != null)
 		{
-			guess = guess.toLowerCase();
+		
 		if (guess.equals(currentWord))
 				{
+					System.out.println("Right guess made by " + c.getUsername());
 				    //send string to one player
 					c.sendStringToClient("CORRECT!");
 					correctGuesses++;
@@ -408,6 +430,8 @@ int correctGuesses;
 				}
 		else
 		{
+			System.out.println(currentWord +" is right, but the user guessed "+ guess);
+			System.out.println("Wrong guess made by " + c.getUsername());
 			c.sendStringToClient("INCORRECT!");
 		}
 		}
