@@ -91,7 +91,6 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
             bitmapCover.setPixel(pixel.getXPosition(), pixel.getYPosition(), pixel.getColor());
         }
         publishProgress();
-        Log.i("TASK", "RUNNING");
         try {
             Thread.sleep(10);
         } catch (Exception e) {

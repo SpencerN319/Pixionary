@@ -73,22 +73,16 @@ public class HostGameActivity extends AppCompatActivity {
         playAI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                accessGame.setGameName(etName.getText().toString());
-                accessGame.setGameTypeAI();
-                accessGame.setIDRequest();
-                //FIXME requestGame(); Just uncomment and remove Test() when server is ready.
-                requestGameTest();
+                accessGame.setPlayers(1);
+                directToGame(accessGame.getPlayers());
             }
         });
 
         play1v1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                accessGame.setGameName(etName.getText().toString());
-                accessGame.setGameType1V1();
-                accessGame.setIDRequest();
-                //FIXME requestGame(); Just uncomment and remove Test() when server is ready.
-                requestGameTest();
+                accessGame.setPlayers(2);
+                directToGame(accessGame.getPlayers());
             }
         });
 
@@ -119,44 +113,21 @@ public class HostGameActivity extends AppCompatActivity {
     }
 
     /**
-     * This method is to make the Volley Request to the server to create the game then direct to the
-     * next screen.
-     */
-    private void requestGame() {
-        JsonObjectRequest gameRequest = new JsonObjectRequest(Request.Method.POST,
-                HOSTGAME_URL, accessGame.createJson(), new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    directToGame(response.getInt("id"), response.getInt("type"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        requestQueue.add(gameRequest);
-    }
-
-    //FIXME Temporary for testing
-    private void requestGameTest() {
-        directToGame(100, 0);
-    }
-
-    /**
      * Used to start the next activity, bundles all the necessary data and selects the activity based
      * off of the game type.
-     * @param gameID used to connect to the Game in next activity.
      * @param gameType used to determine what activity is next.
      */
-    private void directToGame(int gameID, int gameType) {
+    private void directToGame(int gameType) {
         Intent intent = new Intent(context, GameActivity.class);
-        intent.putExtra("gameId", gameID);
-        intent.putExtra("gameType", gameType);
+        intent.putExtra("id", accessGame.getHost());
+        int players = 0;
+        //TODO Change this for multiple players later.
+        if (gameType == 1) {
+            players = 1;
+        } else if (gameType == 2) {
+            players = 2;
+        }
+        intent.putExtra("players", players);
         intent.putExtra("playlist", playlistName);
         startActivity(intent);
         finish();

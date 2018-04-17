@@ -43,7 +43,7 @@ public class GameListAdapter extends BaseAdapter implements android.widget.ListA
 
     @Override
     public long getItemId(int position) {
-        return items.get(position).getGameId();
+        return position;
     }
 
     public View getView(final int position, View convert, ViewGroup parent) {
@@ -55,12 +55,30 @@ public class GameListAdapter extends BaseAdapter implements android.widget.ListA
         }
 
         //Set text for Name.
-        TextView tvGameName = (TextView) view.findViewById(R.id.textGameName);
-        tvGameName.setText(items.get(position).getGameName());
+        TextView tvGameName = (TextView) view.findViewById(R.id.textPlaylistName);
+        tvGameName.setText(items.get(position).getPlaylist().getName());
 
         //Set text for host.
         TextView tvHost = (TextView) view.findViewById(R.id.textGameHost);
         tvHost.setText(items.get(position).getHost());
+
+        TextView tvGameType = (TextView) view.findViewById(R.id.textGameType);
+        String gameType = "Unknown";
+        switch (items.get(position).getPlayers()) {
+            case 2:
+                gameType = "1-V-1";
+                break;
+            case 3:
+                gameType = "Multiplayer";
+                break;
+            default:
+                gameType = "Unknown";
+                break;
+        }
+        tvGameType.setText(gameType);
+
+        TextView tvPlayers = (TextView) view.findViewById(R.id.textPlayers);
+        tvPlayers.setText(String.valueOf(items.get(position).getPlayers()));
 
         Button playBtn = (Button) view.findViewById(R.id.join);
 
@@ -76,8 +94,9 @@ public class GameListAdapter extends BaseAdapter implements android.widget.ListA
 
     private void startWaitScreen(int position) {
         Intent intent = new Intent(context, GameActivity.class);
-        intent.putExtra("id", items.get(position).getGameId());
-        intent.putExtra("gameType", items.get(position).getGameType());
+        intent.putExtra("id", items.get(position).getHost());
+        intent.putExtra("gameType", items.get(position).getPlayers());
+        intent.putExtra("playlist", items.get(position).getPlaylist().getName());
         context.startActivity(intent);
         ((Activity)context).finish();
     }

@@ -2,7 +2,6 @@ package sb_3.pixionary.gameplay;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -39,8 +37,8 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private DataTransferInterface dataTransferInterface;
     private DownloadImageTask downloadImageTask;
 
-    private int gameID;
-    private int gameType;
+    private String gameID; //This is just the host name
+    private int playersRequested;
     private String playlistName;
     private User user;
     private ArrayList<String> listOfOptions;
@@ -48,7 +46,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private GuessListAdapter adapter;
     private String currentGuess;
 
-    private Button sendGuess;
     private ImageView image;
     private ImageView cover;
     private ListView guessList;
@@ -68,8 +65,8 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         UserDataDBHandler userDataDBHandler = new UserDataDBHandler(context);
         user = userDataDBHandler.getUser("0");
 
-        gameID = getIntent().getIntExtra("gameId", -1);
-        gameType = getIntent().getIntExtra("gameType", -1);
+        gameID = getIntent().getStringExtra("id");
+        playersRequested = getIntent().getIntExtra("players", 0);
         playlistName = getIntent().getStringExtra("playlist");
 
         guessList = (ListView) findViewById(R.id.list_of_guesses);
@@ -79,19 +76,10 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         adapter = new GuessListAdapter(context, listOfOptions, dataTransferInterface);
         guessList.setAdapter(adapter);
 
-        sendGuess = (Button) findViewById(R.id.btnSendGuess);
-        sendGuess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendGuess(currentGuess);
-            }
-        });
-
         connect();
 
-        //FIXME
-        if (gameType >= 0) {
-            directToLobby(gameType);
+        if (playersRequested > 1) {
+            directToLobby(playersRequested);
         }
     }
 
@@ -118,11 +106,12 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     public void setValuesAndReact(int position) {
         currentGuess = listOfOptions.get(position);
         Log.i("Current Guess", currentGuess);
+        sendGuessMessage(currentGuess);
     }
 
     private void directToLobby(int gameType) {
         Intent i = new Intent(this, LobbyActivity.class);
-        i.putExtra("gameType", gameType);
+        i.putExtra("players", playersRequested);
         startActivityForResult(i, START_GAME_REQUEST);
     }
 
@@ -167,13 +156,13 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     }
 
     private void createGame() {
-        String message = "create," + user.getUsername() + "," + playlistName;
+        String message = "create," + user.getUsername() + "," + playlistName + "," + String.valueOf(playersRequested);
         webSocket.send(message);
     }
 
     private void joinGame() {
         //FIXME When join game is called, need to have the name of the host sent over from the GameBrowserActivity.
-        String message = "join," + "username of host" + "," + user.getUsername();
+        String message = "join," + gameID + "," + user.getUsername();
         webSocket.send(message);
     }
 
@@ -182,19 +171,19 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         webSocket.send(message);
     }
 
-    private void sendGuess(String guess) {
-        String message = "guess," + guess;
+    private void sendGuessMessage(String guess) {
+        String message = "guess," + guess + "," + gameID + "," + user.getUsername();
+        Log.i(TAG, message);
         webSocket.send(message);
     }
 
     private void messageReceived(String message) {
         Scanner scanner = new Scanner(message);
         String type = scanner.next();
-        Log.i("Message Received", message);
+//        Log.i("Message Received", message);
         switch (type) {
-            case "Creating":
-//                createGameReaction(message);
-                //TODO Not sure what to here other than a check to make sure that the game is created.
+            case "Created":
+                createGameReaction(message);
                 Log.i(TAG, message);
                 break;
             case "START":
@@ -228,7 +217,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 wipeBitmap();
                 Log.i(TAG, message);
                 break;
-            case "CURENTSCORES":
+            case "CURRENTSCORES":
                 wipeScores();
                 Log.i(TAG, message);
                 break;
@@ -238,6 +227,10 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 break;
             case "ENDSCORES":
                 displayScores();
+                break;
+            case "PING":
+//                Log.i(TAG, "Still Connected");
+                break;
             default:
                 Log.i(TAG, "NOT TRACKED: " +  message);
         }
@@ -245,10 +238,10 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
     private void createGameReaction(String message) {
         Scanner scanner = new Scanner(message);
-        if(scanner.next().equals("Creating")) {
-            gameID = scanner.nextInt();
-            Log.i("GameID", String.valueOf(gameID));
-            sendStart();
+        if(scanner.next().equals("Created")) {
+            if (playersRequested < 2 && user.getUserType().equals("host")) {
+                sendStart();
+            }
         }
     }
 
@@ -284,8 +277,8 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         String command = scanner.next();
         if (command.equals("URL")) {
             String url = scanner.next();
-            DownloadImageTask imageTask = new DownloadImageTask(image, cover);
-            imageTask.execute(url);
+            downloadImageTask = new DownloadImageTask(image, cover);
+            downloadImageTask.execute(url);
         }
     }
 
@@ -298,6 +291,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private void wipeBitmap() {
         downloadImageTask.cancel(true);
     }
+
     private void wipeScores() {
         currentScores = new ArrayList<>();
     }

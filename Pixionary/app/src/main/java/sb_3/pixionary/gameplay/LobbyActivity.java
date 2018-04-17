@@ -21,14 +21,15 @@ public class LobbyActivity extends AppCompatActivity {
     public static final int LEAVE_GAME = 11;
     private int gameType;
     private User user;
-    private String playlist;
-    private ArrayList<ShortUser> players;
-    private ArrayList<String> chat;
-    private TextView lobbyName;
-    private TextView gameName;
+//    private String playlist;
+    private ArrayList<String> players;
+//    private ArrayList<String> chat;
+//    private TextView lobbyName;
+//    private TextView gameName;
     private TextView playerUpdate;
-    private ImageView previewImage;
-    private Button chatButton;
+//    private ImageView previewImage;
+//    private Button chatButton;
+    private int numOfPlayers;
     private Button startButton;
     private Button leaveButton;
 
@@ -49,7 +50,7 @@ public class LobbyActivity extends AppCompatActivity {
         } else {
             setContentView(R.layout.activity_player_lobby);
         }
-
+        numOfPlayers = getIntent().getIntExtra("players", 0);
         leaveButton = (Button) findViewById(R.id.leave_button);
         // Chat button, and other stuff to still be decided if it will be implemented or not.
         leaveButton.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +68,9 @@ public class LobbyActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
+    
+
+
 
 
 }
