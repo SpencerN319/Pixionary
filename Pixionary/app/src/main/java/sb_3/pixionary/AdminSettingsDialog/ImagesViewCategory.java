@@ -2,8 +2,6 @@ package sb_3.pixionary.AdminSettingsDialog;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,10 +16,9 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.AdminSettings.RequestViewImages;
+import sb_3.pixionary.Utilities.PreviewImageTask;
 
 public class ImagesViewCategory extends AppCompatActivity {
     private static final int ADDED_IMAGE_ID = 1;
@@ -83,14 +80,13 @@ public class ImagesViewCategory extends AppCompatActivity {
         RequestViewImages view = new RequestViewImages(pageNum, category, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //TODO pull 4 images from the server according to their page ordering.
                 try{
                     JSONObject data = new JSONObject(response);
                     if(data.getBoolean("success")){
                         pageLogic(data.getInt("total"));
                         JSONArray pulled_images = data.getJSONArray("urls");
                         for(int i = 0; i < pulled_images.length(); i++){
-                            images[i].setImageBitmap(fetch(pulled_images.getString(i)));
+                            fetch(pulled_images.getString(i), images[i]);
                             if(pulled_images.length() < 4){
                                 for(int j = pulled_images.length(); j < 4; j++){
                                     images[j].setImageBitmap(null);
@@ -105,23 +101,16 @@ public class ImagesViewCategory extends AppCompatActivity {
         }); requestQueue.add(view);
     }
 
-    protected Bitmap fetch(String image_url) {
+    private void fetch(String image_url, ImageView iv) {
         String base = "http://proj-309-sb-3.cs.iastate.edu/";
         for(int i = 0; i < image_url.length(); i++){
             if(!(image_url.charAt(i) == '\\')){
                 base += image_url.charAt(i);
             }
         }
-        Bitmap image = null;
         Log.i("URL STRING: ", base);
-        try {
-            InputStream in = new java.net.URL(base).openStream();
-            image = BitmapFactory.decodeStream(in);
-        } catch (Exception e) {
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
-        }
-        return image;
+        PreviewImageTask image = new PreviewImageTask(iv);
+        image.execute(base);
     }
 
 
