@@ -22,7 +22,7 @@ import sb_3.pixionary.gameplay.GameActivity;
  * Created by fastn on 3/27/2018.
  */
 //TODO Move back to GameActivity and Create an AsyncTask for adding pixels to the Bitmap.
-public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+public class DownloadImageTask extends AsyncTask<String, Void, Void> {
 
     private ImageView image;
     private ImageView cover;
@@ -38,7 +38,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         this.cover = cover;
     }
 
-    protected Bitmap doInBackground(String... urls) {
+    protected Void doInBackground(String... urls) {
         String urldisplay = urls[0];
         bitmapImage = null;
         try {
@@ -64,7 +64,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
             updateImage();
         }
 
-        return bitmapImage;
+        return null;
     }
 
     @Override

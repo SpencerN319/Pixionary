@@ -78,9 +78,8 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
         connect();
 
-        if (playersRequested > 1) {
-            directToLobby(playersRequested);
-        }
+        directToLobby(playersRequested);
+
     }
 
     @Override
@@ -136,6 +135,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Log.i(TAG, message);
                         messageReceived(message);
                     }
                 });
@@ -180,16 +180,18 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private void messageReceived(String message) {
         Scanner scanner = new Scanner(message);
         String type = scanner.next();
-//        Log.i("Message Received", message);
         switch (type) {
             case "Created":
                 createGameReaction(message);
                 Log.i(TAG, message);
                 break;
             case "START":
-                //TODO Need to get something here to close the lobby.
+                if(!user.getUserType().equals("host")) {
+                    broadcastToLobby(message);
+                }
                 Log.i(TAG, message);
                 break;
+
             case "ROUNDBEGIN":
                 Log.i(TAG, "Do something with this?");
                 break;
@@ -231,9 +233,28 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             case "PING":
 //                Log.i(TAG, "Still Connected");
                 break;
+            case "newmember":
+                broadcastToLobby(message);
+                break;
+            case "Currentplayers":
+                broadcastToLobby(message);
+                break;
+            case "Player:":
+                broadcastToLobby(message);
+                break;
+            case "Endplayers":
+                broadcastToLobby(message);
+                break;
             default:
                 Log.i(TAG, "NOT TRACKED: " +  message);
         }
+    }
+
+    private void broadcastToLobby(String message) {
+        Intent intent = new Intent();
+        intent.putExtra("MESSAGE", message);
+        intent.setAction("LOBBY_MESSAGE");
+        sendBroadcast(intent);
     }
 
     private void createGameReaction(String message) {
