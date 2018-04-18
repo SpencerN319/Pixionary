@@ -23,7 +23,6 @@ import sb_3.pixionary.Utilities.PreviewImageTask;
 public class ImagesViewCategory extends AppCompatActivity {
     private static final int ADDED_IMAGE_ID = 1;
     private static final int DELETED_IMAGE_ID = 2;
-    private ImageView img1, img2, img3, img4;
     private Button previous, next, add;
     private int pageNum = 0;
     private RequestQueue requestQueue;
@@ -44,9 +43,7 @@ public class ImagesViewCategory extends AppCompatActivity {
         images[0] = (ImageView) findViewById(R.id.iv_0);
         images[1] = (ImageView) findViewById(R.id.iv_2);
         images[2] = (ImageView) findViewById(R.id.iv_3);
-        images[3] = (ImageView) findViewById(R.id.iv_1;
-
-        //TODO add on click listener
+        images[3] = (ImageView) findViewById(R.id.iv_1);
 
         pull_images();
 
