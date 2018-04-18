@@ -41,10 +41,10 @@ public class ImagesViewCategory extends AppCompatActivity {
         previous = (Button) findViewById(R.id.bt_PrevImages);
         next = (Button) findViewById(R.id.bt_NextImages);
         add = (Button) findViewById(R.id.bt_AddImage);
-        images[0] = (ImageView) findViewById(R.id.iv_one);
-        images[1] = (ImageView) findViewById(R.id.iv_two);
-        images[2] = (ImageView) findViewById(R.id.iv_three);
-        images[3] = (ImageView) findViewById(R.id.iv_four);
+        images[0] = (ImageView) findViewById(R.id.iv_0);
+        images[1] = (ImageView) findViewById(R.id.iv_2);
+        images[2] = (ImageView) findViewById(R.id.iv_3);
+        images[3] = (ImageView) findViewById(R.id.iv_1;
 
         //TODO add on click listener
 

@@ -28,12 +28,11 @@ public class PreviewImageTask extends AsyncTask<String, Void, Void> {
         try {
             InputStream in = new java.net.URL(urldisplay).openStream();
             bitmapImage = BitmapFactory.decodeStream(in);
+            image.setImageBitmap(bitmapImage);
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
             e.printStackTrace();
         }
-        image.setImageBitmap(bitmapImage);
-
         return null;
     }
 
