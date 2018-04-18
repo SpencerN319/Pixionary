@@ -138,6 +138,7 @@ public class Images extends AppCompatActivity {
 
 
     private void request_category(int category_num){
+        Log.i("CATEGORY REQUESTED", (String) categories[category_num].getText());
         Intent show = new Intent(this, ImagesViewCategory.class);
         show.putExtra("category", categories[category_num].getText());
         startActivity(show);

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestViewImages extends StringRequest{
-    private static final String CATEGORIES_URL = "http://proj-309-sb-3.cs.iastate.edu:80/"; //TODO add url
+    private static final String CATEGORIES_URL = "http://proj-309-sb-3.cs.iastate.edu:80/view_image.php"; //TODO add url
     private Map<String, String> parameters;
 
     public RequestViewImages(int pageRequested, String category_name, Response.Listener<String> listener) {

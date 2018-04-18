@@ -2,8 +2,11 @@ package sb_3.pixionary.AdminSettingsDialog;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +17,8 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.InputStream;
 
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.AdminSettings.RequestViewImages;
@@ -26,7 +31,7 @@ public class ImagesViewCategory extends AppCompatActivity {
     private int pageNum = 0;
     private RequestQueue requestQueue;
     private String category;
-    private ImageView[] images;
+    private ImageView[] images = new ImageView[4];
 
 
     @Override
@@ -83,9 +88,9 @@ public class ImagesViewCategory extends AppCompatActivity {
                     JSONObject data = new JSONObject(response);
                     if(data.getBoolean("success")){
                         pageLogic(data.getInt("total"));
-                        JSONArray pulled_images = data.getJSONArray("images");
+                        JSONArray pulled_images = data.getJSONArray("urls");
                         for(int i = 0; i < pulled_images.length(); i++){
-                            images[i].setImageBitmap(null);
+                            images[i].setImageBitmap(fetch(pulled_images.getString(i)));
                             if(pulled_images.length() < 4){
                                 for(int j = pulled_images.length(); j < 4; j++){
                                     images[j].setImageBitmap(null);
@@ -98,6 +103,25 @@ public class ImagesViewCategory extends AppCompatActivity {
                 }
             }
         }); requestQueue.add(view);
+    }
+
+    protected Bitmap fetch(String image_url) {
+        String base = "http://proj-309-sb-3.cs.iastate.edu/";
+        for(int i = 0; i < image_url.length(); i++){
+            if(!(image_url.charAt(i) == '\\')){
+                base += image_url.charAt(i);
+            }
+        }
+        Bitmap image = null;
+        Log.i("URL STRING: ", base);
+        try {
+            InputStream in = new java.net.URL(base).openStream();
+            image = BitmapFactory.decodeStream(in);
+        } catch (Exception e) {
+            Log.e("Error", e.getMessage());
+            e.printStackTrace();
+        }
+        return image;
     }
 
 
