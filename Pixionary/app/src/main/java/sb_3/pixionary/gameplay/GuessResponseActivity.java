@@ -22,6 +22,7 @@ public class GuessResponseActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_guess_response);
+        this.setFinishOnTouchOutside(false);
 
         timeWait = (TextView) findViewById(R.id.tv_time_wait);
         responseTV = (TextView) findViewById(R.id.title_guess);
@@ -45,6 +46,12 @@ public class GuessResponseActivity extends Activity {
                 }
             }
         });
+    }
+
+    //TODO This needs to be tested.
+    @Override
+    public void onBackPressed() {
+        //DO nothing.
     }
 
     private void waitDisplay() {

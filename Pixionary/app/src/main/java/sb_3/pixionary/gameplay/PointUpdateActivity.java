@@ -19,6 +19,7 @@ public class PointUpdateActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_point_update);
+        this.setFinishOnTouchOutside(false);
         activity = this;
 
         ArrayList<String> userAndScore = getIntent().getStringArrayListExtra("USERSANDSCORES");

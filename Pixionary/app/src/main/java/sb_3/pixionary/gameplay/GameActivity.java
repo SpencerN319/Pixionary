@@ -24,6 +24,7 @@ import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.DownloadImageTask;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.interfaces.DataTransferInterface;
+import sb_3.pixionary.joingame.GameBrowserActivity;
 
 //TODO still need to add a view to see the players in the lobby. --- Not important RN.
 public class GameActivity extends AppCompatActivity implements DataTransferInterface {
@@ -108,9 +109,9 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         sendGuessMessage(currentGuess);
     }
 
-    private void directToLobby(int gameType) {
+    private void directToLobby(int playersNeeded) {
         Intent i = new Intent(this, LobbyActivity.class);
-        i.putExtra("players", playersRequested);
+        i.putExtra("players", playersNeeded);
         startActivityForResult(i, START_GAME_REQUEST);
     }
 
@@ -185,13 +186,16 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 createGameReaction(message);
                 Log.i(TAG, message);
                 break;
+            //TODO THIS IS COMMENTED OUT UNTIL THE SERVER ISN'T DOUBLING THE CONNECTION.
+//            case "FULL":
+//                backToGameBrowser();
+//                break;
             case "START":
                 if(!user.getUserType().equals("host")) {
                     broadcastToLobby(message);
                 }
                 Log.i(TAG, message);
                 break;
-
             case "ROUNDBEGIN":
                 Log.i(TAG, "Do something with this?");
                 break;
@@ -247,23 +251,25 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 break;
             default:
                 Log.i(TAG, "NOT TRACKED: " +  message);
+                break;
         }
-    }
-
-    private void broadcastToLobby(String message) {
-        Intent intent = new Intent();
-        intent.putExtra("MESSAGE", message);
-        intent.setAction("LOBBY_MESSAGE");
-        sendBroadcast(intent);
     }
 
     private void createGameReaction(String message) {
         Scanner scanner = new Scanner(message);
-        if(scanner.next().equals("Created")) {
-            if (playersRequested < 2 && user.getUserType().equals("host")) {
-                sendStart();
-            }
-        }
+//        if(scanner.next().equals("Created")) {
+//            if (playersRequested < 2 && user.getUserType().equals("host")) {
+//                sendStart();
+//            }
+//        }
+
+    }
+
+    private void backToGameBrowser() {
+        webSocket.close(1000, "Game is Full.");
+        Intent backToBrowser = new Intent(context, GameBrowserActivity.class);
+        startActivity(backToBrowser);
+        finish();
     }
 
     private void addWord(String message) {
@@ -333,6 +339,11 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         startActivity(intent);
     }
 
-
+    private void broadcastToLobby(String message) {
+        Intent intent = new Intent();
+        intent.putExtra("MESSAGE", message);
+        intent.setAction("LOBBY_MESSAGE");
+        sendBroadcast(intent);
+    }
 
 }

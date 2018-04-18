@@ -3,7 +3,6 @@ package sb_3.pixionary.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,14 +84,14 @@ public class GameListAdapter extends BaseAdapter implements android.widget.ListA
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startWaitScreen(position);
+                startLobbyScreen(position);
             }
         });
 
         return view;
     }
 
-    private void startWaitScreen(int position) {
+    private void startLobbyScreen(int position) {
         Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra("id", items.get(position).getHost());
         intent.putExtra("gameType", items.get(position).getPlayers());

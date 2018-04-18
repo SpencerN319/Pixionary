@@ -114,10 +114,9 @@ public class GameBrowserActivity extends AppCompatActivity {
                         }
                     });
                     requestQueue.add(categoryRequest);
-
                 }
             };
-            handler.postDelayed(runnable, 1000);
+            handler.post(runnable);
 
         }
 

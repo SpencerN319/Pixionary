@@ -8,21 +8,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.GameClasses.Playlist;
 import sb_3.pixionary.Utilities.POJO.GameClasses.ShortGame;
+import sb_3.pixionary.Utilities.PreviewImageTask;
 import sb_3.pixionary.gameplay.GameActivity;
 
 public class HostGameActivity extends AppCompatActivity {
@@ -32,14 +27,13 @@ public class HostGameActivity extends AppCompatActivity {
     private int GETPLAYLISTID = 5;
 
     private Context context;
-    private RequestQueue requestQueue;
 
     private TextView tvPlaylistSelected;
-    private TextView tvCreatorSelected;
-    private EditText etName;
+    private EditText etNumOfPlayers;
     private Button playlistSelection;
     private Button playAI;
-    private Button play1v1;
+    private Button playMultiplayer;
+    private ImageView previewImage;
 
     private ShortGame accessGame;
     private String playlistName;
@@ -49,14 +43,13 @@ public class HostGameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host_game);
         context = HostGameActivity.this;
-        requestQueue = Volley.newRequestQueue(this);
 
         tvPlaylistSelected = (TextView) findViewById(R.id.tv_playlist);
-        tvCreatorSelected = (TextView) findViewById(R.id.tv_creator);
-        etName = (EditText) findViewById(R.id.et_game_name);
+        etNumOfPlayers = (EditText) findViewById(R.id.et_num_players);
         playlistSelection = (Button) findViewById(R.id.button_category);
         playAI = (Button) findViewById(R.id.button_play_ai);
-        play1v1 = (Button) findViewById(R.id.button_play_1v1);
+        playMultiplayer = (Button) findViewById(R.id.button_play_multiplayer);
+        previewImage = (ImageView) findViewById(R.id.image_preview);
 
         accessGame = new ShortGame();
         accessGame.setHost(getUsernameFromExtra());
@@ -78,7 +71,7 @@ public class HostGameActivity extends AppCompatActivity {
             }
         });
 
-        play1v1.setOnClickListener(new View.OnClickListener() {
+        playMultiplayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 accessGame.setPlayers(2);
@@ -99,12 +92,18 @@ public class HostGameActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GETPLAYLISTID) {
             playlistName = data.getStringExtra("PlaylistName");
+            String imageURL = "http://proj-309-sb-3.cs.iastate.edu/" + data.getStringExtra("ImagePreview");
+            Log.i(TAG, imageURL);
             tvPlaylistSelected.setText(getString(R.string.playlist_dynamic, playlistName));
 
             Log.i("DEBUG:" + TAG, "PlaylistID = " + data.getIntExtra("PlaylistID", -1));
 
             Playlist playlist = new Playlist(playlistName);
             accessGame.setPlaylist(playlist);
+
+            //Image Stuff
+            PreviewImageTask imageTask = new PreviewImageTask(previewImage);
+            imageTask.execute(imageURL);
         }
     }
 
@@ -120,17 +119,21 @@ public class HostGameActivity extends AppCompatActivity {
     private void directToGame(int gameType) {
         Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra("id", accessGame.getHost());
-        int players = 0;
-        //TODO Change this for multiple players later.
-        if (gameType == 1) {
-            players = 1;
-        } else if (gameType == 2) {
-            players = 2;
+        int players;
+        if (playlistName != null) {
+            if (gameType == 1) {
+                players = 1;
+                intent.putExtra("players", players);
+                intent.putExtra("playlist", playlistName);
+                startActivity(intent);
+                finish();
+            } else if (gameType == 2 && Integer.valueOf(etNumOfPlayers.getText().toString()) > 1) {
+                players = Integer.valueOf(etNumOfPlayers.getText().toString());
+                intent.putExtra("players", players);
+                intent.putExtra("playlist", playlistName);
+                startActivity(intent);
+                finish();
+            }
         }
-        intent.putExtra("players", players);
-        intent.putExtra("playlist", playlistName);
-        startActivity(intent);
-        finish();
     }
-
 }

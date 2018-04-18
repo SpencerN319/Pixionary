@@ -109,15 +109,12 @@ public class LobbyActivity extends AppCompatActivity {
                 case "Currentplayers":
                     players = new ArrayList<>();
                     break;
-                case "Player:": //FIXME This read might not work.
+                case "Player:":
                     players.add(scanner.next());
                     break;
                 case "Endplayers":
                     adapter = new LobbyAdapter(context, R.layout.lobby_layout, players);
                     playerList.setAdapter(adapter);
-                    break;
-                case "FULL":
-                    notifyGame(START_GAME); //FIXME Might not do this.
                     break;
                 case "START":
                     closeToStart();
@@ -132,7 +129,6 @@ public class LobbyActivity extends AppCompatActivity {
         players.add(username);
         adapter.notifyDataSetChanged();
     }
-
 
     private void closeToStart() {
         finish();
