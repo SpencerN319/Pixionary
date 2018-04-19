@@ -114,7 +114,7 @@ int correctGuesses;
       }
       
       //endgame
-      //TODO: update table with incremented games_played value
+
       //TODO: fix reconnecting
       this.sendStringToAllMembers("GG");
       int bestscore = 0;
@@ -363,7 +363,7 @@ int correctGuesses;
 				  Thread.sleep(1000);
 				  this.sendStringToAllMembers("PING");
 				  System.out.println("a second has passed");
-				  System.out.println(correctGuesses);
+				  System.out.print(correctGuesses + " / ");
 				  System.out.println(numPlayers);
 				  possiblePoints--;
 				  }
@@ -443,8 +443,11 @@ int correctGuesses;
 					System.out.println("Right guess made by " + c.getUsername());
 				    //send string to one player
 					c.sendStringToClient("CORRECT!");
+					System.out.println("Player guessed correctly for " + possiblePoints + " points");
 					correctGuesses++;
 					int score = possiblePoints;
+					if (score < 0)
+						score = 0;
 					c.incrementScore(score); 
 		
 				}
