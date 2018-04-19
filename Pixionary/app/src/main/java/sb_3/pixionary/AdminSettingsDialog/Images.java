@@ -57,7 +57,6 @@ public class Images extends AppCompatActivity {
                     switch (view.getId()) {
                         case R.id.tv_0:
                             if(categories[0].getText() != null){
-
                                 request_category(0);
                             }
                             break;
