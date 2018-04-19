@@ -129,6 +129,26 @@ int correctGuesses;
     	
       }
       this.sendStringToAllMembers("Winner: "+bestplayer);
+      try {
+	        //removes game from joinable games list
+        Connection conn1;
+        String dbUrl = "jdbc:mysql://mysql.cs.iastate.edu:3306/db309sb3";
+        String user = "dbu309sb3";
+        String password = "Fx3tvTaq";
+             conn1 = DriverManager.getConnection(dbUrl, user, password);
+        System.out.println("*** Connected to the database ***");
+        
+        Statement statement = conn1.createStatement();
+
+        for (ConnectedClient c : gameMembers)
+        {
+        statement.executeUpdate("UPDATE User SET games_played=games_played+1 where username ='"+c.getUsername()+"';");
+        }
+    } catch (SQLException e) {
+        System.out.println("SQLException: " + e.getMessage());
+        System.out.println("SQLState: " + e.getSQLState());
+        System.out.println("VendorError: " + e.getErrorCode());
+    }
     //10 seconds to play again. only will play again if the host says yes
       try {
    		  
@@ -168,7 +188,7 @@ int correctGuesses;
   }
   
   public void addMember(ConnectedClient joiningMember){
-	  numPlayers+=2;
+	  numPlayers++;
     gameMembers.add(joiningMember);
     joiningMember.setGameSession(this);
   }
@@ -335,7 +355,7 @@ int correctGuesses;
 
 		   
 		   try {
-				  for (int seconds = 120; seconds > 0; seconds--)
+				  for (int seconds = 100; seconds > 0; seconds--)
 				  {
 					  if (correctGuesses >=numPlayers)
 						  break;

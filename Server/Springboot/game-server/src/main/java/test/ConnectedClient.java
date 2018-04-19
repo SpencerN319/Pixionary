@@ -29,6 +29,16 @@ public class ConnectedClient implements Runnable{
     this.currentServer = currentServer;
     this.username=username;
   }
+  
+  public WebSocketSession getSocket()
+  {
+	  return socket;
+  }
+  
+  public void setSocket(WebSocketSession w)
+  {
+	  socket = w;
+  }
 
   //shold never be called but is required to exist
   public void run(){
@@ -83,7 +93,8 @@ public class ConnectedClient implements Runnable{
 				if (c.getGameSession().equals(g) && c.getSocketSession().equals(socket))
 				{
 					System.out.println("Deleting client from game");
-					g.i.getGuess(c);
+					g.removeMemberFromMembersList(c);
+					Main.server.connectedClients.remove(c);
 				}
 			}
 		}

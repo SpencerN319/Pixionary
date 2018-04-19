@@ -34,10 +34,26 @@ public class SocketHandler extends TextWebSocketHandler {
 		//if the user wants to create a game
 		if (parts[0].equals("create"))
 		{
+			boolean isNew = true;
+			
 			Game g;
-			ConnectedClient newClient = new ConnectedClient(Main.server,  session,parts[1]);
+			ConnectedClient newClient=null;
+			for (ConnectedClient c : Main.server.connectedClients)
+			{
+				if (c.getUsername().equals(parts[1]))
+				{
+					isNew =false;
+					c.setSocket(session);
+					newClient = c;
+					break;
+				}
+			}
+			if  (isNew)
+			{
+		    newClient = new ConnectedClient(Main.server,  session,parts[1]);
 	        Main.server.connectedClients.add(newClient);
 	        System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
+			}
 			System.out.println("creating game"+ parts[1] +" with category "+ parts[2] + " of size "+parts[3]);
 			webSocketSession.sendMessage(new TextMessage("Created"));
 			g = new Game (newClient, parts[1], parts[2], Integer.parseInt(parts[3]));
@@ -70,15 +86,32 @@ public class SocketHandler extends TextWebSocketHandler {
 		{
 			//TODO: update db when player joins
 			//if the user wants to join a game
-			 ConnectedClient newClient = new ConnectedClient(Main.server, session,parts[2]);
+			boolean isNew = true;
+			ConnectedClient newClient=null;
+			for (ConnectedClient c : Main.server.connectedClients)
+			{
+				if (c.getUsername().equals(parts[1]))
+				{
+					isNew =false;
+					c.setSocket(session);
+					newClient = c;
+					break;
+				}
+			}
+			if  (isNew)
+			{
+			  newClient = new ConnectedClient(Main.server, session,parts[2]);
+			  
 		        Main.server.connectedClients.add(newClient);
 		        System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
+			}
 			System.out.println("joining game");
 			
 			for (Game g : Main.server.gamesList)
 			{
 				if (g.getHostName().equals(parts[1]))
 				{
+					System.out.println("Game Found");
 					if (g.numPlayers == g.gameSize)
 					{
 						
@@ -87,6 +120,25 @@ public class SocketHandler extends TextWebSocketHandler {
 						
 					}else
 					{
+						 try {
+						        //removes game from joinable games list
+					          Connection conn1;
+					          String dbUrl = "jdbc:mysql://mysql.cs.iastate.edu:3306/db309sb3";
+					          String user = "dbu309sb3";
+					          String password = "Fx3tvTaq";
+					               conn1 = DriverManager.getConnection(dbUrl, user, password);
+					          System.out.println("*** Connected to the database ***");
+					          
+					          Statement statement = conn1.createStatement();
+
+
+					          statement.executeUpdate("UPDATE Active SET size=size+1 where host_name ='"+g.getHostName()+"';");
+					          
+					      } catch (SQLException e) {
+					          System.out.println("SQLException: " + e.getMessage());
+					          System.out.println("SQLState: " + e.getSQLState());
+					          System.out.println("VendorError: " + e.getErrorCode());
+					      }
 					g.sendStringToAllMembers("newmember " + parts[2]);
 					g.addMember(newClient);
 					newClient.sendStringToClient("Currentplayers");
@@ -98,9 +150,11 @@ public class SocketHandler extends TextWebSocketHandler {
 					newClient.sendStringToClient("Endplayers");
 					break;
 					}
+					
 				}
 		     
-			}
+			 }
+			
 			
 		}else if (parts[0].equals("start"))
 		{
