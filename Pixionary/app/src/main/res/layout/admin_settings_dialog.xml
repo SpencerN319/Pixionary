@@ -98,11 +98,11 @@
         app:layout_constraintTop_toTopOf="@id/guideline8" />
 
     <Button
-        android:id="@+id/bt_later1"
+        android:id="@+id/bt_HostRequests"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryPurple"
-        android:text="*later*"
+        android:text="Host Requests"
         android:textSize="24dp"
         android:textColor="@color/colorPrimaryText"
         app:layout_constraintBottom_toBottomOf="@id/guideline15"

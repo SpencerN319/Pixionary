@@ -31,7 +31,7 @@ public class ImagesViewCategory extends AppCompatActivity {
     private Button previous, next, add;
     private int pageNum = 0;
     private RequestQueue requestQueue;
-    private String category;
+    private String category, selected_image_key;
     private ImageView[] images = new ImageView[4];
     private String[] image_urls = new String[4];
     private String[] image_keys = new String[4];
@@ -64,24 +64,28 @@ public class ImagesViewCategory extends AppCompatActivity {
                         case R.id.iv_0:
                             if (images[0] != null) {
                                 view_single_image(0);
+                                selected_image_key = image_keys[0];
                                 image.cancel(true);
                             }
                             break;
                         case R.id.iv_2:
                             if (images[1] != null) {
                                 view_single_image(1);
+                                selected_image_key = image_keys[1];
                                 image.cancel(true);
                             }
                             break;
                         case R.id.iv_3:
                             if (images[2] != null) {
                                 view_single_image(2);
+                                selected_image_key = image_keys[2];
                                 image.cancel(true);
                             }
                             break;
                         case R.id.iv_1:
                             if (images[3] != null) {
                                 view_single_image(3);
+                                selected_image_key = image_keys[3];
                                 image.cancel(true);
                             }
                             break;
@@ -151,14 +155,16 @@ public class ImagesViewCategory extends AppCompatActivity {
         startActivityForResult(intent, DELETED_IMAGE_ID);
     }
 
+
     public static String encode_image(Bitmap image)
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        image.compress(Bitmap.CompressFormat.JPEG, 50, baos);
         byte[] b = baos.toByteArray();
         String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
         return imageEncoded;
     }
+
 
     private String fetch(String image_url, ImageView iv) {
         String base = "http://proj-309-sb-3.cs.iastate.edu/";
@@ -205,15 +211,16 @@ public class ImagesViewCategory extends AppCompatActivity {
         } else{
             switch (requestCode){
                 case ADDED_IMAGE_ID:
+                    pull_images();
                     pd.setTitle("Success");
                     pd.setMessage("Image created!");
                     pd.setCancelable(true);
                     pd.show();
                     break;
                 case DELETED_IMAGE_ID:
-                    String word = getIntent().getStringExtra("word");
+                    pull_images();
                     pd.setTitle("Success");
-                    pd.setMessage(word + " has been removed");
+                    pd.setMessage(selected_image_key + " has been removed");
                     pd.setCancelable(true);
                     pd.show();
                     break;

@@ -141,6 +141,7 @@ public class Images extends AppCompatActivity {
         Intent show = new Intent(this, ImagesViewCategory.class);
         show.putExtra("category", categories[category_num].getText());
         startActivity(show);
+        finish(); //TODO delete finish and fix null point on user.getUsername() *BUG*
     }
 
     private void request_categories(){
@@ -148,12 +149,11 @@ public class Images extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try{
-                    JSONObject jsonPlaylists = new JSONObject(response); //Gets the response
+                    JSONObject jsonPlaylists = new JSONObject(response);
                     if(jsonPlaylists.getBoolean("success")) {
-                        pageLogic(jsonPlaylists.getInt("total")); //Enables or disables buttons according to total users.
-                        JSONArray jsonPlaylistArr = jsonPlaylists.getJSONArray("data"); //This might be changing.
+                        pageLogic(jsonPlaylists.getInt("total"));
+                        JSONArray jsonPlaylistArr = jsonPlaylists.getJSONArray("data");
                         for (int i = 0; i < jsonPlaylistArr.length(); i++) {
-                            //This single line creates a Playlist object for every item in Json array.
                             JSONObject jsonObject = jsonPlaylistArr.getJSONObject(i);
                             categories[i].setText(jsonObject.getString("category"));
                             categories[i].setClickable(true);

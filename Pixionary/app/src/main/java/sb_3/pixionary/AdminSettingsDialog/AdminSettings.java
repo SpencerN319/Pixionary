@@ -32,7 +32,7 @@ public class AdminSettings extends Activity implements View.OnClickListener {
         title = (TextView) findViewById(R.id.settings_title);
         buttons[0] = (Button) findViewById(R.id.bt_ViewUsers);
         buttons[1] = (Button) findViewById(R.id.bt_Images);
-        buttons[2] = (Button) findViewById(R.id.bt_later1);
+        buttons[2] = (Button) findViewById(R.id.bt_HostRequests);
         buttons[3] = (Button) findViewById(R.id.bt_later2);
         buttons[4] = (Button) findViewById(R.id.bt_later3);
         for (Button button: buttons) {
@@ -55,9 +55,10 @@ public class AdminSettings extends Activity implements View.OnClickListener {
                 i = 2;
                 selectedActivity = Images.class;
                 break;
-            case R.id.bt_later1:
+            case R.id.bt_HostRequests:
                 i = 3;
-                //TODO start add image
+                //TODO pull host names and accept or reject buttons
+                selectedActivity = HostRequests.class;
                 break;
             case R.id.bt_later2:
                 i = 4;

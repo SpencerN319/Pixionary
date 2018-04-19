@@ -47,8 +47,11 @@
         <activity
             android:name=".AdminSettingsDialog.AddCategory"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".AdminSettingsDialog.ViewSelectedImage"
-            android:theme="@android:style/Theme.Dialog"></activity>
+        <activity
+            android:name=".AdminSettingsDialog.ViewSelectedImage"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".AdminSettingsDialog.HostRequests"
+                  android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>

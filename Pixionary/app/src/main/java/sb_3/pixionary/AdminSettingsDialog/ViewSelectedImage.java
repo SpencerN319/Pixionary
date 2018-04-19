@@ -1,7 +1,6 @@
 package sb_3.pixionary.AdminSettingsDialog;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -84,8 +83,6 @@ public class ViewSelectedImage extends Activity {
 
 
     private void returnToImages(int result, String word){
-        Intent intent = new Intent(this, ImagesViewCategory.class);
-        intent.putExtra("word", word);
         setResult(result);
         finish();
     }
