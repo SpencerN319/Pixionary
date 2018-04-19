@@ -30,6 +30,8 @@ public class HostGameActivity extends AppCompatActivity {
 
     private TextView tvPlaylistSelected;
     private EditText etNumOfPlayers;
+    private EditText etNumOfRounds;
+    private EditText etDifficulty;
     private Button playlistSelection;
     private Button playAI;
     private Button playMultiplayer;
@@ -46,6 +48,8 @@ public class HostGameActivity extends AppCompatActivity {
 
         tvPlaylistSelected = (TextView) findViewById(R.id.tv_playlist);
         etNumOfPlayers = (EditText) findViewById(R.id.et_num_players);
+        etNumOfRounds = (EditText) findViewById(R.id.et_rounds);
+        etDifficulty = (EditText) findViewById(R.id.et_difficulty);
         playlistSelection = (Button) findViewById(R.id.button_category);
         playAI = (Button) findViewById(R.id.button_play_ai);
         playMultiplayer = (Button) findViewById(R.id.button_play_multiplayer);
@@ -119,18 +123,25 @@ public class HostGameActivity extends AppCompatActivity {
     private void directToGame(int gameType) {
         Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra("id", accessGame.getHost());
-        int players;
-        if (playlistName != null) {
-            if (gameType == 1) {
+        int players = Integer.valueOf(etNumOfPlayers.getText().toString());
+        int rounds = Integer.valueOf(etNumOfRounds.getText().toString());
+        int difficulty = Integer.valueOf(etDifficulty.getText().toString());
+        boolean playersCheck = (players > 1);
+        boolean roundsCheck = ((rounds > 0) && (rounds <= 10));
+        boolean difficultyCheck = ((difficulty > 0) && (difficulty <= 10));
+        if (playlistName != null ) {
+            if (gameType == 1 && roundsCheck && difficultyCheck) {
                 players = 1;
                 intent.putExtra("players", players);
                 intent.putExtra("playlist", playlistName);
+                intent.putExtra("rounds", rounds);
+                intent.putExtra("bot_difficulty", difficulty);
                 startActivity(intent);
                 finish();
-            } else if (gameType == 2 && Integer.valueOf(etNumOfPlayers.getText().toString()) > 1) {
-                players = Integer.valueOf(etNumOfPlayers.getText().toString());
+            } else if (gameType == 2 && roundsCheck && playersCheck) {
                 intent.putExtra("players", players);
                 intent.putExtra("playlist", playlistName);
+                intent.putExtra("rounds", rounds);
                 startActivity(intent);
                 finish();
             }

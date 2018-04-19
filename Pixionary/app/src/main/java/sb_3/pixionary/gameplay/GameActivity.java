@@ -2,6 +2,7 @@ package sb_3.pixionary.gameplay;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import okhttp3.WebSocketListener;
 import sb_3.pixionary.Adapters.GuessListAdapter;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.DownloadImageTask;
+import sb_3.pixionary.Utilities.POJO.GameClasses.Bot;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.interfaces.DataTransferInterface;
 import sb_3.pixionary.joingame.GameBrowserActivity;
@@ -46,15 +48,14 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private ArrayList<String> currentScores;
     private GuessListAdapter adapter;
     private String currentGuess;
+    private int difficulty;
+    private int rounds;
+    public Bot bot;
 
     private ImageView image;
     private ImageView cover;
     private ListView guessList;
 
-    //Image stuff
-    int width;
-    int height;
-    int[] pixels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +69,14 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
         gameID = getIntent().getStringExtra("id");
         playersRequested = getIntent().getIntExtra("players", 0);
+        rounds = getIntent().getIntExtra("rounds", 0);
+        difficulty = getIntent().getIntExtra("bot_difficulty", 0);
         playlistName = getIntent().getStringExtra("playlist");
 
         guessList = (ListView) findViewById(R.id.list_of_guesses);
         image = (ImageView) findViewById(R.id.imgGame);
         cover = (ImageView) findViewById(R.id.imgCover);
+
         listOfOptions = new ArrayList<>();
         adapter = new GuessListAdapter(context, listOfOptions, dataTransferInterface);
         guessList.setAdapter(adapter);
@@ -194,21 +198,29 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 if(!user.getUserType().equals("host")) {
                     broadcastToLobby(message);
                 }
+
                 Log.i(TAG, message);
                 break;
             case "ROUNDBEGIN":
+                if(playersRequested == 1) {
+                    bot = new Bot("bot", difficulty);
+                }
                 Log.i(TAG, "Do something with this?");
                 break;
             case "WORD":
                 addWord(message);
                 Log.i(TAG, message);
                 break;
-            case "HEIGHT":
-                setHeightAndWidth(message);
-                Log.i(TAG, message);
-                break;
+//            case "HEIGHT":
+//                setHeightAndWidth(message);
+//                Log.i(TAG, message);
+//                break;
             case "URL":
                 receiveImage(message);
+                if(playersRequested == 1) {
+                    bot.set_word_list(listOfOptions);
+                    runBot(); //TODO This still needs to be tested with the server.
+                }
                 Log.i(TAG, message);
                 break;
             case "CORRECT!":
@@ -249,6 +261,8 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             case "Endplayers":
                 broadcastToLobby(message);
                 break;
+            case "Bot:Correct": //FIXME Not sure that this is how it will respond.
+                bot.setCorrect(true);
             default:
                 Log.i(TAG, "NOT TRACKED: " +  message);
                 break;
@@ -265,12 +279,12 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
     }
 
-    private void backToGameBrowser() {
-        webSocket.close(1000, "Game is Full.");
-        Intent backToBrowser = new Intent(context, GameBrowserActivity.class);
-        startActivity(backToBrowser);
-        finish();
-    }
+//    private void backToGameBrowser() {
+//        webSocket.close(1000, "Game is Full.");
+//        Intent backToBrowser = new Intent(context, GameBrowserActivity.class);
+//        startActivity(backToBrowser);
+//        finish();
+//    }
 
     private void addWord(String message) {
         Scanner scanner = new Scanner(message);
@@ -283,21 +297,21 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         }
     }
 
-    private void setHeightAndWidth(String message) {
-        Scanner scanner = new Scanner(message);
-        String command = scanner.next();
-        if (command.equals("HEIGHT") && scanner.hasNextInt()) {
-            height = scanner.nextInt();
-            Log.i("Height:", String.valueOf(height));
-            command = scanner.next();
-        }
-        if (command.equals("WIDTH") && scanner.hasNextInt()) {
-            width = scanner.nextInt();
-            Log.i("Width:", String.valueOf(width));
-        }
-        pixels = new int[width*height];
-        Log.i("Pixels Length", String.valueOf(pixels.length));
-    }
+//    private void setHeightAndWidth(String message) {
+//        Scanner scanner = new Scanner(message);
+//        String command = scanner.next();
+//        if (command.equals("HEIGHT") && scanner.hasNextInt()) {
+//            height = scanner.nextInt();
+//            Log.i("Height:", String.valueOf(height));
+//            command = scanner.next();
+//        }
+//        if (command.equals("WIDTH") && scanner.hasNextInt()) {
+//            width = scanner.nextInt();
+//            Log.i("Width:", String.valueOf(width));
+//        }
+//        pixels = new int[width*height];
+//        Log.i("Pixels Length", String.valueOf(pixels.length));
+//    }
 
     private void receiveImage(String message) {
         Scanner scanner = new Scanner(message);
@@ -344,6 +358,22 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         intent.putExtra("MESSAGE", message);
         intent.setAction("LOBBY_MESSAGE");
         sendBroadcast(intent);
+    }
+
+    private void runBot() {
+        final Handler botHandler = new Handler();
+        Runnable botRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!bot.isCorrect()) {
+                    String guess = "Bot:" + bot.guess();
+                    webSocket.send(guess);
+                }
+
+                botHandler.postDelayed(this, (120 - 8*bot.getDifficulty()) / bot.getWord_list().size());
+            }
+        };
+        botHandler.postDelayed(botRunnable, (120 - 8*bot.getDifficulty()) / bot.getWord_list().size());
     }
 
 }
