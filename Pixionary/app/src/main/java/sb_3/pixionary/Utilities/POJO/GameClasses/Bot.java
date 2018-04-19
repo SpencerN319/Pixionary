@@ -35,10 +35,14 @@ public class Bot {
 
     public String guess(){
         int size = word_list.size();
-        int num = rand.nextInt(size); //random pick from word list
-        String guess = word_list.get(num);
-        word_list.remove(num);
-        return guess;
+        if (size > 0) {
+            int num = rand.nextInt(size); //random pick from word list
+            String guess = word_list.get(num);
+            word_list.remove(num);
+            return guess;
+        }
+        return null;
+
     }
 
     public void increment_score(int points){

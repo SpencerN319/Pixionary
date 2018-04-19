@@ -42,7 +42,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Void> {
         String urldisplay = urls[0];
         bitmapImage = null;
         try {
-            InputStream in = new java.net.URL(urldisplay).openStream();
+            InputStream in = new java.net.URL(urldisplay).openStream(); //TODO Not sure but didn't work?
             bitmapImage = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
             Log.e("Error", e.getMessage());

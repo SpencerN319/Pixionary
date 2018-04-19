@@ -123,9 +123,18 @@ public class HostGameActivity extends AppCompatActivity {
     private void directToGame(int gameType) {
         Intent intent = new Intent(context, GameActivity.class);
         intent.putExtra("id", accessGame.getHost());
-        int players = Integer.valueOf(etNumOfPlayers.getText().toString());
-        int rounds = Integer.valueOf(etNumOfRounds.getText().toString());
-        int difficulty = Integer.valueOf(etDifficulty.getText().toString());
+        int players = 0;
+        int rounds = 0;
+        int difficulty = 0;
+        if (!etNumOfPlayers.getText().toString().matches("")) {
+            players = Integer.valueOf(etNumOfPlayers.getText().toString());
+        }
+        if (!etNumOfRounds.getText().toString().matches("")) {
+            rounds = Integer.valueOf(etNumOfRounds.getText().toString());
+        }
+        if (!etDifficulty.getText().toString().matches("")) {
+            difficulty = Integer.valueOf(etDifficulty.getText().toString());
+        }
         boolean playersCheck = (players > 1);
         boolean roundsCheck = ((rounds > 0) && (rounds <= 10));
         boolean difficultyCheck = ((difficulty > 0) && (difficulty <= 10));

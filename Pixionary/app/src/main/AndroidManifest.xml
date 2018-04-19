@@ -48,11 +48,9 @@
         <activity
             android:name=".gameplay.PointUpdateActivity"
             android:theme="@android:style/Theme.Dialog" />
-        <!-- <receiver android:name=".gameplay.LobbyActivity$LobbyReceiver"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="LOBBY_MESSAGE"/> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
+        <activity
+            android:name=".gameplay.PlayAgainActivity"
+            android:theme="@android:style/Theme.Dialog" />
 
     </application>
 

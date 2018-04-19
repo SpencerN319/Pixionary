@@ -1,6 +1,7 @@
 package sb_3.pixionary.gameplay;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -12,6 +13,8 @@ import sb_3.pixionary.R;
 
 public class PlayAgainActivity extends Activity {
 
+    public static final int NOTPLAYAGAIN = 20;
+    public static final int PLAYAGAIN = 21;
     private TextView timeWait;
     private TextView winnerTV;
     private Button playAgainBtn;
@@ -27,16 +30,17 @@ public class PlayAgainActivity extends Activity {
         winnerTV = (TextView) findViewById(R.id.tv_winner);
         playAgainBtn = (Button) findViewById(R.id.btn_play_again);
 
-        String response = getIntent().getStringExtra("response");
-        winnerTV.setText(response);
+        String winnerText = getIntent().getStringExtra("winner");
+        winnerTV.setText(winnerText);
 
         playAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Figure out what needs to happen to play again.
-
+                notifyGame(PLAYAGAIN);
             }
         });
+
+        waitDisplay();
     }
 
     @Override
@@ -53,8 +57,16 @@ public class PlayAgainActivity extends Activity {
 
             @Override
             public void onFinish() {
-                timeWait.setText("Press OK to continue");
+                notifyGame(NOTPLAYAGAIN);
+                finish();
             }
         }.start();
+    }
+
+    private void notifyGame(int command) {
+        Intent intent = new Intent();
+        intent.putExtra("command", command);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

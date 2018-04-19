@@ -57,15 +57,8 @@ public class PlaylistsAdapter extends BaseAdapter implements android.widget.List
         TextView tvPlaylistName = (TextView) view.findViewById(R.id.textPlaylistName);
         tvPlaylistName.setText(items.get(position).getName());
 
-        Button previewBtn = (Button) view.findViewById(R.id.preview);
         Button startBtn = (Button) view.findViewById(R.id.play);
 
-        previewBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //should start dialog that will display a requested image from server.
-            }
-        });
 
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -101,8 +101,16 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 webSocket.close(0, "Left Lobby");
                 finish();
                 break;
-            case -1:
+            case PlayAgainActivity.PLAYAGAIN:
+                playAgain(PlayAgainActivity.PLAYAGAIN);
+                break;
+            case PlayAgainActivity.NOTPLAYAGAIN:
+                playAgain(PlayAgainActivity.NOTPLAYAGAIN);
+                break;
+            default:
                 Log.i(TAG, "Error from the Lobby");
+                break;
+
         }
     }
 
@@ -111,6 +119,16 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         currentGuess = listOfOptions.get(position);
         Log.i("Current Guess", currentGuess);
         sendGuessMessage(currentGuess);
+    }
+
+    private void playAgain(int command) {
+        if (command == PlayAgainActivity.PLAYAGAIN) {
+            webSocket.send("playagain");
+            directToLobby(playersRequested);
+        } else if (command == PlayAgainActivity.NOTPLAYAGAIN) {
+            webSocket.close(1000, "Chose not to play again.");
+            finish();
+        }
     }
 
     private void directToLobby(int playersNeeded) {
@@ -203,7 +221,9 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 break;
             case "ROUNDBEGIN":
                 if(playersRequested == 1) {
-                    bot = new Bot("bot", difficulty);
+                    bot = new Bot(user.getUsername(), difficulty);
+                    bot.set_word_list(listOfOptions);
+                    runBot(); //TODO This still needs to be tested with the server.
                 }
                 Log.i(TAG, "Do something with this?");
                 break;
@@ -217,10 +237,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 //                break;
             case "URL":
                 receiveImage(message);
-                if(playersRequested == 1) {
-                    bot.set_word_list(listOfOptions);
-                    runBot(); //TODO This still needs to be tested with the server.
-                }
+
                 Log.i(TAG, message);
                 break;
             case "CORRECT!":
@@ -246,9 +263,9 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             case "ENDSCORES":
                 displayScores();
                 break;
-            case "PING":
+//            case "PING":
 //                Log.i(TAG, "Still Connected");
-                break;
+//                break;
             case "newmember":
                 broadcastToLobby(message);
                 break;
@@ -263,6 +280,13 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 break;
             case "Bot:Correct": //FIXME Not sure that this is how it will respond.
                 bot.setCorrect(true);
+                break;
+            case "GG":
+                //TODO This means the game is over.
+                break;
+            case "Winner:":
+                displayPlayAgain(message);
+                break;
             default:
                 Log.i(TAG, "NOT TRACKED: " +  message);
                 break;
@@ -360,7 +384,14 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         sendBroadcast(intent);
     }
 
+    private void displayPlayAgain(String message) {
+        Intent intent = new Intent(context, PlayAgainActivity.class);
+        intent.putExtra("winner", message);
+        startActivityForResult(intent, 20); //TODO Need to enable for request code.
+    }
+
     private void runBot() {
+        final int size = bot.getWord_list().size();
         final Handler botHandler = new Handler();
         Runnable botRunnable = new Runnable() {
             @Override
@@ -368,12 +399,14 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 if (!bot.isCorrect()) {
                     String guess = "Bot:" + bot.guess();
                     webSocket.send(guess);
+                    Log.i(TAG, guess);
                 }
+                botHandler.postDelayed(this, (120 - 8*bot.getDifficulty()) / size * 1000);
 
-                botHandler.postDelayed(this, (120 - 8*bot.getDifficulty()) / bot.getWord_list().size());
+
             }
         };
-        botHandler.postDelayed(botRunnable, (120 - 8*bot.getDifficulty()) / bot.getWord_list().size());
+        botHandler.postDelayed(botRunnable, (120 - 8*bot.getDifficulty()) / size * 1000);
     }
 
 }
