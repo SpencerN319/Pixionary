@@ -113,7 +113,8 @@ int correctGuesses;
           System.out.println("SQLState: " + e.getSQLState());
           System.out.println("VendorError: " + e.getErrorCode());
       }
-      //hard coded 2 rounds for now
+    
+      //play rounds
       for (int count = 0; count < rounds; count++)
       {
     	  System.out.println("Begin round");
@@ -122,8 +123,9 @@ int correctGuesses;
       
       //endgame
 
-      //TODO: fix reconnecting
+      //TODO: fix reconnecting?
       this.sendStringToAllMembers("GG");
+      System.out.println("Game ending");
       int bestscore = 0;
 	  String bestplayer = "nobody";
       for (ConnectedClient c: gameMembers)
@@ -189,6 +191,7 @@ int correctGuesses;
       }
       //just see how this ends up working
       this.sendStringToAllMembers("NONEWGAME");
+      System.out.println("no playagain, deleting");
       this.delete();
       
       
@@ -216,6 +219,7 @@ int correctGuesses;
 	    joiningMember.setGameSession(this);
 	  }
   public void removeMemberFromMembersList(ConnectedClient leavingMember){
+	  System.out.println("Game size: " +this.gameMembers.size());
  /*   if(leavingMember == host){
       delete();
       return;
@@ -227,6 +231,8 @@ int correctGuesses;
     	this.delete();
 
     orphans.add(leavingMember);
+	System.out.println("Game size: " +this.gameMembers.size());
+
   }
 
   public void kickMember(ConnectedClient kicked){
@@ -421,10 +427,10 @@ int correctGuesses;
 	      }
 	  }
 	  
-
+	  this.sendStringToAllMembers("CURRENTSCORES");
 	for (ConnectedClient c :gameMembers)
 	{
-		this.sendStringToAllMembers("CURRENTSCORES");
+		
 		this.sendStringToAllMembers("USERSCORE " + c.getUsername()+ " " + c.getLocalScore());
 		if (isBotGame)
 		{
@@ -442,8 +448,9 @@ int correctGuesses;
 			this.sendStringToAllMembers("BOTSCORE " + this.botGameScore);
 			
 		}
-		this.sendStringToAllMembers("ENDSCORES");
+		
 	}
+	this.sendStringToAllMembers("ENDSCORES");
 	  try {
 		  Thread.sleep(3000);
 		  }catch (InterruptedException e) {}
@@ -512,11 +519,13 @@ int correctGuesses;
   	}
 	}
   public void delete(){
+	  System.out.println("Deleting game hosted by "+ this.hostName);
     for(int i = 0; i < gameMembers.size(); i++){
       if(gameMembers.get(i) != host){
         kickMember(gameMembers.get(i));
       }
     }
+    System.out.println("Game members left: " + gameMembers.size());
     //All except host is gone, and host is currently leaving.
     Main.server.gamesList.remove(this);
     return;
