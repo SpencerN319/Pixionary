@@ -28,7 +28,6 @@ import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.interfaces.DataTransferInterface;
 import sb_3.pixionary.joingame.GameBrowserActivity;
 
-//TODO still need to add a view to see the players in the lobby. --- Not important RN.
 public class GameActivity extends AppCompatActivity implements DataTransferInterface {
 
     private static final String TAG = GameActivity.class.getSimpleName();
@@ -100,7 +99,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 sendStart();
                 break;
             case LobbyActivity.LEAVE_GAME:
-                webSocket.close(0, "Left Lobby");
+                webSocket.close(1000, "Left Lobby");
                 finish();
                 break;
             case PlayAgainActivity.PLAYAGAIN:
@@ -206,9 +205,9 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         String type = scanner.next();
         switch (type) {
             case "Created":
-                createGameReaction(message);
+                //This shows that the game is created.
                 break;
-            //TODO THIS IS COMMENTED OUT UNTIL THE SERVER ISN'T DOUBLING THE CONNECTION.
+//            TODO THIS IS COMMENTED OUT UNTIL THE SERVER ISN'T DOUBLING THE CONNECTION.
 //            case "FULL":
 //                backToGameBrowser();
 //                break;
@@ -225,16 +224,12 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             case "WORD":
                 addWord(message);
                 break;
-//            case "HEIGHT":
-//                setHeightAndWidth(message);
-//                Log.i(TAG, message);
-//                break;
             case "URL":
                 receiveImage(message);
                 break;
             case "CORRECT!":
                 if (playersRequested == 1) {
-                    botHandler.removeCallbacks(botRunnable); //TODO Not sure if this is need here.
+                    botHandler.removeCallbacks(botRunnable);
                 } else {
                     startGuessResponse("Correct!");
                 }
@@ -257,9 +252,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             case "ENDSCORES":
                 displayScores();
                 break;
-//            case "PING":
-//                Log.i(TAG, "Still Connected");
-//                break;
             case "newmember":
                 broadcastToLobby(message);
                 break;
@@ -272,11 +264,11 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             case "Endplayers":
                 broadcastToLobby(message);
                 break;
-            case "BOTCORRECT!": //FIXME Not sure that this is how it will respond.
+            case "BOTCORRECT!":
                 bot.setCorrect(true);
                 break;
             case "GG":
-                //TODO This means the game is over.
+                //This means game is over.
                 break;
             case "Winner:":
                 displayPlayAgain(message);
@@ -290,16 +282,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 Log.i(TAG, "NOT TRACKED: " +  message);
                 break;
         }
-    }
-
-    private void createGameReaction(String message) {
-        Scanner scanner = new Scanner(message);
-//        if(scanner.next().equals("Created")) {
-//            if (playersRequested < 2 && user.getUserType().equals("host")) {
-//                sendStart();
-//            }
-//        }
-
     }
 
 //    private void backToGameBrowser() {
@@ -319,22 +301,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             adapter.notifyDataSetChanged();
         }
     }
-
-//    private void setHeightAndWidth(String message) {
-//        Scanner scanner = new Scanner(message);
-//        String command = scanner.next();
-//        if (command.equals("HEIGHT") && scanner.hasNextInt()) {
-//            height = scanner.nextInt();
-//            Log.i("Height:", String.valueOf(height));
-//            command = scanner.next();
-//        }
-//        if (command.equals("WIDTH") && scanner.hasNextInt()) {
-//            width = scanner.nextInt();
-//            Log.i("Width:", String.valueOf(width));
-//        }
-//        pixels = new int[width*height];
-//        Log.i("Pixels Length", String.valueOf(pixels.length));
-//    }
 
     private void receiveImage(String message) {
         Scanner scanner = new Scanner(message);
@@ -390,7 +356,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private void displayPlayAgain(String message) {
         Intent intent = new Intent(context, PlayAgainActivity.class);
         intent.putExtra("winner", message);
-        startActivityForResult(intent, 20); //TODO Need to enable for request code.
+        startActivityForResult(intent, 20);
     }
 
     private void runBot() {
@@ -418,7 +384,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         } else {
             botHandler.postDelayed(botRunnable, (120 - 6*bot.getDifficulty()) / size * 1000);
         }
-
     }
 
 }
