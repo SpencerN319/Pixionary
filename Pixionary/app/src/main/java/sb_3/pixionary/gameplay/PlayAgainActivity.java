@@ -49,7 +49,7 @@ public class PlayAgainActivity extends Activity {
     }
 
     private void waitDisplay() {
-        new CountDownTimer(10000, 1) {
+        new CountDownTimer(9000, 1) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timeWait.setText((Integer.toString((int)millisUntilFinished/1000 + 1)));
