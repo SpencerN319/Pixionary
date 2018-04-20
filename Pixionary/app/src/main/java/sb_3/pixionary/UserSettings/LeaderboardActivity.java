@@ -1,4 +1,4 @@
-package sb_3.pixionary;
+package sb_3.pixionary.UserSettings;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import SaveData.UserDataDBHandler;
 import sb_3.pixionary.Adapters.LeaderboardAdapter;
+import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.ShortUser;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestLeaderboard;

@@ -1,4 +1,4 @@
-package sb_3.pixionary;
+package sb_3.pixionary.UserSettings;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import SaveData.UserDataDBHandler;
 import sb_3.pixionary.Adapters.ProfileAdapter;
+import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.User;
 
 public class ProfileActivity extends AppCompatActivity {

@@ -26,18 +26,18 @@
         <activity android:name=".CreateAccountActivity" />
         <activity android:name=".joingame.GameBrowserActivity" />
         <activity
-            android:name=".SettingsDialog"
+            android:name=".UserSettings.SettingsDialog"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".LeaderboardActivity" />
+        <activity android:name=".UserSettings.ProfileActivity" />
+        <activity android:name=".UserSettings.LeaderboardActivity" />
         <activity android:name=".hostgame.HostGameActivity" />
         <activity android:name=".hostgame.PlaylistSelectActivity" />
         <activity android:name=".gameplay.GameActivity" />
         <activity android:name=".gameplay.LobbyActivity" />
         <activity
-            android:name=".AdminSettings"
+            android:name=".AdminSettingsDialog.AdminSettings"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".DeleteAccount" />
+        <activity android:name=".UserSettings.UpdateAccount" />
         <activity android:name=".AdminSettingsDialog.ViewUsers" />
         <activity
             android:name=".AdminSettingsDialog.ViewSelectedUser"

@@ -1,4 +1,4 @@
-package sb_3.pixionary;
+package sb_3.pixionary.UserSettings;
 
 
 import android.app.Activity;
@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
 import SaveData.UserDataDBHandler;
+import sb_3.pixionary.MainMenuActivity;
+import sb_3.pixionary.R;
 
 /**
  * Created by fastn on 2/16/2018.
@@ -16,6 +19,8 @@ import SaveData.UserDataDBHandler;
 
 public class SettingsDialog extends Activity implements View.OnClickListener {
 
+    private static final int UPDATE_REQUEST_ID = 2;
+    private TextView title;
     private Button[] buttons  = new Button[5];
 
     /**
@@ -25,63 +30,53 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.settings_dialog);
         buttons[0] = (Button) findViewById(R.id.button_profile);
         buttons[1] = (Button) findViewById(R.id.button_leaderboard);
-        buttons[2] = (Button) findViewById(R.id.button_blank);
-        buttons[3] = (Button) findViewById(R.id.bt_DeleteAccount);
+        buttons[2] = (Button) findViewById(R.id.bt_blank);
+        buttons[3] = (Button) findViewById(R.id.bt_update);
         buttons[4] = (Button) findViewById(R.id.button_logout);
         for (Button button: buttons) {
             button.setOnClickListener(this);
         }
-        //Disables unused buttons for now.
-        //buttons[2].setEnabled(false);
-        //buttons[3].setEnabled(false);
     }
 
     @Override
     public void onClick(View v) {
 
         Class selectedActivity = null;
-        int i = 0;
 
         switch (v.getId()) {
             case R.id.button_profile:
-                i = 1;
                 selectedActivity = ProfileActivity.class;
+                nextActivity(selectedActivity);
                 break;
             case R.id.button_leaderboard:
-                i = 2;
                 selectedActivity = LeaderboardActivity.class;
+                nextActivity(selectedActivity);
                 break;
-            case R.id.button_blank:
-                i = 3;
+            case R.id.bt_blank:
                 //Start something here.
                 break;
-            case R.id.bt_DeleteAccount:
-                i = 4;
-                selectedActivity = DeleteAccount.class;
-                //Start something here.
+            case R.id.bt_update:
+                Intent intent = new Intent(this, UpdateAccount.class);
+                startActivityForResult(intent, UPDATE_REQUEST_ID);
                 break;
             case R.id.button_logout:
-                i = 5;
                 logOut();
                 break;
         }
-        if (i != 5 && i != 0) {
-            nextActivity(selectedActivity);
-        }
-        finish();
     }
 
     private void logOut() {
         UserDataDBHandler db = new UserDataDBHandler(this);
         db.deleteOne(0);
-        boolean set = true;
-        Intent retIntent = getIntent();
-        retIntent.putExtra("logout", set);
-        setResult(MainMenuActivity.SETTINGS_REQUEST_ID, retIntent);
+        Intent intent = new Intent(this, MainMenuActivity.class);
+        intent.putExtra("action", "logout");
+        setResult(MainMenuActivity.SETTINGS_ID, intent);
+        finish();
     }
 
     private void nextActivity(Class selected) {
@@ -89,4 +84,27 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
         startActivity(intent);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == 0){
+            return;
+        } else{
+            switch (requestCode){
+                case UPDATE_REQUEST_ID:
+                    String action = data.getStringExtra("action");
+                    if(action.equals("delete")){
+                        Intent delete = new Intent(this, MainMenuActivity.class);
+                        delete.putExtra("action", action);
+                        setResult(MainMenuActivity.SETTINGS_ID, delete);
+                        finish();
+                    } else {
+                        Intent update = new Intent(this, MainMenuActivity.class);
+                        update.putExtra("action", "update");
+                        setResult(MainMenuActivity.SETTINGS_ID, update);
+                        finish();
+                    } break;
+            }
+        }
+    }
 }
