@@ -28,6 +28,10 @@ public class Game implements Runnable{
   int possiblePoints;
   int gameSize;
   int numPlayers;
+  int rounds;
+  int botGameScore;
+  int botRoundScore;
+  boolean isBotGame;
  
   ArrayList<WordLink> words = new ArrayList<WordLink>();
   ArrayList<ConnectedClient> orphans = new ArrayList<ConnectedClient>();
@@ -36,16 +40,19 @@ public class Game implements Runnable{
 Imgbreak i;
 int correctGuesses;
 
-  public Game(ConnectedClient host, String gameName, String category, int size){
+  public Game(ConnectedClient host, String gameName, String category, int size, int rounds){
     
     this.host = host;
     hostName = host.getUsername();
     this.gameName = gameName;
     this.category = category;
     this.gameSize = size;
+    if (size==1)
+    	isBotGame = true;
     gameMembers.add(host);
    this.gameID = host.userID;
-   gameSize = 1;
+   this.rounds = rounds;
+   numPlayers = 1;
     /* if we need to generate a random game ID
     boolean found = false;
 
@@ -107,7 +114,7 @@ int correctGuesses;
           System.out.println("VendorError: " + e.getErrorCode());
       }
       //hard coded 2 rounds for now
-      for (int count = 0; count < 2; count++)
+      for (int count = 0; count < rounds; count++)
       {
     	  System.out.println("Begin round");
 	  this.playRound();
@@ -172,7 +179,7 @@ int correctGuesses;
       if (playNewGame)
       {
     	  this.sendStringToAllMembers("NEWGAME");
-      Game newgame = new Game(this.host, this.gameName, this.category, this.gameSize);
+      Game newgame = new Game(this.host, this.gameName, this.category, this.gameSize, this.rounds);
 
       for (ConnectedClient c : playAgains)
       {
@@ -189,6 +196,7 @@ int correctGuesses;
   
   public void addMember(ConnectedClient joiningMember){
 	  numPlayers++;
+	  System.out.println("Now playing a "+ numPlayers + " player game");
     gameMembers.add(joiningMember);
     joiningMember.setGameSession(this);
   }
@@ -302,6 +310,7 @@ int correctGuesses;
 	      gameMembers.get(i).resetRoundScore();
 	      }
 	  correctGuesses = 0;
+	  botRoundScore = 0;
 	  
 	  System.out.println("Round starting");
 	  Random r = new Random();
@@ -362,7 +371,6 @@ int correctGuesses;
 				 
 				  Thread.sleep(1000);
 				  this.sendStringToAllMembers("PING");
-				  System.out.println("a second has passed");
 				  System.out.print(correctGuesses + " / ");
 				  System.out.println(numPlayers);
 				  possiblePoints--;
@@ -418,6 +426,22 @@ int correctGuesses;
 	{
 		this.sendStringToAllMembers("CURRENTSCORES");
 		this.sendStringToAllMembers("USERSCORE " + c.getUsername()+ " " + c.getLocalScore());
+		if (isBotGame)
+		{
+			System.out.println("Bot round score: "+ botRoundScore);
+			System.out.println("Bot game score " + botGameScore);
+			if (this.botRoundScore == 0)
+			{
+				System.out.println(possiblePoints);
+				Random r2 = new Random();
+			  botRoundScore = r2.nextInt(possiblePoints) + 2;	
+			  
+			  System.out.println("Bot got pity points: "+ botRoundScore);
+			  botGameScore+=botRoundScore;		
+			}
+			this.sendStringToAllMembers("BOTSCORE " + this.botGameScore);
+			
+		}
 		this.sendStringToAllMembers("ENDSCORES");
 	}
 	  try {
@@ -433,10 +457,35 @@ int correctGuesses;
   	{
 	   
 		
-		
+
   		
 		if (guess != null)
 		{
+			
+			if (guess.length() >=4 && guess.substring(0, 4).equals("Bot:"))
+			{
+				
+				System.out.println("Bot is making a guess");
+		//		System.out.println((guess.substring(4, guess.length()-1)));
+		if (guess.substring(4, guess.length()).equals(currentWord))
+		{
+			System.out.println("Right guess made by the bot");
+		    //send string to one player
+			c.sendStringToClient("BOTCORRECT!");
+			System.out.println("Player guessed correctly for " + possiblePoints + " points");
+
+			int score = possiblePoints;
+			if (score < 0)
+				score = 0;
+			this.botRoundScore = score; 
+			this.botGameScore+=score;
+
+		}else
+		{
+			c.sendStringToClient("BOTINCORRECT!");
+		}
+			}else
+			{
 		
 		if (guess.equals(currentWord))
 				{
@@ -456,6 +505,7 @@ int correctGuesses;
 			System.out.println(currentWord +" is right, but the user guessed "+ guess);
 			System.out.println("Wrong guess made by " + c.getUsername());
 			c.sendStringToClient("INCORRECT!");
+		}
 		}
 		}
 	

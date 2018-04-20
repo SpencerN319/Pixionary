@@ -27,7 +27,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
         
 		System.out.println("Socket attempting to connect");
-		for(WebSocketSession webSocketSession : sessions) {
+//		for(WebSocketSession webSocketSession : sessions) {
 		System.out.println("Message incoming");
 		String value =	message.getPayload();
 		String[] parts = value.split(",");
@@ -54,9 +54,10 @@ public class SocketHandler extends TextWebSocketHandler {
 	        Main.server.connectedClients.add(newClient);
 	        System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
 			}
-			System.out.println("creating game"+ parts[1] +" with category "+ parts[2] + " of size "+parts[3]);
-			webSocketSession.sendMessage(new TextMessage("Created"));
-			g = new Game (newClient, parts[1], parts[2], Integer.parseInt(parts[3]));
+			System.out.println("creating game"+ parts[1] +" with category "+ parts[2] + " of size "+parts[3] + " with rounds " + parts[4]);
+			session.sendMessage(new TextMessage("Created"));
+			g = new Game (newClient, parts[1], parts[2], Integer.parseInt(parts[3]),Integer.parseInt(parts[4]));
+			System.out.println(g.gameSize);
 			Main.server.gamesList.add(g);
 			
 			 try {
@@ -71,8 +72,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		          Statement statement = conn1.createStatement();
 		          
 		          //this probably isn't right
-		          statement.executeUpdate("INSERT INTO Active (host_name, category, players) VALUES "
-		          		+ "('" + g.getHostName() +"', '" + g.getCategory() + "', '"+ g.gameSize + "');");
+		          statement.executeUpdate("INSERT INTO Active (host_name, category, players, max) VALUES "
+		          		+ "('" + g.getHostName() +"', '" + g.getCategory() + "', '"+ g.numPlayers +  "', '" + g.gameSize +"');");
 		        
 		       
 		          
@@ -84,6 +85,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			
 		}else if (parts[0].equals("join"))
 		{
+			System.out.println("JOIN REQUEST");
 			//TODO: update db when player joins
 			//if the user wants to join a game
 			boolean isNew = true;
@@ -100,7 +102,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			}
 			if  (isNew)
 			{
-			  newClient = new ConnectedClient(Main.server, session,parts[2]);
+			  newClient = new ConnectedClient(Main.server, session,parts[1]);
 			  
 		        Main.server.connectedClients.add(newClient);
 		        System.out.println("Now serving " + Main.server.connectedClients.size() + " clients.");
@@ -109,7 +111,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			
 			for (Game g : Main.server.gamesList)
 			{
-				if (g.getHostName().equals(parts[1]))
+				if (g.getHostName().equals(parts[2]))
 				{
 					System.out.println("Game Found");
 					if (g.numPlayers == g.gameSize)
@@ -132,14 +134,14 @@ public class SocketHandler extends TextWebSocketHandler {
 					          Statement statement = conn1.createStatement();
 
 
-					          statement.executeUpdate("UPDATE Active SET size=size+1 where host_name ='"+g.getHostName()+"';");
+					          statement.executeUpdate("UPDATE Active SET players=players+1 where host_name ='"+g.getHostName()+"';");
 					          
 					      } catch (SQLException e) {
 					          System.out.println("SQLException: " + e.getMessage());
 					          System.out.println("SQLState: " + e.getSQLState());
 					          System.out.println("VendorError: " + e.getErrorCode());
 					      }
-					g.sendStringToAllMembers("newmember " + parts[2]);
+					g.sendStringToAllMembers("newmember " + parts[1]);
 					g.addMember(newClient);
 					newClient.sendStringToClient("Currentplayers");
 					//this currently includes the player
@@ -213,17 +215,24 @@ public class SocketHandler extends TextWebSocketHandler {
 			System.out.println("making guess "+ parts[1]);
 		}else if (parts[0].equals("reconnect"))
 		{
+			boolean found = false;
 			for (Game g: Main.server.gamesList)
 			{
 				
 				if (g.findOrphan(parts[1]))
 				{
+					found = true;
 					ConnectedClient newClient = new ConnectedClient(Main.server, session,parts[1]);
 					g.addRescuedOrphan(newClient);
-
+					session.sendMessage( new TextMessage("success"));
+					System.out.println("Disconnected player rejoining game");
 					break;
 				}
 			}
+			if (!found)
+				session.sendMessage( new TextMessage("fail"));
+				System.out.println("player unable to find game to reconnect to");
+			
 			
 		}else if (parts[0].equals("playagain"))
 		{
@@ -240,10 +249,10 @@ public class SocketHandler extends TextWebSocketHandler {
 			}
 		}else
 		{
-			System.out.println("Invalid message");
-			webSocketSession.sendMessage(new TextMessage("Message not recognized (or blank for testing)"));
+			System.out.println("Invalid message: "+ parts[0]);
+			session.sendMessage(new TextMessage("Message not recognized (or blank for testing)"));
 		}
-		}
+//		}
 	}
 
 	@Override
