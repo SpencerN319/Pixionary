@@ -57,7 +57,6 @@ public class AdminSettings extends Activity implements View.OnClickListener {
                 break;
             case R.id.bt_HostRequests:
                 i = 3;
-                //TODO pull host names and accept or reject buttons
                 selectedActivity = HostRequests.class;
                 break;
             case R.id.bt_later2:
