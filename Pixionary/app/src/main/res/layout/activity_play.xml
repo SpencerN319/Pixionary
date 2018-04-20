@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryPurple"
-    tools:context="sb_3.pixionary.gameplay.PlayActivity">
+    tools:context="sb_3.pixionary.gameplay.GameActivity">
 
     <View
         android:id="@+id/gameover"
@@ -13,17 +13,6 @@
         android:layout_height="200dp"
         android:background="@color/colorPrimaryPurple" />
 
-    <Button
-        android:id="@+id/btnSendGuess"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/colorPrimaryOrange"
-        android:text="@string/guess"
-        android:textColor="@color/colorPrimaryText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline22" />
 
     <ImageView
         android:id="@+id/imgGame"
@@ -79,7 +68,7 @@
         android:id="@+id/list_of_guesses"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/guideline22"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

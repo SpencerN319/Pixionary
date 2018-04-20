@@ -42,6 +42,15 @@
         <activity
             android:name=".AdminSettingsDialog.ViewSelectedUser"
             android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".gameplay.GuessResponseActivity"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".gameplay.PointUpdateActivity"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".gameplay.PlayAgainActivity"
+            android:theme="@android:style/Theme.Dialog" />
 
     </application>
 

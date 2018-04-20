@@ -77,7 +77,7 @@ public class GameBrowserActivity extends AppCompatActivity {
     private void gamesAvailablePage() {
         UserDataDBHandler db = new UserDataDBHandler(context);
         User user = db.getUser("0");
-        if(user != null) {
+        if (user != null) {
             final String username = user.getUsername();
             final Handler handler = new Handler();
             final Runnable runnable = new Runnable() {
@@ -87,10 +87,10 @@ public class GameBrowserActivity extends AppCompatActivity {
                     RequestGamesAvailable categoryRequest = new RequestGamesAvailable(username, pageNum, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            try{
+                            try {
                                 Log.i(TAG, response);
                                 JSONObject jsonGameList = new JSONObject(response); //Gets the response
-                                if(jsonGameList.getBoolean("success")) {
+                                if (jsonGameList.getBoolean("success")) {
                                     pageLogic(jsonGameList.getInt("total")); //Enables or disables buttons according to total users.
                                     JSONArray jsonGameArr = jsonGameList.getJSONArray("data"); //This might be changing.
                                     gamesList = new ArrayList<>();
@@ -114,23 +114,13 @@ public class GameBrowserActivity extends AppCompatActivity {
                         }
                     });
                     requestQueue.add(categoryRequest);
-
                 }
             };
-            handler.postDelayed(runnable, 5000);
+            handler.post(runnable);
 
         }
-//        //FIXME temporary for testing.
-//        gamesList = new ArrayList<>();
-//        for (int i = 0; i < 10; i++) {
-//            gamesList.add(new ShortGame(i, "host" + i,
-//                    "gameName" + i, i * 100, null));
-//        }
-//        adapter = new GameListAdapter(context, gamesList);
-//        listView.setAdapter(adapter);
+
     }
-
-
 
     private void pageLogic(int totalUsers) {
         if (totalUsers > 10) { //Will be changing 10 to 100.

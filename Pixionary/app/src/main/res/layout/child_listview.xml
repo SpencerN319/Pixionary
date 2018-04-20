@@ -5,7 +5,7 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/textGameName"
+        android:id="@+id/textPlaylistName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/textGameHost"
@@ -14,23 +14,51 @@
         android:layout_toLeftOf="@id/textGameHost"
         android:layout_toStartOf="@id/textGameHost"
         android:background="@color/colorPrimaryYellow"
-        android:text="GameName"
         android:gravity="center"
+        android:text="PlaylistName"
         android:textAlignment="textStart"
         android:textColor="@color/colorPrimaryText" />
 
     <TextView
         android:id="@+id/textGameHost"
-        android:layout_width="120sp"
+        android:layout_width="80sp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textGameType"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/textGameType"
+        android:layout_toStartOf="@+id/textGameType"
+        android:background="@color/colorPrimaryYellow"
+        android:text="Host"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryText" />
+
+    <TextView
+        android:id="@+id/textGameType"
+        android:layout_width="80sp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textPlayers"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/textPlayers"
+        android:layout_toStartOf="@+id/textPlayers"
+        android:background="@color/colorPrimaryYellow"
+        android:text="Host"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryText" />
+
+    <TextView
+        android:id="@+id/textPlayers"
+        android:layout_width="40sp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/join"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/join"
         android:layout_toStartOf="@+id/join"
         android:background="@color/colorPrimaryYellow"
-        android:text="Host"
+        android:text="0"
         android:gravity="center"
-        android:textAlignment="textStart"
+        android:textAlignment="center"
         android:textColor="@color/colorPrimaryText" />
 
     <Button

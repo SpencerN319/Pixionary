@@ -10,6 +10,7 @@ import org.json.JSONObject;
 public class Playlist {
 
     private String name;
+    private String url;
 
     public Playlist() {
         //empty constructor
@@ -19,23 +20,10 @@ public class Playlist {
         this.name = name;
     }
 
-//    public Playlist(JSONObject object) {
-//        if (object != null) {
-//            try {
-//                this.id = object.getInt("id");
-//                this.name = object.getString("name");
-//                this.creator = object.getString("creator");
-//                this.success = true;
-//            } catch(JSONException e) {
-//                e.printStackTrace();
-//                this.id = -1;
-//                this.name = "error";
-//                this.creator = "error";
-//                this.success = false;
-//            }
-//        }
-//
-//    }
+    public Playlist(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
 
     public String getName() {
         return name;
@@ -44,20 +32,13 @@ public class Playlist {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
-//
-//    public String getCreator() {
-//        return creator;
-//    }
-//
-//    public void setCreator(String creator) {
-//        this.creator = creator;
-//    }
-//}
+
