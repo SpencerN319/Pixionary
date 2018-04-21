@@ -1,4 +1,4 @@
-package sb_3.pixionary.AdminSettingsDialog;
+package sb_3.pixionary.SharedSettings;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

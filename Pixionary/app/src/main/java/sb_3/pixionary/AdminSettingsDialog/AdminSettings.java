@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import sb_3.pixionary.R;
+import sb_3.pixionary.SharedSettings.Images;
 
 
 /**

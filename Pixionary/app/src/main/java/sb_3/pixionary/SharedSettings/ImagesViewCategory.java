@@ -1,4 +1,4 @@
-package sb_3.pixionary.AdminSettingsDialog;
+package sb_3.pixionary.SharedSettings;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -62,32 +62,24 @@ public class ImagesViewCategory extends AppCompatActivity {
                 public void onClick(View view) {
                     switch (view.getId()) {
                         case R.id.iv_0:
-                            if (images[0] != null) {
-                                view_single_image(0);
-                                selected_image_key = image_keys[0];
-                                image.cancel(true);
-                            }
+                            view_single_image(0);
+                            selected_image_key = image_keys[0];
+                            image.cancel(true);
                             break;
                         case R.id.iv_2:
-                            if (images[1] != null) {
-                                view_single_image(1);
-                                selected_image_key = image_keys[1];
-                                image.cancel(true);
-                            }
+                            view_single_image(1);
+                            selected_image_key = image_keys[1];
+                            image.cancel(true);
                             break;
                         case R.id.iv_3:
-                            if (images[2] != null) {
-                                view_single_image(2);
-                                selected_image_key = image_keys[2];
-                                image.cancel(true);
-                            }
+                            view_single_image(2);
+                            selected_image_key = image_keys[2];
+                            image.cancel(true);
                             break;
                         case R.id.iv_1:
-                            if (images[3] != null) {
-                                view_single_image(3);
-                                selected_image_key = image_keys[3];
-                                image.cancel(true);
-                            }
+                            view_single_image(3);
+                            selected_image_key = image_keys[3];
+                            image.cancel(true);
                             break;
                     }
                 }
@@ -128,16 +120,33 @@ public class ImagesViewCategory extends AppCompatActivity {
                     JSONObject data = new JSONObject(response);
                     if(data.getBoolean("success")){
                         pageLogic(data.getInt("total"));
+                        Log.i("PULLED IMAGES LENGTH", ""+data.getInt("total"));
                         JSONArray pulled_images = data.getJSONArray("urls");
                         JSONArray pulled_words = data.getJSONArray("words");
                         for(int i = 0; i < pulled_images.length(); i++){
-                            image_urls[i] = fetch(pulled_images.getString(i), images[i]);
-                            image_keys[i] = pulled_words.getString(i);
+                            if(!(pulled_words.getString(i).equals("blank"))){
+                                image_urls[i] = fetch(pulled_images.getString(i), images[i]); //SETS ImageView image in background
+                                image_keys[i] = pulled_words.getString(i);
+                                images[i].setClickable(true);
+                            } else {
+                                image_urls[i] = "";
+                                image_keys[i] = "";
+                                images[i].setImageBitmap(null);
+                                images[i].setClickable(false);
+                            }
                             if(pulled_images.length() < 4){
                                 for(int j = pulled_images.length(); j < 4; j++){
                                     images[j].setImageBitmap(null);
+                                    images[j].setClickable(false);
                                 }
                             }
+                        }
+                    } else {
+                        for(int i = 0; i < 4; i++){
+                            image_urls[i] = "";
+                            image_keys[i] = "";
+                            images[i].setImageBitmap(null);
+                            images[i].setClickable(false);
                         }
                     }
                 } catch (Exception e) {
@@ -204,7 +213,6 @@ public class ImagesViewCategory extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i("RESULT CODE ", String.valueOf(resultCode));
         final ProgressDialog pd = new ProgressDialog(this);
         if(resultCode == -1){
             return;

@@ -1,9 +1,8 @@
-package sb_3.pixionary.AdminSettingsDialog;
+package sb_3.pixionary.SharedSettings;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -15,8 +14,8 @@ import com.android.volley.toolbox.Volley;
 
 import sb_3.pixionary.MainMenuActivity;
 import sb_3.pixionary.R;
-import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.AdminSettings.RequestAddCategory;
+import sb_3.pixionary.Utilities.POJO.User;
 
 public class AddCategory extends Activity{
 
@@ -59,7 +58,6 @@ public class AddCategory extends Activity{
                     RequestAddCategory addCategory = new RequestAddCategory(user.getUsername(), user.getPassword(), category_name, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.i("RESPONSE", response);
                             if(response.equals("success")){
                                 setResult(1);
                                 finish();

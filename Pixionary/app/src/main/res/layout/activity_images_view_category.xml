@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/view_image_background"
-    tools:context="sb_3.pixionary.AdminSettingsDialog.ImagesViewCategory">
+    tools:context="sb_3.pixionary.SharedSettings.ImagesViewCategory">
 
     <ImageView
         android:id="@+id/iv_0"

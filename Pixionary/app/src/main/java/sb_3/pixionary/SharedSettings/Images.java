@@ -1,4 +1,4 @@
-package sb_3.pixionary.AdminSettingsDialog;
+package sb_3.pixionary.SharedSettings;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,6 +16,9 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import sb_3.pixionary.MainMenuActivity;
 import sb_3.pixionary.R;
@@ -56,52 +59,52 @@ public class Images extends AppCompatActivity {
                 public void onClick(View view) {
                     switch (view.getId()) {
                         case R.id.tv_0:
-                            if(categories[0].getText() != null){
+                            if(!categories[0].getText().equals("")){
                                 request_category(0);
                             }
                             break;
                         case R.id.tv_1:
-                            if(categories[1].getText() != null){
+                            if(!categories[1].getText().equals("")){
                                 request_category(1);
                             }
                             break;
                         case R.id.tv_2:
-                            if(categories[2].getText() != null){
+                            if(!categories[2].getText().equals("")){
                                 request_category(2);
                             }
                             break;
                         case R.id.tv_3:
-                            if(categories[3].getText() != null){
+                            if(!categories[3].getText().equals("")){
                                 request_category(3);
                             }
                             break;
                         case R.id.tv_4:
-                            if(categories[4].getText() != null){
+                            if(!categories[4].getText().equals("")){
                                 request_category(4);
                             }
                             break;
                         case R.id.tv_5:
-                            if(categories[5].getText() != null){
+                            if(!categories[5].getText().equals("")){
                                 request_category(5);
                             }
                             break;
                         case R.id.tv_6:
-                            if(categories[6].getText() != null){
+                            if(!categories[6].getText().equals("")){
                                 request_category(6);
                             }
                             break;
                         case R.id.tv_7:
-                            if(categories[7].getText() != null){
+                            if(!categories[7].getText().equals("")){
                                 request_category(7);
                             }
                             break;
                         case R.id.tv_8:
-                            if(categories[8].getText() != null){
+                            if(!categories[8].getText().equals("")){
                                 request_category(8);
                             }
                             break;
                         case R.id.tv_9:
-                            if(categories[9].getText() != null){
+                            if(!categories[9].getText().equals("")){
                                 request_category(9);
                             }
                             break;
@@ -137,7 +140,6 @@ public class Images extends AppCompatActivity {
 
 
     private void request_category(int category_num){
-        Log.i("CATEGORY REQUESTED", (String) categories[category_num].getText());
         Intent show = new Intent(this, ImagesViewCategory.class);
         show.putExtra("category", categories[category_num].getText());
         startActivity(show);
@@ -145,12 +147,14 @@ public class Images extends AppCompatActivity {
     }
 
     private void request_categories(){
+        Log.i("USERNAME", MainMenuActivity.user.getUsername());
         RequestPlaylists categoryRequest = new RequestPlaylists(MainMenuActivity.user.getUsername(), pageNum, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try{
                     JSONObject jsonPlaylists = new JSONObject(response);
                     if(jsonPlaylists.getBoolean("success")) {
+                        Log.i("SUCCESS", "RETURNED USER CATEGORIES");
                         pageLogic(jsonPlaylists.getInt("total"));
                         JSONArray jsonPlaylistArr = jsonPlaylists.getJSONArray("data");
                         for (int i = 0; i < jsonPlaylistArr.length(); i++) {
@@ -160,11 +164,12 @@ public class Images extends AppCompatActivity {
                             if(jsonPlaylistArr.length() < 10){
                                 for(int j = jsonPlaylistArr.length(); j < 10; j++){
                                     categories[j].setText("");
-                                    categories[i].setClickable(false);
+                                    categories[j].setClickable(false);
                                 }
 
                             }
                         }
+                    } else {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -214,8 +219,17 @@ public class Images extends AppCompatActivity {
                 case ADD_RESULT_ID:
                     pd.setTitle("Success");
                     pd.setMessage("Category created!");
-                    pd.setCancelable(true);
+                    pd.setCancelable(false);
                     pd.show();
+                    final Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            request_categories();
+                            pd.cancel();
+                            timer.cancel();
+                        }
+                    }, 1000);
                     break;
             }
         }

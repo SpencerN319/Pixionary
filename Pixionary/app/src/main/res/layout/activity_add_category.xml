@@ -6,7 +6,7 @@
     android:layout_height="400dp"
     android:layout_gravity="center"
     android:background="@drawable/layout_border"
-    tools:context="sb_3.pixionary.AdminSettingsDialog.AddCategory">
+    tools:context="sb_3.pixionary.SharedSettings.AddCategory">
 
 
     <TextView

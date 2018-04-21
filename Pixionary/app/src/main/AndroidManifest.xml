@@ -42,16 +42,17 @@
         <activity
             android:name=".AdminSettingsDialog.ViewSelectedUser"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".AdminSettingsDialog.Images" />
-        <activity android:name=".AdminSettingsDialog.ImagesViewCategory" />
+        <activity android:name=".SharedSettings.Images" />
+        <activity android:name=".SharedSettings.ImagesViewCategory" />
         <activity
-            android:name=".AdminSettingsDialog.AddCategory"
+            android:name=".SharedSettings.AddCategory"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".AdminSettingsDialog.ViewSelectedImage"
+            android:name=".SharedSettings.ViewSelectedImage"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".AdminSettingsDialog.HostRequests"
-                  android:theme="@android:style/Theme.Dialog"></activity>
+        <activity
+            android:name=".AdminSettingsDialog.HostRequests"
+            android:theme="@android:style/Theme.Dialog" />
     </application>
 
 </manifest>
