@@ -64,7 +64,10 @@
         <activity
             android:name=".SharedSettings.AddFriend"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".SharedSettings.FriendRequests"
+        <activity
+            android:name=".SharedSettings.FriendRequests"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".SharedSettings.ViewSelectedFriend"
                   android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 

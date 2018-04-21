@@ -17,7 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import sb_3.pixionary.AdminSettingsDialog.ViewSelectedUser;
 import sb_3.pixionary.MainMenuActivity;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.Settings.RequestViewFriends;
@@ -148,9 +147,8 @@ public class Friends extends AppCompatActivity {
 
 
     private void request_friend(int user_num){
-        //TODO make a new selected user that does not show pass word and other information
-        Intent show = new Intent(this, ViewSelectedUser.class);
-        show.putExtra("user", users[user_num].getText());
+        Intent show = new Intent(this, ViewSelectedFriend.class);
+        show.putExtra("friend", users[user_num].getText());
         startActivity(show);
     }
 
@@ -166,7 +164,7 @@ public class Friends extends AppCompatActivity {
                         int length = user_array.length();
                         for(int i = 0; i < length; i++) {
                             users[i].setText(user_array.getString(i));
-                            users[i].setClickable(false);
+                            users[i].setClickable(true);
                         }
                         if(length < 10){
                             for(int i = length; i < 10; i++){
@@ -216,7 +214,7 @@ public class Friends extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent returnedData){
         Log.i("ACTIVITY RESULT", ""+resultCode);
         final ProgressDialog pd = new ProgressDialog(this);
-        if(resultCode == -1){
+        if(resultCode == -1 || returnedData == null){
             request_friends();
             return;
         }

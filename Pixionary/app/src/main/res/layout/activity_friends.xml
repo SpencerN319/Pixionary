@@ -8,32 +8,32 @@
 
         <Button
             android:id="@+id/bt_Next"
-            android:layout_width="25dp"
+            android:layout_width="35dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/colorPrimaryDark"
-            android:text="N"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/colorPrimaryText"
+            android:background="@drawable/next"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <Button
-            android:id="@+id/bt_Previous"
-            android:layout_width="25dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@color/colorPrimaryDark"
-            android:text= "P"
-            android:textColor="@color/colorPrimaryText"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/next_btn"
-            app:layout_constraintHorizontal_bias="0.043"
-            app:layout_constraintStart_toStartOf="parent" />
+    <Button
+        android:id="@+id/bt_Previous"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/back"
+        android:backgroundTint="@color/colorPrimary"
+        android:text=""
+        android:textColor="@color/colorPrimaryText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/next_btn"
+        app:layout_constraintHorizontal_bias="0.043"
+        app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/title_users"
@@ -44,8 +44,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             android:text="Friends"
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="30sp"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="40sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
@@ -171,32 +172,27 @@
 
     <Button
         android:id="@+id/bt_requests"
-        android:layout_width="wrap_content"
+        android:layout_width="45dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Requests"
-        android:textColor="@color/colorPrimaryText"
-        android:backgroundTint="@color/colorPrimary"
+        android:layout_marginEnd="110dp"
+        android:layout_marginRight="110dp"
+        android:background="@drawable/addcontact"
+        android:textColor="@android:color/holo_green_light"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/bt_Next"
-        app:layout_constraintHorizontal_bias="0.578"
-        app:layout_constraintStart_toEndOf="@+id/bt_add" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/bt_add"
-        android:layout_width="wrap_content"
+        android:layout_width="45dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="48dp"
-        android:layout_marginStart="48dp"
-        android:text="Add"
+        android:layout_marginLeft="110dp"
+        android:layout_marginStart="110dp"
+        android:background="@android:drawable/ic_input_add"
+        android:text=""
         android:textColor="@color/colorPrimaryText"
-        android:backgroundTint ="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/bt_Previous" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
