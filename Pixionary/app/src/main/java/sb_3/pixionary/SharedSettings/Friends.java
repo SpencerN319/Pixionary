@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -140,7 +141,7 @@ public class Friends extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Friends.this, FriendRequests.class);
-                startActivity(intent);
+                startActivityForResult(intent, RESULT_OK);
             }
         });
     }
@@ -172,6 +173,11 @@ public class Friends extends AppCompatActivity {
                                 users[i].setText(null);
                                 users[i].setClickable(false);
                             }
+                        }
+                    } else {
+                        for(int i = 0; i < 10; i++){
+                            users[i].setText("");
+                            users[i].setClickable(false);
                         }
                     }
                 } catch (JSONException e) {
@@ -208,8 +214,9 @@ public class Friends extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent returnedData){
+        Log.i("ACTIVITY RESULT", ""+resultCode);
         final ProgressDialog pd = new ProgressDialog(this);
-        if(resultCode == 0){
+        if(resultCode == -1){
             request_friends();
             return;
         }

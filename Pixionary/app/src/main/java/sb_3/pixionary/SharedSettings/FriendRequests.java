@@ -124,6 +124,13 @@ public class FriendRequests extends Activity {
                                 }
                             }
                         }
+                    } else {
+                        for(int i = 0; i < 5; i++){
+                            users[i].setText("");
+                            users[i].setVisibility(View.INVISIBLE);
+                            checkmarks[i].setVisibility(View.INVISIBLE);
+                            checkmarks[i].setClickable(false);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

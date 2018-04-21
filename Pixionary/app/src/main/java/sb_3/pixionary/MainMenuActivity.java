@@ -277,6 +277,17 @@ public class MainMenuActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        UserDataDBHandler db = new UserDataDBHandler(context);
+        if(db.getUser("0") != null){
+            set_user(db.getUser("0"));
+        } else {
+            startLoginActivity();
+        }
+    }
+
     private void startProgressDialog() {
         progressDialog = new ProgressDialog(MainMenuActivity.this);
         progressDialog.setTitle("Please Wait");
