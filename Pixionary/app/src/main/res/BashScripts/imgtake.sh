@@ -14,7 +14,7 @@ for value in {1..12}
 do
 	head -n $value link.txt | tail -n 1 > onelink.txt
 	echo $url
-	wget -i onelink.txt  -O $value.jpg;
+	wget -i onelink.txt  -O $value.jpg | base64;
 done
 rm url.txt;
 rm link.txt;

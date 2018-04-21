@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import sb_3.pixionary.R;
+import sb_3.pixionary.Utilities.Settings.DownloadSearchedImages;
 
 public class ImageSearch extends Activity {
 
@@ -26,6 +27,7 @@ public class ImageSearch extends Activity {
             @Override
             public void onClick(View view) {
                 String key_word = word.getText().toString();
+                DownloadSearchedImages down = new DownloadSearchedImages(key_word);
                 if(!word.getText().toString().equals("")){
                     Intent intent = new Intent();
                     intent.putExtra("word", key_word);
