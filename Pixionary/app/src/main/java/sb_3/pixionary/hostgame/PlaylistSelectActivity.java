@@ -94,7 +94,8 @@ public class PlaylistSelectActivity extends AppCompatActivity implements DataTra
                             for (int i = 0; i < jsonPlaylistArr.length(); i++) {
                                 //This single line creates a Playlist object for every item in Json array.
                                 JSONObject jsonObject = jsonPlaylistArr.getJSONObject(i);
-                                playlistsList.add(new Playlist(jsonObject.getString("category")));
+                                playlistsList.add(new Playlist(jsonObject.getString("category"), jsonObject.getString("image")));
+
                                 Log.i(TAG, jsonPlaylistArr.getString(i));
                             }
                             adapter = new PlaylistsAdapter(context, playlistsList, dataTransferInterface);
@@ -146,6 +147,7 @@ public class PlaylistSelectActivity extends AppCompatActivity implements DataTra
     private void sendResultingPlaylist(Playlist playlist) {
         Intent intent = new Intent(context, HostGameActivity.class);
         intent.putExtra("PlaylistName", playlist.getName());
+        intent.putExtra("ImagePreview", playlist.getUrl());
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

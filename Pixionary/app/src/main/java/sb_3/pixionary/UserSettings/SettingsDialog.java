@@ -18,6 +18,7 @@ import sb_3.pixionary.R;
  */
 
 public class SettingsDialog extends Activity implements View.OnClickListener {
+
     private static final int UPDATE_REQUEST_ID = 2;
     private TextView title;
     private Button[] buttons  = new Button[5];
@@ -32,7 +33,6 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.settings_dialog);
-        title = (TextView) findViewById(R.id.settings_title);
         buttons[0] = (Button) findViewById(R.id.button_profile);
         buttons[1] = (Button) findViewById(R.id.button_leaderboard);
         buttons[2] = (Button) findViewById(R.id.bt_blank);

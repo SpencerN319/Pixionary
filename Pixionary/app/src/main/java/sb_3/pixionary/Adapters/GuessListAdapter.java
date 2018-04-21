@@ -56,7 +56,7 @@ public class GuessListAdapter extends BaseAdapter implements android.widget.List
         }
 
         TextView guess1 = (TextView) view.findViewById(R.id.guess1);
-        guess1.setText(possibleWords.get(position).toString());
+        guess1.setText(possibleWords.get(position));
 
         Button select = (Button) view.findViewById(R.id.important);
 

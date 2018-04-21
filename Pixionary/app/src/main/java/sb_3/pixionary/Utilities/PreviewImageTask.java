@@ -7,12 +7,15 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.InputStream;
+import java.util.Random;
+
+import sb_3.pixionary.ImageBuilder.Pixel;
 
 /**
  * Created by fastn on 3/27/2018.
  */
 
-public class PreviewImageTask extends AsyncTask<String, Void, Void> {
+public class PreviewImageTask extends AsyncTask<String, Void, Bitmap> {
 
     private ImageView image;
     private Bitmap bitmapImage;
@@ -22,18 +25,24 @@ public class PreviewImageTask extends AsyncTask<String, Void, Void> {
         this.image = image;
     }
 
-    protected Void doInBackground(String... urls) {
+    protected Bitmap doInBackground(String... urls) {
         String urldisplay = urls[0];
         bitmapImage = null;
         try {
             InputStream in = new java.net.URL(urldisplay).openStream();
             bitmapImage = BitmapFactory.decodeStream(in);
-            image.setImageBitmap(bitmapImage);
+            return bitmapImage;
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
             e.printStackTrace();
         }
+
+
         return null;
     }
 
+    @Override
+    protected void onPostExecute(Bitmap bitmap) {
+        image.setImageBitmap(bitmap);
+    }
 }

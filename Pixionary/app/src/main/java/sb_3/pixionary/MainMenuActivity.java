@@ -220,7 +220,7 @@ public class MainMenuActivity extends AppCompatActivity {
         db.addUser(user);
     }
     private void startLoginActivity() {
-        Intent login = new Intent(MainMenuActivity.this, LoginActivity.class);
+        Intent login = new Intent(this, LoginActivity.class);
         startActivityForResult(login, LOGIN_REQUEST_ID);
     }
 
