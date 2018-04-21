@@ -154,7 +154,6 @@ public class Images extends AppCompatActivity {
                 try{
                     JSONObject jsonPlaylists = new JSONObject(response);
                     if(jsonPlaylists.getBoolean("success")) {
-                        Log.i("SUCCESS", "RETURNED USER CATEGORIES");
                         pageLogic(jsonPlaylists.getInt("total"));
                         JSONArray jsonPlaylistArr = jsonPlaylists.getJSONArray("data");
                         for (int i = 0; i < jsonPlaylistArr.length(); i++) {

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/view_image_background"
-    tools:context="sb_3.pixionary.SharedSettings.ImagesViewCategory">
+    tools:context=".SharedSettings.AddImage">
+
 
     <ImageView
         android:id="@+id/iv_0"
@@ -109,24 +110,6 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_1"
         app:layout_constraintVertical_bias="0.966" />
 
-    <Button
-        android:id="@+id/bt_AddImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="+"
-        android:textSize="25dp"
-        android:textColor="@color/colorPrimaryText"
-        android:background="@color/colorPrimaryOrange"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/bt_NextImages"
-        app:layout_constraintStart_toEndOf="@+id/bt_PrevImages"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.996" />
+
 
 </android.support.constraint.ConstraintLayout>

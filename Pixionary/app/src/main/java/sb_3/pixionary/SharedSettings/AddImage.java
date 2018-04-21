@@ -7,56 +7,37 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 
 import sb_3.pixionary.R;
-import sb_3.pixionary.Utilities.AdminSettings.RequestViewImages;
-import sb_3.pixionary.Utilities.PreviewImageTask;
 
-public class ImagesViewCategory extends AppCompatActivity {
-    private static final int DELETED_IMAGE_ID = 2;
-    private static final int SEARCH_IMAGE_ID = 3;
-    private static final int ADD_IMAGE_ID = 4;
-    private Button previous, next, add;
+public class AddImage extends AppCompatActivity {
+    private static final int ADDED_IMAGE_ID = 2;
+    private Button previous, next;
     private int pageNum = 0;
-    private RequestQueue requestQueue;
-    private String category, selected_image_key;
+    private String category;
     private ImageView[] images = new ImageView[4];
-    private String[] image_urls = new String[4];
-    private String[] image_keys = new String[4];
-    private PreviewImageTask image;
-
+    private String key_word;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_images_view_category);
-
+        setContentView(R.layout.activity_add_image);
 
         category = getIntent().getStringExtra("category");
-        requestQueue = Volley.newRequestQueue(this);
+        key_word = getIntent().getStringExtra("word");
         previous = (Button) findViewById(R.id.bt_PrevImages);
         next = (Button) findViewById(R.id.bt_NextImages);
-        add = (Button) findViewById(R.id.bt_AddImage);
         images[0] = (ImageView) findViewById(R.id.iv_0);
         images[1] = (ImageView) findViewById(R.id.iv_2);
         images[2] = (ImageView) findViewById(R.id.iv_3);
         images[3] = (ImageView) findViewById(R.id.iv_1);
 
-
-        pull_images(); //TODO put in timer and loading so load is in the back ground
+        //pull_images();
 
         for (ImageView imagess: images) {
             imagess.setOnClickListener(new View.OnClickListener() {
@@ -65,43 +46,26 @@ public class ImagesViewCategory extends AppCompatActivity {
                     switch (view.getId()) {
                         case R.id.iv_0:
                             view_single_image(0);
-                            selected_image_key = image_keys[0];
-                            image.cancel(true);
                             break;
                         case R.id.iv_2:
                             view_single_image(1);
-                            selected_image_key = image_keys[1];
-                            image.cancel(true);
                             break;
                         case R.id.iv_3:
                             view_single_image(2);
-                            selected_image_key = image_keys[2];
-                            image.cancel(true);
                             break;
                         case R.id.iv_1:
                             view_single_image(3);
-                            selected_image_key = image_keys[3];
-                            image.cancel(true);
                             break;
                     }
                 }
             });
         }
 
-
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ImagesViewCategory.this, ImageSearch.class);
-                startActivityForResult(intent, SEARCH_IMAGE_ID);
-            }
-        });
-
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pageNum--;
-                pull_images();
+                //pull_images();
             }
         });
 
@@ -109,12 +73,13 @@ public class ImagesViewCategory extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pageNum++;
-                pull_images();
+                //pull_images();
             }
         });
 
     }
 
+    /* //TODO insert bash command to pull all 12 images
     private void pull_images(){
         RequestViewImages view = new RequestViewImages(pageNum, category, new Response.Listener<String>() {
             @Override
@@ -157,14 +122,14 @@ public class ImagesViewCategory extends AppCompatActivity {
                 }
             }
         }); requestQueue.add(view);
-    }
+    }*/
 
     private void view_single_image(int img){
-        Intent intent = new Intent(this, ViewSelectedImage.class);
+        Intent intent = new Intent(this, AddViewImage.class);
         intent.putExtra("image", encode_image(((BitmapDrawable)images[img].getDrawable()).getBitmap()));
-        intent.putExtra("word", image_keys[img]);
+        intent.putExtra("word", key_word);
         intent.putExtra("category", category);
-        startActivityForResult(intent, DELETED_IMAGE_ID);
+        startActivityForResult(intent, ADDED_IMAGE_ID);
     }
 
 
@@ -177,28 +142,14 @@ public class ImagesViewCategory extends AppCompatActivity {
         return imageEncoded;
     }
 
-
-    private String fetch(String image_url, ImageView iv) {
-        String base = "http://proj-309-sb-3.cs.iastate.edu/";
-        for(int i = 0; i < image_url.length(); i++){
-            if(!(image_url.charAt(i) == '\\')){
-                base += image_url.charAt(i);
-            }
-        }
-        image = new PreviewImageTask(iv);
-        image.execute(base);
-        return base;
-    }
-
-
-    private void pageLogic(int total) {
-        if (total > 4) {
+    private void pageLogic(int totalUsers) {
+        if (totalUsers > 10) {
             if (pageNum == 0) {
                 disableButton(previous);
             } else {
                 enableButton(previous);
             }
-            if (total < (pageNum+1)*4) {
+            if (totalUsers < (pageNum+1)*10) {
                 disableButton(next);
             } else {
                 enableButton(next);
@@ -214,37 +165,20 @@ public class ImagesViewCategory extends AppCompatActivity {
     private void enableButton(Button button){button.setEnabled(true);}
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent returnedData) {
-        super.onActivityResult(requestCode, resultCode, returnedData);
-        Log.i("RETURNED CODE", ""+resultCode);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         final ProgressDialog pd = new ProgressDialog(this);
-        if(resultCode == -1 || resultCode == 0){
+        if(resultCode == -1){
             return;
         } else{
             switch (requestCode){
-                case DELETED_IMAGE_ID:
-                    pull_images();
-                    pd.setTitle("Success");
-                    pd.setMessage(selected_image_key + " has been removed");
-                    pd.setCancelable(true);
-                    pd.show();
+                case ADDED_IMAGE_ID:
+                    //pull_images();
+                    String word = data.getStringExtra("word");
+                    Intent intent = new Intent();
+                    intent.putExtra("word", word);
+                    finish();
                     break;
-                case SEARCH_IMAGE_ID:
-                    String key = returnedData.getStringExtra("word");
-                    Intent intent = new Intent(this, AddImage.class);
-                    intent.putExtra("word", key);
-                    intent.putExtra("category", category);
-                    startActivityForResult(intent, ADD_IMAGE_ID);
-                    break;
-                case ADD_IMAGE_ID:
-                    pull_images();
-                    String key_returned = returnedData.getStringExtra("word");
-                    pd.setTitle("Success");
-                    pd.setMessage(key_returned + " has been added");
-                    pd.setCancelable(true);
-                    pd.show();
-                    break;
-
             }
         }
     }

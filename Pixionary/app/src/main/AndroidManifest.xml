@@ -53,6 +53,12 @@
         <activity
             android:name=".AdminSettingsDialog.HostRequests"
             android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".SharedSettings.AddImage" />
+        <activity
+            android:name=".SharedSettings.AddViewImage"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".SharedSettings.ImageSearch"
+                  android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>

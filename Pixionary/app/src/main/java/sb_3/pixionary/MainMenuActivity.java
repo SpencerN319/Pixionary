@@ -180,7 +180,6 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent returnedData){
-        Log.i("requestCode", String.valueOf(requestCode));
         if(resultCode == 0){
             return;
         }

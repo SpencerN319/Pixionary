@@ -83,7 +83,7 @@ public class HostRequests extends Activity {
                 dialog.setTitle("Updating");
                 dialog.setMessage("Update in progress please wait");
                 dialog.show();
-                dialog.setCancelable(true);
+                dialog.setCancelable(false);
                 if(!(response.equals("success"))){ Log.i("RESPONSE ", response); }
 
             }
