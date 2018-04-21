@@ -1,4 +1,4 @@
-package sb_3.pixionary.AdminSettingsDialog;
+package sb_3.pixionary.SharedSettings;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -18,11 +18,13 @@ import org.json.JSONObject;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import sb_3.pixionary.MainMenuActivity;
 import sb_3.pixionary.R;
-import sb_3.pixionary.Utilities.AdminSettings.RequestHosts;
-import sb_3.pixionary.Utilities.AdminSettings.RequestMakeHost;
+import sb_3.pixionary.Utilities.Settings.RequestAcceptFriend;
+import sb_3.pixionary.Utilities.Settings.RequestViewFriendRequests;
 
-public class HostRequests extends Activity {
+public class FriendRequests extends Activity {
+
 
     private RequestQueue requestQueue;
     private TextView[] users = new TextView[5];
@@ -33,7 +35,7 @@ public class HostRequests extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_host_requests);
+        setContentView(R.layout.activity_friend_requests);
         requestQueue = Volley.newRequestQueue(this);
         dialog = new ProgressDialog(this);
         users[0] = (TextView) findViewById(R.id.tv_0);
@@ -55,21 +57,21 @@ public class HostRequests extends Activity {
                 @Override
                 public void onClick(View view) {
                     switch (view.getId()) {
-                            case R.id.iv_0:
-                                accept(0);
-                                break;
-                            case R.id.iv_1:
-                                accept(1);
-                                break;
-                            case R.id.iv_2:
-                                accept(2);
-                                break;
-                            case R.id.iv_3:
-                                accept(3);
-                                break;
-                            case R.id.iv_4:
-                                accept(4);
-                                break;
+                        case R.id.iv_0:
+                            accept(0);
+                            break;
+                        case R.id.iv_1:
+                            accept(1);
+                            break;
+                        case R.id.iv_2:
+                            accept(2);
+                            break;
+                        case R.id.iv_3:
+                            accept(3);
+                            break;
+                        case R.id.iv_4:
+                            accept(4);
+                            break;
                     }
                 }
             });
@@ -77,7 +79,7 @@ public class HostRequests extends Activity {
     }
 
     private void accept(int user_num){
-        RequestMakeHost grant_host = new RequestMakeHost(usernames[user_num], new Response.Listener<String>() {
+        RequestAcceptFriend acceptFriend = new RequestAcceptFriend(MainMenuActivity.user.getUsername(), usernames[user_num], new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 dialog.setTitle("Updating");
@@ -85,10 +87,9 @@ public class HostRequests extends Activity {
                 dialog.show();
                 dialog.setCancelable(false);
                 if(!(response.equals("success"))){ Log.i("RESPONSE ", response); }
-
             }
         });
-        requestQueue.add(grant_host);
+        requestQueue.add(acceptFriend);
         final Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -101,20 +102,20 @@ public class HostRequests extends Activity {
     }
 
     private void pull_requests(){
-        RequestHosts requestHosts = new RequestHosts(new Response.Listener<String>() {
+        RequestViewFriendRequests view = new RequestViewFriendRequests(MainMenuActivity.user.getUsername(), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try{
                     JSONObject data = new JSONObject(response);
                     if(data.getBoolean("success")){
-                        JSONArray hosts = data.getJSONArray("hosts");
-                        for(int i = 0; i < hosts.length(); i++){
-                            users[i].setText(hosts.getString(i));
+                        JSONArray friends = data.getJSONArray("requests");
+                        for(int i = 0; i < friends.length(); i++){
+                            users[i].setText(friends.getString(i));
                             users[i].setVisibility(View.VISIBLE);
-                            usernames[i] = hosts.getString(i);
+                            usernames[i] = friends.getString(i);
                             checkmarks[i].setVisibility(View.VISIBLE);
-                            if(hosts.length() < 5){
-                                for(int j = hosts.length(); j < 5; j++){
+                            if(friends.length() < 5){
+                                for(int j = friends.length(); j < 5; j++){
                                     users[j].setText("");
                                     users[j].setVisibility(View.INVISIBLE);
                                     usernames[j] = "";
@@ -128,8 +129,6 @@ public class HostRequests extends Activity {
                     e.printStackTrace();
                 }
             }
-        }); requestQueue.add(requestHosts);
+        }); requestQueue.add(view);
     }
-
-
 }

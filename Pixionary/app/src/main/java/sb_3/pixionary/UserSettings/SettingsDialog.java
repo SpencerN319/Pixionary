@@ -12,6 +12,7 @@ import android.widget.TextView;
 import SaveData.UserDataDBHandler;
 import sb_3.pixionary.MainMenuActivity;
 import sb_3.pixionary.R;
+import sb_3.pixionary.SharedSettings.Friends;
 
 /**
  * Created by fastn on 2/16/2018.
@@ -35,7 +36,7 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
         setContentView(R.layout.settings_dialog);
         buttons[0] = (Button) findViewById(R.id.button_profile);
         buttons[1] = (Button) findViewById(R.id.button_leaderboard);
-        buttons[2] = (Button) findViewById(R.id.bt_blank);
+        buttons[2] = (Button) findViewById(R.id.bt_Friends);
         buttons[3] = (Button) findViewById(R.id.bt_update);
         buttons[4] = (Button) findViewById(R.id.button_logout);
         for (Button button: buttons) {
@@ -46,19 +47,15 @@ public class SettingsDialog extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        Class selectedActivity = null;
-
         switch (v.getId()) {
             case R.id.button_profile:
-                selectedActivity = ProfileActivity.class;
-                nextActivity(selectedActivity);
+                nextActivity(ProfileActivity.class);
                 break;
             case R.id.button_leaderboard:
-                selectedActivity = LeaderboardActivity.class;
-                nextActivity(selectedActivity);
+                nextActivity(LeaderboardActivity.class);
                 break;
-            case R.id.bt_blank:
-                //Start something here.
+            case R.id.bt_Friends:
+                nextActivity(Friends.class);
                 break;
             case R.id.bt_update:
                 Intent intent = new Intent(this, UpdateAccount.class);

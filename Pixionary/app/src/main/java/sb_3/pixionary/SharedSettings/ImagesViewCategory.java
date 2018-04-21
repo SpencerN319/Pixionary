@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -123,7 +122,6 @@ public class ImagesViewCategory extends AppCompatActivity {
                     JSONObject data = new JSONObject(response);
                     if(data.getBoolean("success")){
                         pageLogic(data.getInt("total"));
-                        Log.i("PULLED IMAGES LENGTH", ""+data.getInt("total"));
                         JSONArray pulled_images = data.getJSONArray("urls");
                         JSONArray pulled_words = data.getJSONArray("words");
                         for(int i = 0; i < pulled_images.length(); i++){
@@ -216,7 +214,6 @@ public class ImagesViewCategory extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent returnedData) {
         super.onActivityResult(requestCode, resultCode, returnedData);
-        Log.i("RETURNED CODE", ""+resultCode);
         final ProgressDialog pd = new ProgressDialog(this);
         if(resultCode == -1 || resultCode == 0){
             return;

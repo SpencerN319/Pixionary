@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
             et_username.setError("Enter Username");
             return false;
         } else if(string.length() > 12){
-            et_username.setError("Max 20 Characters");
+            et_username.setError("Max 12 Characters");
             return false;
         } else if(string.length() < 6){
             et_username.setError("Minimum 6 Characters");
