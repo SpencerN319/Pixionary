@@ -7,8 +7,8 @@ import java.io.InputStream;
 
 public class DownloadSearchedImages {
 
-    private static final String pull = "/Users/spencern319/AndroidStudioProjects/SB_3_ImageGuesser/Pixionary/app/src/main/res/BashScripts/imgtake.sh";
-    private static final String clean = "/Users/spencern319/AndroidStudioProjects/SB_3_ImageGuesser/Pixionary/app/src/main/res/BashScripts/imgcleaner.sh";
+    private static final String pull = "CleanUp.sh";
+    private static final String clean = "ImagePull.sh";
     private String output;
 
     public DownloadSearchedImages(String key){
