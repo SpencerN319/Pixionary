@@ -178,8 +178,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void create_guest(String user_name){
+        db = new UserDataDBHandler(this);
         User user = new User(user_name, null, null, "guest", 0, 0, 0, 0);
         MainMenuActivity.set_user(user);
+        db.addUser(user);
         Intent retInt = new Intent(LoginActivity.this, MainMenuActivity.class);
         retInt.putExtra("username", "Guest_"+user_name);
         setResult(MainMenuActivity.GUEST_REQUEST_ID, retInt);

@@ -192,6 +192,7 @@ public class MainMenuActivity extends AppCompatActivity {
                 break;
             case GUEST_REQUEST_ID:
                 usernameDisplay.setText("Logged in as: " + user.getUsername());
+                is_admin();
                 break;
             case SETTINGS_ID:
                 String action = returnedData.getStringExtra("action");
@@ -281,8 +282,9 @@ public class MainMenuActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         UserDataDBHandler db = new UserDataDBHandler(context);
-        if(db.getUser("0") != null){
+        if(db.getUser("0") != null || user != null){
             set_user(db.getUser("0"));
+            usernameDisplay.setText("Logged in as " + user.getUsername());
         } else {
             startLoginActivity();
         }
