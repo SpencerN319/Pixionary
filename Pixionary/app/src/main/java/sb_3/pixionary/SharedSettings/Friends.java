@@ -223,10 +223,12 @@ public class Friends extends AppCompatActivity {
 
             case ADD_FRIEND_ID:
                 String friends_name = returnedData.getStringExtra("friends_name");
-                pd.setTitle("Success");
-                pd.setMessage("Friend request sent to: " + friends_name);
-                pd.show();
-                pd.setCancelable(true);
+                if (friends_name != null) {
+                    pd.setTitle("Success");
+                    pd.setMessage("Friend request sent to: " + friends_name);
+                    pd.show();
+                    pd.setCancelable(true);
+                }
                 break;
         }
     }

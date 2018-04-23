@@ -119,7 +119,9 @@ public class LobbyActivity extends AppCompatActivity {
                 case "START":
                     closeToStart();
                     break;
-
+                case "NONEWGAME":
+                    finish();
+                    break;
             }
         }
     }
