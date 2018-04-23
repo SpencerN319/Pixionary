@@ -143,11 +143,10 @@ public class Images extends AppCompatActivity {
         Intent show = new Intent(this, ImagesViewCategory.class);
         show.putExtra("category", categories[category_num].getText());
         startActivity(show);
-        finish(); //TODO delete finish and fix null point on user.getUsername() *BUG*
+        finish();
     }
 
     private void request_categories(){
-        Log.i("USERNAME", MainMenuActivity.user.getUsername());
         RequestPlaylists categoryRequest = new RequestPlaylists(MainMenuActivity.user.getUsername(), pageNum, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

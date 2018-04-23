@@ -12,16 +12,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONObject;
+
+import sb_3.pixionary.MainMenuActivity;
 import sb_3.pixionary.R;
+import sb_3.pixionary.Utilities.Settings.RequestSaveImage;
 
 public class AddViewImage extends Activity {
 
     private RequestQueue requestQueue;
     private TextView image_name;
-    private Button add, close;
-    private String word, category;
+    private Button add;
+    private String word, category, image64;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +35,10 @@ public class AddViewImage extends Activity {
         ImageView image = (ImageView) findViewById(R.id.iv_image);
         image_name = (TextView) findViewById(R.id.tv_ImageName);
         add = (Button) findViewById(R.id.bt_AddImage);
-        close = (Button) findViewById(R.id.bt_close);
         requestQueue = Volley.newRequestQueue(this);
         word = getIntent().getStringExtra("word");
         category = getIntent().getStringExtra("category");
+        image64 = getIntent().getStringExtra("image");
 
         image_name.setText(word);
         image.setImageBitmap(decode(getIntent().getStringExtra("image")));
@@ -41,28 +46,24 @@ public class AddViewImage extends Activity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO create RequestAddImage(String creator, String location, String word, String Category, Image);
-                /*
-                RequestDeleteImage delete_image = new RequestDeleteImage(category, word, new Response.Listener<String>() {
+                RequestSaveImage save = new RequestSaveImage(image64, word, category, MainMenuActivity.user.getUsername(), new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try{
                             JSONObject data = new JSONObject(response);
                             if(data.getBoolean("success")){
-                                returnToImages(2,word);
+                                Intent intent = new Intent();
+                                intent.putExtra("word", word);
+                                setResult(2, intent);
+                                finish();
                             }
-                        } catch (Exception e) {
+
+                        } catch (Exception e){
                             e.printStackTrace();
                         }
                     }
-                }); requestQueue.add(delete_image);*/
-            }
-        });
-
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                returnToImages(RESULT_OK, null);
+                });
+                requestQueue.add(save);
             }
         });
     }

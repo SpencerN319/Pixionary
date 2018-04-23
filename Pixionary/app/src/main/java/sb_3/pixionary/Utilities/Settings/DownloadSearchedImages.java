@@ -1,59 +1,25 @@
 package sb_3.pixionary.Utilities.Settings;
 
-import android.util.Log;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
-public class DownloadSearchedImages {
+public class DownloadSearchedImages extends StringRequest {
 
-    private static final String pull = "CleanUp.sh";
-    private static final String clean = "ImagePull.sh";
-    private String output;
+    private static final String LOGIN_URL = "http://proj-309-sb-3.cs.iastate.edu:80/image_search.php";
+    private Map<String, String> parameters;
 
-    public DownloadSearchedImages(String key){
-        try{
-            String[] command = {pull, key};
-            ProcessBuilder pb = new ProcessBuilder(command);
-            Process process = pb.start();
-            InputStream inputStream = process.getInputStream();
-
-            StringBuilder cmdReturn = new StringBuilder();
-            int c;
-            while ((c = inputStream.read()) != -1) {
-                cmdReturn.append((char) c);
-            }
-            output = cmdReturn.toString();
-            Log.i("Returned ", cmdReturn.toString());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public DownloadSearchedImages(String word, Response.Listener<String> listener) {
+        super(Request.Method.POST, LOGIN_URL, listener, null);
+        parameters = new HashMap<>();
+        parameters.put("word", word);
     }
 
-    protected String get_output(){
-        return this.output;
+    @Override
+    protected Map<String, String> getParams() {
+        return parameters;
     }
-
-    protected void clean(){
-        try{
-            String[] command = {clean};
-            ProcessBuilder pb = new ProcessBuilder(command);
-            Process process = pb.start();
-            InputStream inputStream = process.getInputStream();
-
-            StringBuilder cmdReturn = new StringBuilder();
-            int c;
-            while ((c = inputStream.read()) != -1) {
-                cmdReturn.append((char) c);
-            }
-            output = cmdReturn.toString();
-            Log.i("Returned ", cmdReturn.toString());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }

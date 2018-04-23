@@ -3,17 +3,26 @@ package sb_3.pixionary.SharedSettings;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+
 import java.io.ByteArrayOutputStream;
 
 import sb_3.pixionary.R;
+import sb_3.pixionary.Utilities.Settings.DownloadSearchedImages;
 
 public class AddImage extends AppCompatActivity {
     private static final int ADDED_IMAGE_ID = 2;
@@ -22,22 +31,26 @@ public class AddImage extends AppCompatActivity {
     private String category;
     private ImageView[] images = new ImageView[4];
     private String key_word;
+    private RequestQueue requestQueue;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_image);
-
+        dialog = new ProgressDialog(this);
         category = getIntent().getStringExtra("category");
         key_word = getIntent().getStringExtra("word");
         previous = (Button) findViewById(R.id.bt_PrevImages);
+        requestQueue = Volley.newRequestQueue(this);
         next = (Button) findViewById(R.id.bt_NextImages);
         images[0] = (ImageView) findViewById(R.id.iv_0);
         images[1] = (ImageView) findViewById(R.id.iv_2);
         images[2] = (ImageView) findViewById(R.id.iv_3);
         images[3] = (ImageView) findViewById(R.id.iv_1);
 
-        //pull_images();
+        pull_images(key_word);
+
 
         for (ImageView imagess: images) {
             imagess.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +78,6 @@ public class AddImage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pageNum--;
-                //pull_images();
             }
         });
 
@@ -73,56 +85,52 @@ public class AddImage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pageNum++;
-                //pull_images();
             }
         });
 
     }
 
-    /* //TODO insert bash command to pull all 12 images
-    private void pull_images(){
-        RequestViewImages view = new RequestViewImages(pageNum, category, new Response.Listener<String>() {
+    private void pull_images(String word){
+        dialog.setTitle("Loading");
+        dialog.setMessage("searching for "+key_word);
+        dialog.show();
+        dialog.setCancelable(false);
+        DownloadSearchedImages down = new DownloadSearchedImages(word, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try{
-                    JSONObject data = new JSONObject(response);
-                    if(data.getBoolean("success")){
-                        pageLogic(data.getInt("total"));
-                        Log.i("PULLED IMAGES LENGTH", ""+data.getInt("total"));
-                        JSONArray pulled_images = data.getJSONArray("urls");
-                        JSONArray pulled_words = data.getJSONArray("words");
-                        for(int i = 0; i < pulled_images.length(); i++){
-                            if(!(pulled_words.getString(i).equals("blank"))){
-                                image_urls[i] = fetch(pulled_images.getString(i), images[i]); //SETS ImageView image in background
-                                image_keys[i] = pulled_words.getString(i);
-                                images[i].setClickable(true);
-                            } else {
-                                image_urls[i] = "";
-                                image_keys[i] = "";
-                                images[i].setImageBitmap(null);
-                                images[i].setClickable(false);
-                            }
-                            if(pulled_images.length() < 4){
-                                for(int j = pulled_images.length(); j < 4; j++){
-                                    images[j].setImageBitmap(null);
-                                    images[j].setClickable(false);
-                                }
-                            }
+                    JSONArray data = new JSONArray(response);
+                    int length = data.length();
+                    Log.i("DATA LENGTH", ""+length);
+                    if(length > 4){
+                        for(int i = 0; i < 4; i++){
+                            images[i].setImageBitmap(decode(data.getString(i)));
+                            images[i].setClickable(true);
                         }
                     } else {
-                        for(int i = 0; i < 4; i++){
-                            image_urls[i] = "";
-                            image_keys[i] = "";
-                            images[i].setImageBitmap(null);
-                            images[i].setClickable(false);
+                        for(int i = 0; i < length; i++){
+                            images[i].setImageBitmap(decode(data.getString(i)));
+                            images[i].setClickable(true);
+                        }
+                        for(int j = length; j < 4; j++){
+                            images[j].setClickable(false);
                         }
                     }
-                } catch (Exception e) {
+                    dialog.cancel();
+                } catch (Exception e){
                     e.printStackTrace();
                 }
             }
-        }); requestQueue.add(view);
-    }*/
+        });
+
+        requestQueue.add(down);
+    }
+
+    private static Bitmap decode(String image)
+    {
+        byte[] decodedBytes = Base64.decode(image, 0);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
 
     private void view_single_image(int img){
         Intent intent = new Intent(this, AddViewImage.class);
@@ -167,13 +175,11 @@ public class AddImage extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        final ProgressDialog pd = new ProgressDialog(this);
-        if(resultCode == -1){
+        if(resultCode == -1 || resultCode == 0){
             return;
         } else{
             switch (requestCode){
                 case ADDED_IMAGE_ID:
-                    //pull_images();
                     String word = data.getStringExtra("word");
                     Intent intent = new Intent();
                     intent.putExtra("word", word);

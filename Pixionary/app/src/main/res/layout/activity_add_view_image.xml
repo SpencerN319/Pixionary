@@ -5,7 +5,7 @@
     android:layout_width="320dp"
     android:layout_height="500dp"
     android:layout_gravity="center"
-    android:background="@drawable/layout_border"
+    android:background="@mipmap/view_image_background"
     tools:context=".SharedSettings.AddViewImage">
 
 
@@ -46,32 +46,21 @@
         android:id="@+id/bt_AddImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
-        android:background="@color/colorPrimary"
-        android:text = "add"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/bt_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="40dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="40dp"
-        android:background="@color/colorPrimary"
-        android:text="close"
+        android:layout_marginStart="8dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:gravity="center"
+        android:text="add"
+        android:textAllCaps="true"
         android:textColor="@color/colorPrimaryText"
         android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/bt_AddImage"
-        app:layout_constraintHorizontal_bias="0.114"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent" />
+
+
 
 </android.support.constraint.ConstraintLayout>

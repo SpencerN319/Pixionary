@@ -5,7 +5,7 @@
     android:layout_width="320dp"
     android:layout_height="500dp"
     android:layout_gravity="center"
-    android:background="@drawable/layout_border"
+    android:background="@mipmap/view_image_background"
     tools:context=".SharedSettings.ViewSelectedImage">
 
     <TextView
