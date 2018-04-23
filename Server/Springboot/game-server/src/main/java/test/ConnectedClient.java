@@ -90,11 +90,14 @@ public class ConnectedClient implements Runnable{
 		{
 			for (ConnectedClient c : Main.server.connectedClients)
 			{
+				if (c.getSocketSession() != null && c.getGameSession() != null)
+				{
 				if (c.getGameSession().equals(g) && c.getSocketSession().equals(socket))
 				{
 					System.out.println("Deleting client from game");
 					g.removeMemberFromMembersList(c);
-					Main.server.connectedClients.remove(c);
+				//	Main.server.connectedClients.remove(c);
+				}
 				}
 			}
 		}

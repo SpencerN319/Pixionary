@@ -204,6 +204,7 @@ public class SocketHandler extends TextWebSocketHandler {
 				{
 				for (ConnectedClient c : g.gameMembers)
 				{
+					System.out.println(c.getUsername()+ ":" + parts[3]);
 					if (c.getUsername().equals(parts[3]))
 					{
 						System.out.println("Sending guess to game");
@@ -218,34 +219,42 @@ public class SocketHandler extends TextWebSocketHandler {
 			boolean found = false;
 			for (Game g: Main.server.gamesList)
 			{
+				System.out.println(parts[1] + "is rejoining somewhere");
 				
 				if (g.findOrphan(parts[1]))
 				{
 					found = true;
 					ConnectedClient newClient = new ConnectedClient(Main.server, session,parts[1]);
-					g.addRescuedOrphan(newClient);
+					g.addRescuedOrphan(newClient, parts[1]);
 					session.sendMessage( new TextMessage("success"));
 					System.out.println("Disconnected player rejoining game");
 					break;
 				}
 			}
 			if (!found)
+			{
 				session.sendMessage( new TextMessage("fail"));
 				System.out.println("player unable to find game to reconnect to");
-			
+			}
 			
 		}else if (parts[0].equals("playagain"))
 		{
+			System.out.println("Play again request received");
 		    //if the user is in a game and wishes to make a guess at the word
 			for (Game g: Main.server.gamesList)
 			{
-				for (ConnectedClient c : Main.server.connectedClients)
+				if (g.getHostName().equals(parts[1]))
 				{
-					if (c.getGameSession().equals(g) && c.getSocketSession().equals(session))
+					for (ConnectedClient c : g.gameMembers)
 					{
-						g.addPlayAgain(c);					
+						if (c.getUsername().equals(parts[2]))
+						{
+							g.addPlayAgain(c);
+							System.out.println(parts[2] + "Wants to play again");
+						}
 					}
 				}
+				
 			}
 		}else
 		{

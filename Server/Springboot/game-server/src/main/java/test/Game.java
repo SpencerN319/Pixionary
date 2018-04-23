@@ -168,29 +168,42 @@ int correctGuesses;
 		
 	}
    boolean playNewGame = false;
-  
-      for (ConnectedClient c : playAgains)
-      {
-    	  if (c.equals(host))
-    	  {
-    		  playAgains.remove(c);
-    		  playNewGame = true;
-    		  break;
-    	  }
-      }
+   		System.out.println("Creating play again game?");
+     
+     if (playAgains.size() == gameMembers.size())
+    	 playNewGame = true;
       if (playNewGame)
       {
+    	  System.out.println("Creating child game");
     	  this.sendStringToAllMembers("NEWGAME");
       Game newgame = new Game(this.host, this.gameName, this.category, this.gameSize, this.rounds);
-
-      for (ConnectedClient c : playAgains)
+      Main.server.gamesList.add(newgame);
+      for (ConnectedClient c : this.gameMembers)
       {
-    	 newgame.addMember(c);
+    	  System.out.println("adding playagain");
+    	  if (!(c.equals(newgame.host)))
+    	  {
+    		  //terrible practice but its the only thing that works
+    		  System.out.println("Heee");
+    		  newgame.gameMembers.add(c);
+    		  System.out.println(c.getUsername());
+    		  newgame.numPlayers = this.numPlayers;
+    	  }
+      }
+      this.delete();
+      
+      for (ConnectedClient c : newgame.gameMembers)
+      {
+    	  System.out.println("PLAZ");
+    	  c.sendStringToClient("you are in the new game");
       }
       newgame.startGame();
       }
       //just see how this ends up working
+      if (this.gameMembers.size() >0)
+      {
       this.sendStringToAllMembers("NONEWGAME");
+      }
       System.out.println("no playagain, deleting");
       this.delete();
       
@@ -204,11 +217,12 @@ int correctGuesses;
     joiningMember.setGameSession(this);
   }
 
-  public void addRescuedOrphan(ConnectedClient joiningMember){
+  public void addRescuedOrphan(ConnectedClient joiningMember, String username){
 	  
 	  for (ConnectedClient c: this.orphans)
 	  {
-		  if (joiningMember.getUsername().equals(c.getUsername()))
+		  System.out.println(joiningMember.getUsername() + c.getUsername());
+		  if (c.getUsername().equals(username))
 				  {
 			  		System.out.println("Orphan score updated");
 				  joiningMember.setLocalScore(c.getLocalScore());
@@ -216,6 +230,37 @@ int correctGuesses;
 	  }
 	    rescuedOrphans.add(joiningMember);
 	    System.out.println("Orphan has rejoined");
+	    try {
+	          //gets all images and words for the selected playlist
+	          Connection conn1;
+	          String dbUrl = "jdbc:mysql://mysql.cs.iastate.edu:3306/db309sb3";
+	          String user = "dbu309sb3";
+	          String password = "Fx3tvTaq";
+	               conn1 = DriverManager.getConnection(dbUrl, user, password);
+	          System.out.println("*** Connected to the database ***");
+	          
+	          Statement statement = conn1.createStatement();
+	          ResultSet rs;
+	          rs = statement.executeQuery("select word, location from Images where category='"+category+"';");
+	          System.out.println("select word, location from Images where category='"+category+"';");
+	          //get them words and links
+	          while (rs.next()) {
+	        
+	        	  	String word = rs.getString("word");
+	        	  	String link = rs.getString("location");
+	        	  
+	        	  	WordLink wl = new WordLink(word, link);
+	        	  	words.add(wl);
+	        	  	//sends all words in the playlist to all members
+	        	  	joiningMember.sendStringToClient("WORD "+word);
+	        	 
+	          }
+	          
+	      } catch (SQLException e) {
+	          System.out.println("SQLException: " + e.getMessage());
+	          System.out.println("SQLState: " + e.getSQLState());
+	          System.out.println("VendorError: " + e.getErrorCode());
+	      }
 	    joiningMember.setGameSession(this);
 	  }
   public void removeMemberFromMembersList(ConnectedClient leavingMember){
@@ -227,9 +272,10 @@ int correctGuesses;
 	  //deletes game if nobody left in it
     gameMembers.remove(leavingMember);
     if (gameMembers.size() == 0)
+    {
     	System.out.println("Game empty, deleting game");
     	this.delete();
-
+    }
     orphans.add(leavingMember);
 	System.out.println("Game size: " +this.gameMembers.size());
 
@@ -249,6 +295,10 @@ int correctGuesses;
     for(int i = 0; i < gameMembers.size(); i++){
       gameMembers.get(i).sendStringToClient(output);
     }
+    for(int i = 0; i < rescuedOrphans.size(); i++){
+        rescuedOrphans.get(i).sendStringToClient(output);
+      }
+    
   }
   
   
@@ -283,11 +333,13 @@ int correctGuesses;
   
   public boolean findOrphan(String username)
   {
+	  System.out.println(orphans.size());
 	  for (ConnectedClient c :orphans)
 	  {
+		  System.out.println(c.getUsername() + username);
 		  if (c.getUsername().equals(username))
 		  {
-			orphans.remove(c);
+			//orphans.remove(c);
 			return true;
 		  }
 	  }
@@ -296,15 +348,23 @@ int correctGuesses;
   
   public void addPlayAgain(ConnectedClient c)
   {
+	  System.out.println("playagainadd called");
 	  this.playAgains.add(c);
+	  System.out.println(playAgains.size());
   }
   public void playRound()
   {
+	 
+	  System.out.println(rescuedOrphans.size());
 	  //get rejoining players back in the action
 	  for (ConnectedClient c: rescuedOrphans)
 	  {
+		  
+		  if (gameMembers.contains(c))
+		  {
 		  gameMembers.add(c);
-		  rescuedOrphans.remove(c);
+		  }
+		 // rescuedOrphans.remove(c);
 	  }
 	 
 	  this.sendStringToAllMembers("ROUNDBEGIN");
@@ -372,7 +432,7 @@ int correctGuesses;
 		   try {
 				  for (int seconds = 100; seconds > 0; seconds--)
 				  {
-					  if (correctGuesses >=numPlayers)
+					  if (correctGuesses >=gameMembers.size())
 						  break;
 				 
 				  Thread.sleep(1000);
@@ -520,14 +580,20 @@ int correctGuesses;
 	}
   public void delete(){
 	  System.out.println("Deleting game hosted by "+ this.hostName);
+	  Main.server.gamesList.remove(this);
+	  for (ConnectedClient c : this.gameMembers)
+	  {
+		  c.setLocalScore(0);
+		  c.resetRoundScore();
+	  }
     for(int i = 0; i < gameMembers.size(); i++){
-      if(gameMembers.get(i) != host){
+    	
         kickMember(gameMembers.get(i));
-      }
+      
     }
     System.out.println("Game members left: " + gameMembers.size());
     //All except host is gone, and host is currently leaving.
-    Main.server.gamesList.remove(this);
+    
     return;
   }
 
