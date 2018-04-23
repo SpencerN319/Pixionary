@@ -1,4 +1,4 @@
-package sb_3.pixionary.Utilities;
+package sb_3.pixionary.Utilities.MainMenu;
 /**
  * Created by spencern319 on 2/10/18.
  */

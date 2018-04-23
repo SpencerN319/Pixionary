@@ -42,16 +42,30 @@
         <activity
             android:name=".AdminSettingsDialog.ViewSelectedUser"
             android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".SharedSettings.Images" />
+        <activity android:name=".SharedSettings.ImagesViewCategory" />
         <activity
-            android:name=".gameplay.GuessResponseActivity"
+            android:name=".SharedSettings.AddCategory"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".gameplay.PointUpdateActivity"
+            android:name=".SharedSettings.ViewSelectedImage"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".gameplay.PlayAgainActivity"
+            android:name=".AdminSettingsDialog.HostRequests"
             android:theme="@android:style/Theme.Dialog" />
-
+        <activity android:name=".SharedSettings.AddImage" />
+        <activity
+            android:name=".SharedSettings.AddViewImage"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".SharedSettings.ImageSearch"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".SharedSettings.Friends" />
+        <activity
+            android:name=".SharedSettings.AddFriend"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".SharedSettings.FriendRequests"
+                  android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 
 </manifest>

@@ -23,7 +23,7 @@ import sb_3.pixionary.Adapters.LeaderboardAdapter;
 import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.ShortUser;
 import sb_3.pixionary.Utilities.POJO.User;
-import sb_3.pixionary.Utilities.RequestLeaderboard;
+import sb_3.pixionary.Utilities.Settings.RequestLeaderboard;
 
 public class LeaderboardActivity extends AppCompatActivity {
     private static final String URL = "http://proj-309-sb-3.cs.iastate.edu:80/leaderboard.php";

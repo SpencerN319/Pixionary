@@ -14,7 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import sb_3.pixionary.R;
-import sb_3.pixionary.Utilities.RequestSelectedUser;
+import sb_3.pixionary.Utilities.AdminSettings.RequestSelectedUser;
 
 public class ViewSelectedUser extends Activity {
     private RequestQueue requestQueue;

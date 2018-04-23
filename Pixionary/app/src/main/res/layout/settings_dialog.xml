@@ -98,13 +98,13 @@
         app:layout_constraintTop_toTopOf="@id/guideline8" />
 
     <Button
-        android:id="@+id/bt_blank"
+        android:id="@+id/bt_Friends"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimaryPurple"
-        android:text="*later*"
-        android:textSize="24dp"
+        android:text="Friends"
         android:textColor="@color/colorPrimaryText"
+        android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="@id/guideline15"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

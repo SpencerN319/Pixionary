@@ -1,22 +1,15 @@
 package sb_3.pixionary.Utilities;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.nfc.Tag;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import java.io.InputStream;
-import java.lang.reflect.AccessibleObject;
-import java.util.Arrays;
 import java.util.Random;
 
 import sb_3.pixionary.ImageBuilder.Pixel;
-import sb_3.pixionary.gameplay.GameActivity;
 
 /**
  * Created by fastn on 3/27/2018.

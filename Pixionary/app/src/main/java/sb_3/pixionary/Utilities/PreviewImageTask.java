@@ -7,9 +7,6 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.InputStream;
-import java.util.Random;
-
-import sb_3.pixionary.ImageBuilder.Pixel;
 
 /**
  * Created by fastn on 3/27/2018.

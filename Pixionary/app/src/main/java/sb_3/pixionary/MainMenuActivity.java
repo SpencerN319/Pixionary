@@ -4,12 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Switch;
@@ -25,10 +24,11 @@ import org.json.JSONObject;
 import SaveData.UserDataDBHandler;
 import sb_3.pixionary.AdminSettingsDialog.AdminSettings;
 import sb_3.pixionary.UserSettings.SettingsDialog;
+import sb_3.pixionary.Utilities.MainMenu.RequestLogin;
 import sb_3.pixionary.Utilities.POJO.User;
-import sb_3.pixionary.Utilities.RequestLogin;
 import sb_3.pixionary.hostgame.HostGameActivity;
 import sb_3.pixionary.joingame.GameBrowserActivity;
+import sb_3.pixionary.SharedSettings.Images;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -106,8 +106,8 @@ public class MainMenuActivity extends AppCompatActivity {
                 if(user == null){
                     startLoginActivity();
                 }else {
-                    Snackbar.make(view, "Open build game activity", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    Intent intent = new Intent(MainMenuActivity.this , Images.class);
+                    startActivity(intent);
                 }
             }
         });
@@ -180,7 +180,6 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent returnedData){
-        Log.i("requestCode", String.valueOf(requestCode));
         if(resultCode == 0){
             return;
         }
@@ -275,6 +274,17 @@ public class MainMenuActivity extends AppCompatActivity {
                 startLoginActivity();
                 progressDialog.dismiss();
             }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        UserDataDBHandler db = new UserDataDBHandler(context);
+        if(db.getUser("0") != null){
+            set_user(db.getUser("0"));
+        } else {
+            startLoginActivity();
         }
     }
 
