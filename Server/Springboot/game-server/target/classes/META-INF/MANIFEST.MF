@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Built-By: panic
-Build-Jdk: 9.0.1
+Build-Jdk: 9.0.4
 Implementation-Title: Server frame
 Implementation-Version: 0.0.1-SNAPSHOT
 Implementation-Vendor-Id: io.pixelnary.springboot

@@ -1,33 +1,43 @@
 package test;
 //makes our websocket clients more object oriented
-import java.net.Socket;
+
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.io.*;
+
 
 public class ConnectedClient implements Runnable{
 
   private WebSocketSession socket;
   private PixionaryServer currentServer;
-  private BufferedReader in;
+
 //  private PrintWriter out;
-  private String username = "tempUsername";
+  private String username;
 
   private Game gameSession;
   //private final String ACTION_SUCCESS = "success";
   private boolean connected = true;
   
   public int userID;
-  public int localScore;
-  public int roundScore;
+ public int localScore;
+ public int roundScore;
   public boolean guessed;
   
-  public ConnectedClient(PixionaryServer currentServer, WebSocketSession socket){
+  public ConnectedClient(PixionaryServer currentServer, WebSocketSession socket,String username){
     this.socket = socket;
     this.currentServer = currentServer;
-
+    this.username=username;
+  }
+  
+  public WebSocketSession getSocket()
+  {
+	  return socket;
+  }
+  
+  public void setSocket(WebSocketSession w)
+  {
+	  socket = w;
   }
 
   //shold never be called but is required to exist
@@ -76,6 +86,21 @@ public class ConnectedClient implements Runnable{
     }
     catch(Exception e){
       System.out.println("Failed to send '" + output + "' to client.");
+      for (Game g: Main.server.gamesList)
+		{
+			for (ConnectedClient c : Main.server.connectedClients)
+			{
+				if (c.getSocketSession() != null && c.getGameSession() != null)
+				{
+				if (c.getGameSession().equals(g) && c.getSocketSession().equals(socket))
+				{
+					System.out.println("Deleting client from game");
+					g.removeMemberFromMembersList(c);
+				//	Main.server.connectedClients.remove(c);
+				}
+				}
+			}
+		}
     }
   }
 //various game logic methods
@@ -93,6 +118,16 @@ public class ConnectedClient implements Runnable{
   public void resetRoundScore()
   {
 	   roundScore = 0;
+  }
+  
+  public int getLocalScore()
+  {
+	  return localScore;
+  }
+  
+  public void setLocalScore(int i)
+  {
+	  this.localScore = i;
   }
   
   public void setGuessed(boolean b)
