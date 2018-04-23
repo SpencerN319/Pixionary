@@ -36,7 +36,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private DataTransferInterface dataTransferInterface;
     private DownloadImageTask downloadImageTask;
 
-    private String gameID; //This is just the host name
+    private String gameID;
     private int playersRequested;
     private String playlistName;
     private User user;
@@ -130,7 +130,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             webSocket.send("playagain," + gameID + "," + user.getUsername());
             directToLobby(playersRequested);
         } else if (command == PlayAgainActivity.NOTPLAYAGAIN) {
-//            webSocket.close(1000, "Chose not to play again.");
             finish();
         }
     }
@@ -210,13 +209,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         Scanner scanner = new Scanner(message);
         String type = scanner.next();
         switch (type) {
-            case "Created":
-                //This shows that the game is created.
-                break;
-//            TODO THIS IS COMMENTED OUT UNTIL THE SERVER ISN'T DOUBLING THE CONNECTION.
-//            case "FULL":
-//                backToGameBrowser();
-//                break;
             case "START":
                 broadcastToLobby(message);
                 break;
@@ -281,6 +273,9 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 displayPlayAgain(message);
                 break;
             case "NEWGAME":
+                if (playersRequested == 1) {
+                    bot.setCorrect(true);
+                }
                 break;
             case "NONEWGAME":
                 broadcastToLobby(message);
@@ -294,13 +289,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 break;
         }
     }
-
-//    private void backToGameBrowser() {
-//        webSocket.close(1000, "Game is Full.");
-//        Intent backToBrowser = new Intent(context, GameBrowserActivity.class);
-//        startActivity(backToBrowser);
-//        finish();
-//    }
 
     private void addWord(String message) {
         Scanner scanner = new Scanner(message);
@@ -389,14 +377,14 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                     String guess = "guess,Bot:" + bot.guess() + "," + gameID + "," + user.getUsername();
                     webSocket.send(guess);
                     Log.i(TAG, guess);
-                    botHandler.postDelayed(this, (120 - 6*bot.getDifficulty()) / size * 1000);
+                    botHandler.postDelayed(this, (120 - 4*bot.getDifficulty()) / size * 1000);
                 }
             }
         };
         if (bot.isCorrect()) {
             botHandler.removeCallbacks(botRunnable);
         } else {
-            botHandler.postDelayed(botRunnable, (120 - 6*bot.getDifficulty()) / size * 1000);
+            botHandler.postDelayed(botRunnable, (120 - 4*bot.getDifficulty()) / size * 1000);
         }
     }
 
