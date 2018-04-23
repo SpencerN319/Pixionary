@@ -6,8 +6,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -26,7 +24,6 @@ import sb_3.pixionary.Utilities.DownloadImageTask;
 import sb_3.pixionary.Utilities.POJO.GameClasses.Bot;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.interfaces.DataTransferInterface;
-import sb_3.pixionary.joingame.GameBrowserActivity;
 
 public class GameActivity extends AppCompatActivity implements DataTransferInterface {
 
@@ -206,7 +203,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
     private void sendGuessMessage(String guess) {
         String message = "guess," + guess + "," + gameID + "," + user.getUsername();
-        Log.i(TAG, message);
         webSocket.send(message);
     }
 

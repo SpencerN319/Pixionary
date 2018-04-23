@@ -61,23 +61,10 @@ public class GameListAdapter extends BaseAdapter implements android.widget.ListA
         TextView tvHost = (TextView) view.findViewById(R.id.textGameHost);
         tvHost.setText(items.get(position).getHost());
 
-        TextView tvGameType = (TextView) view.findViewById(R.id.textGameType);
-        String gameType = "Unknown";
-        switch (items.get(position).getPlayers()) {
-            case 2:
-                gameType = "1-V-1";
-                break;
-            case 3:
-                gameType = "Multiplayer";
-                break;
-            default:
-                gameType = "Unknown";
-                break;
-        }
-        tvGameType.setText(gameType);
-
+        //TODO Change tvPlayers setup.
         TextView tvPlayers = (TextView) view.findViewById(R.id.textPlayers);
-        tvPlayers.setText(String.valueOf(items.get(position).getPlayers()));
+        String text = String.valueOf(items.get(position).getPlayers()) + "/" + String.valueOf(items.get(position).getMax());
+        tvPlayers.setText(text);
 
         Button playBtn = (Button) view.findViewById(R.id.join);
 
