@@ -26,6 +26,7 @@ import sb_3.pixionary.R;
 import sb_3.pixionary.Utilities.POJO.GameClasses.ShortGame;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.Utilities.RequestGamesAvailable;
+import sb_3.pixionary.gameplay.GameActivity;
 
 
 public class GameBrowserActivity extends AppCompatActivity {
@@ -38,6 +39,7 @@ public class GameBrowserActivity extends AppCompatActivity {
     private ListView listView;
     private Button next;
     private Button previous;
+    private Button reconnect;
 
     private int pageNum;
     private ArrayList<ShortGame> gamesList;
@@ -53,6 +55,7 @@ public class GameBrowserActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.gameList);
         previous = (Button) findViewById(R.id.previous_gameS);
         next = (Button) findViewById(R.id.next_gameS);
+        reconnect = (Button) findViewById(R.id.btn_reconnect);
 
         gamesAvailablePage();
 
@@ -69,6 +72,16 @@ public class GameBrowserActivity extends AppCompatActivity {
             public void onClick(View v) {
                 pageNum++;
                 gamesAvailablePage();
+            }
+        });
+
+        reconnect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, GameActivity.class);
+                intent.putExtra("reconnect", "true");
+                startActivity(intent);
+                finish();
             }
         });
 

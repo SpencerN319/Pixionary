@@ -13,7 +13,7 @@ import java.util.Map;
  */
 
 public class RequestPlaylists extends StringRequest {
-    private static final String CATEGORIES_URL = "http://proj-309-sb-3.cs.iastate.edu:80/playlist.php";
+    private static final String CATEGORIES_URL = "http://proj-309-sb-3.cs.iastate.edu:80/category.php";
     private Map<String, String> parameters;
 
     public RequestPlaylists(String username, int pageRequested, Response.Listener<String> listener, Response.ErrorListener errorListener) {

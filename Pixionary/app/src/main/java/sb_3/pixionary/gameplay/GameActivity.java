@@ -52,6 +52,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private Handler botHandler;
     private Runnable botRunnable;
     public Bot bot;
+    private boolean reconnect = false;
 
     private ImageView image;
     private ImageView cover;
@@ -73,6 +74,10 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         rounds = getIntent().getIntExtra("rounds", 0);
         difficulty = getIntent().getIntExtra("bot_difficulty", 0);
         playlistName = getIntent().getStringExtra("playlist");
+        String isReconnect = getIntent().getStringExtra("reconnect");
+        if (isReconnect != null && isReconnect.equals("true")) {
+            reconnect = true;
+        }
 
         guessList = (ListView) findViewById(R.id.list_of_guesses);
         image = (ImageView) findViewById(R.id.imgGame);
@@ -83,9 +88,9 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         guessList.setAdapter(adapter);
 
         connect();
-
-        directToLobby(playersRequested);
-
+        if (!reconnect) {
+            directToLobby(playersRequested);
+        }
     }
 
     @Override
@@ -124,10 +129,11 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
     private void playAgain(int command) {
         if (command == PlayAgainActivity.PLAYAGAIN) {
-            webSocket.send("playagain");
+            Log.i(TAG, "playagain");
+            webSocket.send("playagain," + gameID + "," + user.getUsername());
             directToLobby(playersRequested);
         } else if (command == PlayAgainActivity.NOTPLAYAGAIN) {
-            webSocket.close(1000, "Chose not to play again.");
+//            webSocket.close(1000, "Chose not to play again.");
             finish();
         }
     }
@@ -145,11 +151,16 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
                 Log.i(TAG, "Opened Method");
-                if (user.getUserType().equals("host")) {
-                    createGame();
+                if (reconnect) {
+                    webSocket.send("reconnect," + user.getUsername());
                 } else {
-                    joinGame();
+                    if (user.getUserType().equals("host")) {
+                        createGame();
+                    } else {
+                        joinGame();
+                    }
                 }
+
                 Log.i("Response:", response.message());
             }
 
@@ -167,7 +178,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
             @Override
             public void onClosing(WebSocket webSocket, int code, String reason) {
-                webSocket.close(1000, null);
                 Log.i("Closing", reason);
             }
 
@@ -212,13 +222,14 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 //                backToGameBrowser();
 //                break;
             case "START":
-                if(!user.getUserType().equals("host")) {
-                    broadcastToLobby(message);
-                }
+                broadcastToLobby(message);
                 break;
             case "ROUNDBEGIN":
                 if(playersRequested == 1) {
                     runBot();
+                }
+                if(reconnect) {
+                    reconnect = false;
                 }
                 break;
             case "WORD":
@@ -274,10 +285,14 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 displayPlayAgain(message);
                 break;
             case "NEWGAME":
-                //TODO Do something to get a new game.
+                break;
             case "NONEWGAME":
-                webSocket.close(1000, "Not Playing Again");
+                broadcastToLobby(message);
                 finish();
+                break;
+            case "fail":
+                finish();
+                break;
             default:
                 Log.i(TAG, "NOT TRACKED: " +  message);
                 break;
@@ -319,7 +334,10 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     }
 
     private void wipeBitmap() {
-        downloadImageTask.cancel(true);
+        if (!reconnect) {
+            downloadImageTask.cancel(true);
+        }
+
     }
 
     private void wipeScores() {
