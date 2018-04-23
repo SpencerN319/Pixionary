@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 
@@ -33,6 +34,7 @@ public class AddImage extends AppCompatActivity {
     private String key_word;
     private RequestQueue requestQueue;
     private ProgressDialog dialog;
+    private String[] file_names = new String[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,17 +101,21 @@ public class AddImage extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try{
-                    JSONArray data = new JSONArray(response);
+                    JSONObject data = new JSONObject(response);
+                    JSONArray names = data.getJSONArray("file_names");
+                    JSONArray images64 = data.getJSONArray("images");
                     int length = data.length();
-                    Log.i("DATA LENGTH", ""+length);
                     if(length > 4){
                         for(int i = 0; i < 4; i++){
-                            images[i].setImageBitmap(decode(data.getString(i)));
+                            Log.i("FILE NAME", names.getString(i));
+                            images[i].setImageBitmap(decode(images64.getString(i)));
+                            file_names[i] = names.getString(i);
                             images[i].setClickable(true);
                         }
                     } else {
                         for(int i = 0; i < length; i++){
-                            images[i].setImageBitmap(decode(data.getString(i)));
+                            images[i].setImageBitmap(decode(images64.getString(i)));
+                            file_names[i] = names.getString(i);
                             images[i].setClickable(true);
                         }
                         for(int j = length; j < 4; j++){
@@ -137,6 +143,7 @@ public class AddImage extends AppCompatActivity {
         intent.putExtra("image", encode_image(((BitmapDrawable)images[img].getDrawable()).getBitmap()));
         intent.putExtra("word", key_word);
         intent.putExtra("category", category);
+        intent.putExtra("file_name", file_names[img]);
         startActivityForResult(intent, ADDED_IMAGE_ID);
     }
 

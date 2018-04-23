@@ -11,13 +11,14 @@ public class RequestSaveImage extends StringRequest{
     private static final String LOGIN_URL = "http://proj-309-sb-3.cs.iastate.edu:80/save_image.php";
     private Map<String, String> parameters;
 
-    public RequestSaveImage(String image, String word, String category, String username, Response.Listener<String> listener) {
+    public RequestSaveImage(String image, String word, String category, String username, String file_name, Response.Listener<String> listener) {
         super(Method.POST, LOGIN_URL, listener, null);
         parameters = new HashMap<>();
         parameters.put("image", image);
         parameters.put("word", word);
         parameters.put("category", category);
         parameters.put("username", username);
+        parameters.put("file_name", file_name);
     }
 
 

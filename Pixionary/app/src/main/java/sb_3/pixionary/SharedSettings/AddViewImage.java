@@ -26,7 +26,7 @@ public class AddViewImage extends Activity {
     private RequestQueue requestQueue;
     private TextView image_name;
     private Button add;
-    private String word, category, image64;
+    private String word, category, image64, file_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +39,7 @@ public class AddViewImage extends Activity {
         word = getIntent().getStringExtra("word");
         category = getIntent().getStringExtra("category");
         image64 = getIntent().getStringExtra("image");
+        file_name = getIntent().getStringExtra("file_name");
 
         image_name.setText(word);
         image.setImageBitmap(decode(getIntent().getStringExtra("image")));
@@ -46,7 +47,7 @@ public class AddViewImage extends Activity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RequestSaveImage save = new RequestSaveImage(image64, word, category, MainMenuActivity.user.getUsername(), new Response.Listener<String>() {
+                RequestSaveImage save = new RequestSaveImage(image64, word, category, MainMenuActivity.user.getUsername(), file_name, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try{
@@ -57,7 +58,6 @@ public class AddViewImage extends Activity {
                                 setResult(2, intent);
                                 finish();
                             }
-
                         } catch (Exception e){
                             e.printStackTrace();
                         }
@@ -79,12 +79,4 @@ public class AddViewImage extends Activity {
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
-
-
-    private void returnToImages(int result, String word){
-        Intent intent = new Intent();
-        intent.putExtra("word", word);
-        setResult(result);
-        finish();
-    }
 }
