@@ -8,9 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.android.volley.RequestQueue;
@@ -27,8 +25,6 @@ import sb_3.pixionary.Utilities.Settings.DownloadSearchedImages;
 
 public class AddImage extends AppCompatActivity {
     private static final int ADDED_IMAGE_ID = 2;
-    private Button previous, next;
-    private int pageNum = 0;
     private String category;
     private ImageView[] images = new ImageView[4];
     private String key_word;
@@ -43,9 +39,7 @@ public class AddImage extends AppCompatActivity {
         dialog = new ProgressDialog(this);
         category = getIntent().getStringExtra("category");
         key_word = getIntent().getStringExtra("word");
-        previous = (Button) findViewById(R.id.bt_PrevImages);
         requestQueue = Volley.newRequestQueue(this);
-        next = (Button) findViewById(R.id.bt_NextImages);
         images[0] = (ImageView) findViewById(R.id.iv_0);
         images[1] = (ImageView) findViewById(R.id.iv_2);
         images[2] = (ImageView) findViewById(R.id.iv_3);
@@ -76,20 +70,6 @@ public class AddImage extends AppCompatActivity {
             });
         }
 
-        previous.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pageNum--;
-            }
-        });
-
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pageNum++;
-            }
-        });
-
     }
 
     private void pull_images(String word){
@@ -104,10 +84,9 @@ public class AddImage extends AppCompatActivity {
                     JSONObject data = new JSONObject(response);
                     JSONArray names = data.getJSONArray("file_names");
                     JSONArray images64 = data.getJSONArray("images");
-                    int length = data.length();
+                    int length = images64.length();
                     if(length > 4){
                         for(int i = 0; i < 4; i++){
-                            Log.i("FILE NAME", names.getString(i));
                             images[i].setImageBitmap(decode(images64.getString(i)));
                             file_names[i] = names.getString(i);
                             images[i].setClickable(true);
@@ -156,28 +135,6 @@ public class AddImage extends AppCompatActivity {
         String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
         return imageEncoded;
     }
-
-    private void pageLogic(int totalUsers) {
-        if (totalUsers > 10) {
-            if (pageNum == 0) {
-                disableButton(previous);
-            } else {
-                enableButton(previous);
-            }
-            if (totalUsers < (pageNum+1)*10) {
-                disableButton(next);
-            } else {
-                enableButton(next);
-            }
-        } else {
-            disableButton(previous);
-            disableButton(next);
-        }
-    }
-
-    private void disableButton(Button button){button.setEnabled(false);}
-
-    private void enableButton(Button button){button.setEnabled(true);}
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
