@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class RequestGamesAvailable extends StringRequest {
 
-    private static final String GAMES_URL = "http://proj-309-sb-3.cs.iastate.edu:80/active.php"; //TODO set actual URL
+    private static final String GAMES_URL = "http://proj-309-sb-3.cs.iastate.edu:80/active.php";
     private Map<String, String> parameters;
 
     public RequestGamesAvailable(String username, int pageRequested, Response.Listener<String> listener, Response.ErrorListener errorListener) {

@@ -6,8 +6,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -26,9 +24,7 @@ import sb_3.pixionary.Utilities.DownloadImageTask;
 import sb_3.pixionary.Utilities.POJO.GameClasses.Bot;
 import sb_3.pixionary.Utilities.POJO.User;
 import sb_3.pixionary.interfaces.DataTransferInterface;
-import sb_3.pixionary.joingame.GameBrowserActivity;
 
-//TODO still need to add a view to see the players in the lobby. --- Not important RN.
 public class GameActivity extends AppCompatActivity implements DataTransferInterface {
 
     private static final String TAG = GameActivity.class.getSimpleName();
@@ -40,7 +36,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private DataTransferInterface dataTransferInterface;
     private DownloadImageTask downloadImageTask;
 
-    private String gameID; //This is just the host name
+    private String gameID;
     private int playersRequested;
     private String playlistName;
     private User user;
@@ -53,6 +49,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private Handler botHandler;
     private Runnable botRunnable;
     public Bot bot;
+    private boolean reconnect = false;
 
     private ImageView image;
     private ImageView cover;
@@ -74,6 +71,10 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         rounds = getIntent().getIntExtra("rounds", 0);
         difficulty = getIntent().getIntExtra("bot_difficulty", 0);
         playlistName = getIntent().getStringExtra("playlist");
+        String isReconnect = getIntent().getStringExtra("reconnect");
+        if (isReconnect != null && isReconnect.equals("true")) {
+            reconnect = true;
+        }
 
         guessList = (ListView) findViewById(R.id.list_of_guesses);
         image = (ImageView) findViewById(R.id.imgGame);
@@ -84,9 +85,9 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         guessList.setAdapter(adapter);
 
         connect();
-
-        directToLobby(playersRequested);
-
+        if (!reconnect) {
+            directToLobby(playersRequested);
+        }
     }
 
     @Override
@@ -100,7 +101,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                 sendStart();
                 break;
             case LobbyActivity.LEAVE_GAME:
-                webSocket.close(0, "Left Lobby");
+                webSocket.close(1000, "Left Lobby");
                 finish();
                 break;
             case PlayAgainActivity.PLAYAGAIN:
@@ -125,10 +126,10 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
     private void playAgain(int command) {
         if (command == PlayAgainActivity.PLAYAGAIN) {
-            webSocket.send("playagain");
+            Log.i(TAG, "playagain");
+            webSocket.send("playagain," + gameID + "," + user.getUsername());
             directToLobby(playersRequested);
         } else if (command == PlayAgainActivity.NOTPLAYAGAIN) {
-            webSocket.close(1000, "Chose not to play again.");
             finish();
         }
     }
@@ -146,11 +147,16 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
                 Log.i(TAG, "Opened Method");
-                if (user.getUserType().equals("host")) {
-                    createGame();
+                if (reconnect) {
+                    webSocket.send("reconnect," + user.getUsername());
                 } else {
-                    joinGame();
+                    if (user.getUserType().equals("host")) {
+                        createGame();
+                    } else {
+                        joinGame();
+                    }
                 }
+
                 Log.i("Response:", response.message());
             }
 
@@ -168,7 +174,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
             @Override
             public void onClosing(WebSocket webSocket, int code, String reason) {
-                webSocket.close(1000, null);
                 Log.i("Closing", reason);
             }
 
@@ -197,7 +202,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
 
     private void sendGuessMessage(String guess) {
         String message = "guess," + guess + "," + gameID + "," + user.getUsername();
-        Log.i(TAG, message);
         webSocket.send(message);
     }
 
@@ -205,36 +209,26 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
         Scanner scanner = new Scanner(message);
         String type = scanner.next();
         switch (type) {
-            case "Created":
-                createGameReaction(message);
-                break;
-            //TODO THIS IS COMMENTED OUT UNTIL THE SERVER ISN'T DOUBLING THE CONNECTION.
-//            case "FULL":
-//                backToGameBrowser();
-//                break;
             case "START":
-                if(!user.getUserType().equals("host")) {
-                    broadcastToLobby(message);
-                }
+                broadcastToLobby(message);
                 break;
             case "ROUNDBEGIN":
                 if(playersRequested == 1) {
                     runBot();
                 }
+                if(reconnect) {
+                    reconnect = false;
+                }
                 break;
             case "WORD":
                 addWord(message);
                 break;
-//            case "HEIGHT":
-//                setHeightAndWidth(message);
-//                Log.i(TAG, message);
-//                break;
             case "URL":
                 receiveImage(message);
                 break;
             case "CORRECT!":
                 if (playersRequested == 1) {
-                    botHandler.removeCallbacks(botRunnable); //TODO Not sure if this is need here.
+                    botHandler.removeCallbacks(botRunnable);
                 } else {
                     startGuessResponse("Correct!");
                 }
@@ -257,9 +251,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             case "ENDSCORES":
                 displayScores();
                 break;
-//            case "PING":
-//                Log.i(TAG, "Still Connected");
-//                break;
             case "newmember":
                 broadcastToLobby(message);
                 break;
@@ -272,42 +263,32 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             case "Endplayers":
                 broadcastToLobby(message);
                 break;
-            case "BOTCORRECT!": //FIXME Not sure that this is how it will respond.
+            case "BOTCORRECT!":
                 bot.setCorrect(true);
                 break;
             case "GG":
-                //TODO This means the game is over.
+                //This means game is over.
                 break;
             case "Winner:":
                 displayPlayAgain(message);
                 break;
             case "NEWGAME":
-                //TODO Do something to get a new game.
+                if (playersRequested == 1) {
+                    bot.setCorrect(true);
+                }
+                break;
             case "NONEWGAME":
-                webSocket.close(1000, "Not Playing Again");
+                broadcastToLobby(message);
                 finish();
+                break;
+            case "fail":
+                finish();
+                break;
             default:
                 Log.i(TAG, "NOT TRACKED: " +  message);
                 break;
         }
     }
-
-    private void createGameReaction(String message) {
-        Scanner scanner = new Scanner(message);
-//        if(scanner.next().equals("Created")) {
-//            if (playersRequested < 2 && user.getUserType().equals("host")) {
-//                sendStart();
-//            }
-//        }
-
-    }
-
-//    private void backToGameBrowser() {
-//        webSocket.close(1000, "Game is Full.");
-//        Intent backToBrowser = new Intent(context, GameBrowserActivity.class);
-//        startActivity(backToBrowser);
-//        finish();
-//    }
 
     private void addWord(String message) {
         Scanner scanner = new Scanner(message);
@@ -319,22 +300,6 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
             adapter.notifyDataSetChanged();
         }
     }
-
-//    private void setHeightAndWidth(String message) {
-//        Scanner scanner = new Scanner(message);
-//        String command = scanner.next();
-//        if (command.equals("HEIGHT") && scanner.hasNextInt()) {
-//            height = scanner.nextInt();
-//            Log.i("Height:", String.valueOf(height));
-//            command = scanner.next();
-//        }
-//        if (command.equals("WIDTH") && scanner.hasNextInt()) {
-//            width = scanner.nextInt();
-//            Log.i("Width:", String.valueOf(width));
-//        }
-//        pixels = new int[width*height];
-//        Log.i("Pixels Length", String.valueOf(pixels.length));
-//    }
 
     private void receiveImage(String message) {
         Scanner scanner = new Scanner(message);
@@ -353,7 +318,10 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     }
 
     private void wipeBitmap() {
-        downloadImageTask.cancel(true);
+        if (!reconnect) {
+            downloadImageTask.cancel(true);
+        }
+
     }
 
     private void wipeScores() {
@@ -390,7 +358,7 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
     private void displayPlayAgain(String message) {
         Intent intent = new Intent(context, PlayAgainActivity.class);
         intent.putExtra("winner", message);
-        startActivityForResult(intent, 20); //TODO Need to enable for request code.
+        startActivityForResult(intent, 20);
     }
 
     private void runBot() {
@@ -409,16 +377,15 @@ public class GameActivity extends AppCompatActivity implements DataTransferInter
                     String guess = "guess,Bot:" + bot.guess() + "," + gameID + "," + user.getUsername();
                     webSocket.send(guess);
                     Log.i(TAG, guess);
-                    botHandler.postDelayed(this, (120 - 6*bot.getDifficulty()) / size * 1000);
+                    botHandler.postDelayed(this, (120 - 4*bot.getDifficulty()) / size * 1000);
                 }
             }
         };
         if (bot.isCorrect()) {
             botHandler.removeCallbacks(botRunnable);
         } else {
-            botHandler.postDelayed(botRunnable, (120 - 6*bot.getDifficulty()) / size * 1000);
+            botHandler.postDelayed(botRunnable, (120 - 4*bot.getDifficulty()) / size * 1000);
         }
-
     }
 
 }

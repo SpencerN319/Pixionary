@@ -22,7 +22,7 @@ public class ProfileAdapter extends ArrayAdapter<String> {
     private Context context;
     private int resource;
     private String[] dataLabels = { "Username: ", "Password: ", "ID: ", "User Type: ",
-            "Games Played: ", "Score: ", "Category Count: ", "Image Count: " };
+             "Score: ", "Games Played: " };
 
     public ProfileAdapter(Context context, int resource, ArrayList<String> user) {
         super(context, resource, user);

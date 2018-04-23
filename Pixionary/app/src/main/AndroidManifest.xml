@@ -35,6 +35,15 @@
         <activity android:name=".gameplay.GameActivity" />
         <activity android:name=".gameplay.LobbyActivity" />
         <activity
+            android:name=".gameplay.PlayAgainActivity"
+            android:theme="@android:style/Theme.Dialog"/>
+        <activity
+            android:name=".gameplay.PointUpdateActivity"
+            android:theme="@android:style/Theme.Dialog"/>
+        <activity
+            android:name=".gameplay.GuessResponseActivity"
+            android:theme="@android:style/Theme.Dialog"/>
+        <activity
             android:name=".AdminSettingsDialog.AdminSettings"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".UserSettings.UpdateAccount" />
