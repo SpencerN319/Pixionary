@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryOrange"
+    android:background="@mipmap/view_image_background"
     tools:context="sb_3.pixionary.SharedSettings.ImagesViewCategory">
     <!--android:background="@mipmap/view_image_background"-->
 
